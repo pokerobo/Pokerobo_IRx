@@ -23,6 +23,33 @@ void setup() {
 
 void loop() {
   testServos();
+  //
+  if(error == 1) { //skip loop if no controller found
+    Serial.println("Error, terminated!");
+    return;
+  } else { //DualShock Controller
+    ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
+    //
+    // Perform movements based on D-pad buttons
+    //
+    // MOVE FORWARD
+    if(ps2x.Button(PSB_PAD_UP)) {
+      Serial.println("PSB_PAD_UP is pushed");
+    }
+    // MOVE BACK
+    if(ps2x.Button(PSB_PAD_DOWN)){
+      Serial.println("PSB_PAD_UP is pushed");
+    }
+    // TURN LEFT
+    if(ps2x.Button(PSB_PAD_LEFT)){
+      Serial.println("PSB_PAD_LEFT is pushed");
+    }
+    // TURN RIGHT
+    if(ps2x.Button(PSB_PAD_RIGHT)){
+      Serial.println("PSB_PAD_RIGHT is pushed");
+    }
+  }
+  //
   delay(500);
 }
 
