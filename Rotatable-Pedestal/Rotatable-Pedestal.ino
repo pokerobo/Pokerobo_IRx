@@ -9,7 +9,6 @@ Servo horizontalServo;
 Servo verticalServo;
 
 int count = 0;
-int pos = 0;
 
 void setup() {
   Serial.begin(57600);
@@ -17,13 +16,22 @@ void setup() {
   //
   initializePS2();
   //
-  horizontalServo.attach(HORIZONTAL_SERVO_PIN);
-  verticalServo.attach(VERTICAL_SERVO_PIN);
+  initServos();
   //
   Serial.println("Bootstrap has done!");
 }
 
 void loop() {
+  testServos();
+  delay(500);
+}
+
+void initServos() {
+  horizontalServo.attach(HORIZONTAL_SERVO_PIN);
+  verticalServo.attach(VERTICAL_SERVO_PIN);
+}
+
+void testServos() {
   if (count >= 3) {
     Serial.print(count);
     Serial.print(" rounds are done!");
@@ -31,7 +39,7 @@ void loop() {
   }
   count++;
   //
-  for ( pos = 0; pos <= 180; pos += 5) {
+  for (int pos = 0; pos <= 180; pos += 5) {
     horizontalServo.write(pos);
     verticalServo.write(pos);
     Serial.print("Pos= ");
@@ -40,7 +48,7 @@ void loop() {
     delay(100);
   }
   //
-  for ( pos = 180; pos >= 0; pos -= 5) {
+  for (int pos = 180; pos >= 0; pos -= 5) {
     horizontalServo.write(pos);
     verticalServo.write(pos);
     Serial.print("Pos= ");
@@ -48,6 +56,4 @@ void loop() {
     Serial.println();
     delay(100);
   }
-  //
-  delay(500);
 }
