@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "Servo_Handler.h"
 
+#define MOVING_AMOUNT      2
+
 int count = 0;
 
 bool verticalServoUp() {
@@ -8,7 +10,7 @@ bool verticalServoUp() {
   if (vPos >= 180) {
     return false;
   }
-  vPos += 5;
+  vPos += MOVING_AMOUNT;
   if (vPos > 180) {
     vPos = 180;
   }
@@ -21,7 +23,7 @@ bool verticalServoDown() {
   if (vPos <= 0) {
     return false;
   }
-  vPos -= 5;
+  vPos -= MOVING_AMOUNT;
   if (vPos < 0) {
     vPos = 0;
   }
@@ -34,7 +36,7 @@ bool horizontalServoLeft() {
   if (hPos >= 180) {
     return false;
   }
-  hPos += 5;
+  hPos += MOVING_AMOUNT;
   if (hPos > 180) {
     hPos = 180;
   }
@@ -47,7 +49,7 @@ bool horizontalServoRight() {
   if (hPos <= 0) {
     return false;
   }
-  hPos -= 5;
+  hPos -= MOVING_AMOUNT;
   if (hPos < 0) {
     hPos = 0;
   }

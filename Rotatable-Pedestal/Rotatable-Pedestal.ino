@@ -13,10 +13,17 @@ void setup() {
 }
 
 void loop() {
-  testServos();
+  bool activated = false;
+  // testServos();
   //
-  if(type != 1) { //skip loop if no controller found
-    Serial.println("Error, terminated!");
+  if(errorCode != 0) { //skip loop if no controller found
+    if (!errorDisplayed) {
+      Serial.println("Error, terminated!");
+      errorDisplayed = true;
+    }
+    Serial.println("Reload ...");
+    delay(1000);
+    initializePS2();
     return;
   } else { //DualShock Controller
     ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
@@ -26,24 +33,28 @@ void loop() {
     // MOVE FORWARD
     if(ps2x.Button(PSB_PAD_UP)) {
       Serial.println("PSB_PAD_UP is pushed");
-      verticalServoUp();
+      activated = verticalServoUp();
     }
     // MOVE BACK
     if(ps2x.Button(PSB_PAD_DOWN)){
       Serial.println("PSB_PAD_DOWN is pushed");
-      verticalServoDown();
+      activated = verticalServoDown();
     }
     // TURN LEFT
     if(ps2x.Button(PSB_PAD_LEFT)){
       Serial.println("PSB_PAD_LEFT is pushed");
-      horizontalServoLeft();
+      activated = horizontalServoLeft();
     }
     // TURN RIGHT
     if(ps2x.Button(PSB_PAD_RIGHT)){
       Serial.println("PSB_PAD_RIGHT is pushed");
-      horizontalServoRight();
+      activated = horizontalServoRight();
+    }
+    //
+    if (activated) {
+      delay(10);
+    } else {
+      delay(200);
     }
   }
-  //
-  delay(500);
 }
