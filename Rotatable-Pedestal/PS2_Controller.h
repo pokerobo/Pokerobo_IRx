@@ -17,52 +17,23 @@
 #define GAMEPAD_DATA        12
 #define GAMEPAD_CLOCK       13
 
-PS2X ps2x; // create PS2 Controller Class
+static void (*user_onDPadButtonPressed)(uint16_t);
 
-//right now, the library does NOT support hot pluggable controllers, meaning 
-//you must always either restart your Arduino after you conect the controller, 
-//or call config_gamepad(pins) again after connecting the controller.
-
-int errorCode = 0;
-bool errorDisplayed = false;
-byte ps2Type = 0;
-byte vibrate = 0;
-
-void initializePS2() {
-  //
-  // setup pins and settings:  GamePad(clock, command, attention, data, Pressures?, Rumble?) check for error
-  errorCode = ps2x.config_gamepad(GAMEPAD_CLOCK, GAMEPAD_COMMAND, GAMEPAD_ATTENTION, GAMEPAD_DATA, false, false);
-
-  // Check for error
-  if(errorCode == 0) {
-    Serial.println("Found Controller, configured successful");
-  }
-  else if(errorCode == 1) {
-    Serial.println("No controller found, check wiring or reset the Arduino");
-  }
-  else if(errorCode == 2) {
-    Serial.println("Controller found but not accepting commands");
-  }
-  else if(errorCode == 3) {
-    Serial.println("Controller refusing to enter Pressures mode, may not support it.");
-  }
-  //
-  // Check for the type of controller
-  ps2Type = ps2x.readType();
-  switch(ps2Type) {
-    case 0:
-      Serial.println("Unknown Controller type");
-      break;
-    case 1:
-      Serial.println("DualShock Controller Found");
-      break;
-    case 2:
-      Serial.println("GuitarHero Controller Found");
-      break;
-    default:
-      Serial.print("Invalid Controller type: ");
-      Serial.println(ps2Type);
-  }
-}
+class PS2Controller {
+  public:
+    PS2Controller();
+    void begin();
+    bool hasError();
+    void showError();
+    void reload();
+    void onDPadButtonPressed(void (*function)(uint16_t));
+    int check();
+  private:
+    PS2X ps2x;
+    int errorCode;
+    bool errorDisplayed;
+    byte ps2Type;
+    byte vibrate;
+};
 
 #endif

@@ -59,7 +59,7 @@ bool horizontalServoRight() {
 
 void initServos() {
   horizontalServo.attach(HORIZONTAL_SERVO_PIN);
-  horizontalServo.write(0);
+  horizontalServo.write(90);
   verticalServo.attach(VERTICAL_SERVO_PIN);
   verticalServo.write(0);
 }

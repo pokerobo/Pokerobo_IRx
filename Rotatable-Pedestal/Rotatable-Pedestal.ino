@@ -1,11 +1,14 @@
 #include "PS2_Controller.h"
 #include "Servo_Handler.h"
 
+PS2Controller ps2Controller;
+
 void setup() {
   Serial.begin(57600);
   Serial.println("Setup starting ...");
   //
-  initializePS2();
+  ps2Controller.begin();
+  ps2Controller.onDPadButtonPressed(processDPadButtonPressedEvent);
   //
   initServos();
   //
@@ -14,47 +17,45 @@ void setup() {
 
 void loop() {
   bool activated = false;
-  // testServos();
   //
-  if(errorCode != 0) { //skip loop if no controller found
-    if (!errorDisplayed) {
-      Serial.println("Error, terminated!");
-      errorDisplayed = true;
-    }
+  if(ps2Controller.hasError()) { //skip loop if no controller found
+    ps2Controller.showError();
     Serial.println("Reload ...");
     delay(1000);
-    initializePS2();
+    ps2Controller.reload();
     return;
   } else { //DualShock Controller
-    ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
-    //
-    // Perform movements based on D-pad buttons
-    //
-    // MOVE FORWARD
-    if(ps2x.Button(PSB_PAD_UP)) {
-      Serial.println("PSB_PAD_UP is pushed");
-      activated = verticalServoUp();
-    }
-    // MOVE BACK
-    if(ps2x.Button(PSB_PAD_DOWN)){
-      Serial.println("PSB_PAD_DOWN is pushed");
-      activated = verticalServoDown();
-    }
-    // TURN LEFT
-    if(ps2x.Button(PSB_PAD_LEFT)){
-      Serial.println("PSB_PAD_LEFT is pushed");
-      activated = horizontalServoLeft();
-    }
-    // TURN RIGHT
-    if(ps2x.Button(PSB_PAD_RIGHT)){
-      Serial.println("PSB_PAD_RIGHT is pushed");
-      activated = horizontalServoRight();
-    }
+    activated = ps2Controller.check();
     //
     if (activated) {
       delay(10);
     } else {
       delay(200);
     }
+  }
+}
+
+void processDPadButtonPressedEvent(uint16_t padButton) {
+  bool activated = false;
+  //
+  // MOVE FORWARD
+  if(padButton == PSB_PAD_UP) {
+    Serial.println("PSB_PAD_UP is pushed");
+    activated = verticalServoUp();
+  }
+  // MOVE BACK
+  if(padButton == PSB_PAD_DOWN) {
+    Serial.println("PSB_PAD_DOWN is pushed");
+    activated = verticalServoDown();
+  }
+  // TURN LEFT
+  if(padButton == PSB_PAD_LEFT) {
+    Serial.println("PSB_PAD_LEFT is pushed");
+    activated = horizontalServoLeft();
+  }
+  // TURN RIGHT
+  if(padButton == PSB_PAD_RIGHT) {
+    Serial.println("PSB_PAD_RIGHT is pushed");
+    activated = horizontalServoRight();
   }
 }
