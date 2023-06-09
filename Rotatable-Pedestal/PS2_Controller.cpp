@@ -63,6 +63,18 @@ void PS2Controller::onDPadButtonPressed(void (*function)(uint16_t)) {
   user_onDPadButtonPressed = function;
 };
 
+int PS2Controller::loop() {
+  if(hasError()) { //skip loop if no controller found
+    showError();
+    Serial.println("Reload ...");
+    delay(1000);
+    reload();
+    return 0;
+  } else { //DualShock Controller
+    return check();
+  }
+}
+
 int PS2Controller::check() {
   ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
   //

@@ -23,6 +23,7 @@ class PS2Controller {
   public:
     PS2Controller();
     void begin();
+    int loop();
     bool hasError();
     void showError();
     void reload();

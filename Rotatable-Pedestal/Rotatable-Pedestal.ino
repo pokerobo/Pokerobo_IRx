@@ -1,12 +1,18 @@
+// #include "IR_Controller.h"
 #include "PS2_Controller.h"
 #include "Pedestal_Handler.h"
 
+// IRController irController;
 PS2Controller ps2Controller;
 PedestalHandler pedestalHandler;
 
 void setup() {
   Serial.begin(57600);
+  while (!Serial)  // Wait for the serial connection to be establised.
+    delay(100);
   Serial.println("Setup starting ...");
+  //
+  // irController.begin();
   //
   ps2Controller.begin();
   ps2Controller.onDPadButtonPressed(processDPadButtonPressedEvent);
@@ -17,22 +23,11 @@ void setup() {
 }
 
 void loop() {
-  bool activated = false;
-  //
-  if(ps2Controller.hasError()) { //skip loop if no controller found
-    ps2Controller.showError();
-    Serial.println("Reload ...");
-    delay(1000);
-    ps2Controller.reload();
-    return;
-  } else { //DualShock Controller
-    activated = ps2Controller.check();
-    //
-    if (activated) {
-      delay(10);
-    } else {
-      delay(200);
-    }
+  int changed = ps2Controller.loop();
+  if (changed >= 1) {
+    delay(10);
+  } else {
+    delay(200);
   }
 }
 
