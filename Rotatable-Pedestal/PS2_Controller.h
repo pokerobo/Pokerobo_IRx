@@ -12,12 +12,16 @@
 #define DELTA_X      5
 #define DELTA_Y      5
 
+#define MIN_BOUND_X      10
+#define MIN_BOUND_Y      10
+
 #define GAMEPAD_ATTENTION   10
 #define GAMEPAD_COMMAND     11
 #define GAMEPAD_DATA        12
 #define GAMEPAD_CLOCK       13
 
 static void (*user_onDPadButtonPressed)(uint16_t);
+static void (*user_onLeftJoystickChanged)(int, int);
 
 class PS2Controller {
   public:
@@ -28,6 +32,7 @@ class PS2Controller {
     void showError();
     void reload();
     void onDPadButtonPressed(void (*function)(uint16_t));
+    void onLeftJoystickChanged(void (*function)(int, int));
     int check();
   private:
     PS2X ps2x;

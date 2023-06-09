@@ -63,6 +63,10 @@ void PS2Controller::onDPadButtonPressed(void (*function)(uint16_t)) {
   user_onDPadButtonPressed = function;
 };
 
+void PS2Controller::onLeftJoystickChanged(void (*function)(int, int)) {
+  user_onLeftJoystickChanged = function;
+};
+
 int PS2Controller::loop() {
   if(hasError()) { //skip loop if no controller found
     showError();
@@ -115,5 +119,25 @@ int PS2Controller::check() {
     }
     user_onDPadButtonPressed(PSB_PAD_RIGHT);
     return 1;
+  }
+  //
+  //
+  int nJoyLX = ps2x.Analog(PSS_LX); // read x-joystick
+  int nJoyLY = ps2x.Analog(PSS_LY); // read y-joystick
+  //
+  nJoyLX = map(nJoyLX, 0, 255, -10, 10);
+  nJoyLY = map(nJoyLY, 0, 255, 10, -10);
+  //
+  if (nJoyLX >= MIN_BOUND_X || nJoyLX <= -MIN_BOUND_X || nJoyLY >= MIN_BOUND_Y || nJoyLY <= -MIN_BOUND_Y)
+  {
+    if (!user_onLeftJoystickChanged) {
+      Serial.println("Left Joystick: ");
+      Serial.print("- nJoyLX: ");
+      Serial.println(nJoyLX);
+      Serial.print("- nJoyLY: ");
+      Serial.println(nJoyLY);
+    } else {
+      user_onLeftJoystickChanged(nJoyLX, nJoyLY);
+    }
   }
 };

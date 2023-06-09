@@ -20,6 +20,9 @@ class PedestalHandler {
     bool horizontalServoLeft();
     bool horizontalServoRight();  
 
+    bool changeHorizontalServo(int hDelta);
+    bool changeVerticalServo(int vDelta);
+
   private:
     int count;
 };

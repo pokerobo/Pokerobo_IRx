@@ -92,3 +92,41 @@ bool PedestalHandler::horizontalServoRight() {
   horizontalServo.write(hPos);
   return true;
 }
+
+bool PedestalHandler::changeHorizontalServo(int hDelta) {
+  int hPos = horizontalServo.read();
+  if (hDelta <= 0 && hPos <= 0) {
+    return false;
+  }
+  if (hDelta >= 0 && hPos >= 180) {
+    return false;
+  }
+  hPos += hDelta;
+  if (hPos < 0) {
+    hPos = 0;
+  }
+  if (hPos > 180) {
+    hPos = 180;
+  }
+  horizontalServo.write(hPos);
+  return true;
+}
+
+bool PedestalHandler::changeVerticalServo(int vDelta) {
+  int vPos = verticalServo.read();
+  if (vDelta <= 0 && vPos <= 0) {
+    return false;
+  }
+  if (vDelta >= 0 && vPos >= 180) {
+    return false;
+  }
+  vPos += vDelta;
+  if (vPos < 0) {
+    vPos = 0;
+  }
+  if (vPos > 180) {
+    vPos = 180;
+  }
+  verticalServo.write(vPos);
+  return true;
+}

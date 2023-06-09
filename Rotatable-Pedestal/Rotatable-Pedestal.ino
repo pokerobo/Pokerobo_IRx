@@ -16,6 +16,7 @@ void setup() {
   //
   ps2Controller.begin();
   ps2Controller.onDPadButtonPressed(processDPadButtonPressedEvent);
+  ps2Controller.onLeftJoystickChanged(processLeftJoystickChangeEvent);
   //
   pedestalHandler.begin();
   //
@@ -54,4 +55,11 @@ void processDPadButtonPressedEvent(uint16_t padButton) {
     Serial.println("PSB_PAD_RIGHT is pushed");
     activated = pedestalHandler.horizontalServoRight();
   }
+}
+
+void processLeftJoystickChangeEvent(int nJoyLX, int nJoyLY) {
+  bool hChanged = pedestalHandler.changeHorizontalServo(nJoyLX);
+  bool vChanged = pedestalHandler.changeVerticalServo(nJoyLY);
+  //
+  return hChanged || vChanged;
 }
