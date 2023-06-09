@@ -1,7 +1,8 @@
 #include "PS2_Controller.h"
-#include "Servo_Handler.h"
+#include "Pedestal_Handler.h"
 
 PS2Controller ps2Controller;
+PedestalHandler pedestalHandler;
 
 void setup() {
   Serial.begin(57600);
@@ -10,7 +11,7 @@ void setup() {
   ps2Controller.begin();
   ps2Controller.onDPadButtonPressed(processDPadButtonPressedEvent);
   //
-  initServos();
+  pedestalHandler.begin();
   //
   Serial.println("Setup has done!");
 }
@@ -41,21 +42,21 @@ void processDPadButtonPressedEvent(uint16_t padButton) {
   // MOVE FORWARD
   if(padButton == PSB_PAD_UP) {
     Serial.println("PSB_PAD_UP is pushed");
-    activated = verticalServoUp();
+    activated = pedestalHandler.verticalServoUp();
   }
   // MOVE BACK
   if(padButton == PSB_PAD_DOWN) {
     Serial.println("PSB_PAD_DOWN is pushed");
-    activated = verticalServoDown();
+    activated = pedestalHandler.verticalServoDown();
   }
   // TURN LEFT
   if(padButton == PSB_PAD_LEFT) {
     Serial.println("PSB_PAD_LEFT is pushed");
-    activated = horizontalServoLeft();
+    activated = pedestalHandler.horizontalServoLeft();
   }
   // TURN RIGHT
   if(padButton == PSB_PAD_RIGHT) {
     Serial.println("PSB_PAD_RIGHT is pushed");
-    activated = horizontalServoRight();
+    activated = pedestalHandler.horizontalServoRight();
   }
 }
