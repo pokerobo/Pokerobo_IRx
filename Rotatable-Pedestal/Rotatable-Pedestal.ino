@@ -8,17 +8,18 @@ PedestalHandler pedestalHandler;
 
 void setup() {
   Serial.begin(57600);
-  while (!Serial)  // Wait for the serial connection to be establised.
+  while (!Serial) {// Wait for the serial connection to be establised.
     delay(100);
+  }
   Serial.println("Setup starting ...");
   //
-  // irController.begin();
+  pedestalHandler.begin();
   //
   ps2Controller.begin();
   ps2Controller.onDPadButtonPressed(processDPadButtonPressedEvent);
   ps2Controller.onLeftJoystickChanged(processLeftJoystickChangeEvent);
   //
-  pedestalHandler.begin();
+  // irController.begin();
   //
   Serial.println("Setup has done!");
 }
@@ -29,6 +30,14 @@ void loop() {
     delay(10);
   } else {
     delay(200);
+  }
+}
+
+uint32_t getDelayAmount(int status) {
+  if (status >= 1) {
+    return 10;
+  } else {
+    return 200;
   }
 }
 
@@ -58,8 +67,5 @@ void processDPadButtonPressedEvent(uint16_t padButton) {
 }
 
 void processLeftJoystickChangeEvent(int nJoyLX, int nJoyLY) {
-  bool hChanged = pedestalHandler.changeHorizontalServo(nJoyLX);
-  bool vChanged = pedestalHandler.changeVerticalServo(nJoyLY);
-  //
-  return hChanged || vChanged;
+  return pedestalHandler.change(nJoyLX, nJoyLY);
 }

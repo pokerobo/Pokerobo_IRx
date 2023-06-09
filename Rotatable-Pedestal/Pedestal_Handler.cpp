@@ -4,13 +4,19 @@
 #define MOVING_AMOUNT      2
 
 PedestalHandler::PedestalHandler() {
+  PedestalHandler(HORIZONTAL_SERVO_PIN, VERTICAL_SERVO_PIN);
+}
+
+PedestalHandler::PedestalHandler(int hPin, int vPin) {
   count = 0;
+  horizontalServoPin = hPin;
+  verticalServoPin = vPin;
 }
 
 void PedestalHandler::begin() {
-  horizontalServo.attach(HORIZONTAL_SERVO_PIN);
+  horizontalServo.attach(horizontalServoPin);
   horizontalServo.write(90);
-  verticalServo.attach(VERTICAL_SERVO_PIN);
+  verticalServo.attach(verticalServoPin);
   verticalServo.write(0);
 }
 
@@ -94,11 +100,14 @@ bool PedestalHandler::horizontalServoRight() {
 }
 
 bool PedestalHandler::changeHorizontalServo(int hDelta) {
-  int hPos = horizontalServo.read();
-  if (hDelta <= 0 && hPos <= 0) {
+  if (hDelta == 0) {
     return false;
   }
-  if (hDelta >= 0 && hPos >= 180) {
+  int hPos = horizontalServo.read();
+  if (hDelta < 0 && hPos <= 0) {
+    return false;
+  }
+  if (hDelta > 0 && hPos >= 180) {
     return false;
   }
   hPos += hDelta;
@@ -113,11 +122,14 @@ bool PedestalHandler::changeHorizontalServo(int hDelta) {
 }
 
 bool PedestalHandler::changeVerticalServo(int vDelta) {
-  int vPos = verticalServo.read();
-  if (vDelta <= 0 && vPos <= 0) {
+  if (vDelta == 0) {
     return false;
   }
-  if (vDelta >= 0 && vPos >= 180) {
+  int vPos = verticalServo.read();
+  if (vDelta < 0 && vPos <= 0) {
+    return false;
+  }
+  if (vDelta > 0 && vPos >= 180) {
     return false;
   }
   vPos += vDelta;
@@ -129,4 +141,10 @@ bool PedestalHandler::changeVerticalServo(int vDelta) {
   }
   verticalServo.write(vPos);
   return true;
+}
+
+bool PedestalHandler::change(int hDelta, int vDelta) {
+  bool hChanged = changeHorizontalServo(hDelta);
+  bool vChanged = changeVerticalServo(vDelta);
+  return hChanged || vChanged;
 }

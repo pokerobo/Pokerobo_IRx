@@ -12,6 +12,7 @@ static Servo verticalServo;
 class PedestalHandler {
   public:
     PedestalHandler();
+    PedestalHandler(int hPin, int vPin);
     void begin();
     void test();
 
@@ -22,9 +23,12 @@ class PedestalHandler {
 
     bool changeHorizontalServo(int hDelta);
     bool changeVerticalServo(int vDelta);
+    bool change(int hDelta, int vDelta);
 
   private:
     int count;
+    int horizontalServoPin;
+    int verticalServoPin;
 };
 
 #endif

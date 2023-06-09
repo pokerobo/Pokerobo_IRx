@@ -9,11 +9,13 @@
 #ifndef __PS2_CONTROLLER_H__
 #define __PS2_CONTROLLER_H__
 
-#define DELTA_X      5
-#define DELTA_Y      5
+#define MIN_BOUND_X      5
+#define MIN_BOUND_Y      5
 
-#define MIN_BOUND_X      10
-#define MIN_BOUND_Y      10
+#define NUM_RANGE_X      10
+#define NUM_RANGE_Y      10
+
+#define DEBUG_DEFAULT       true
 
 #define GAMEPAD_ATTENTION   10
 #define GAMEPAD_COMMAND     11
@@ -36,6 +38,7 @@ class PS2Controller {
     int check();
   private:
     PS2X ps2x;
+    bool debugEnabled;
     int errorCode;
     bool errorDisplayed;
     byte ps2Type;

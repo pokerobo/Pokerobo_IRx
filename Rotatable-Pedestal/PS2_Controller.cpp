@@ -1,6 +1,7 @@
 #include "PS2_Controller.h"
 
 PS2Controller::PS2Controller() {
+  debugEnabled = true;
   errorCode = 0;
   errorDisplayed = false;
   ps2Type = 0;
@@ -125,19 +126,24 @@ int PS2Controller::check() {
   int nJoyLX = ps2x.Analog(PSS_LX); // read x-joystick
   int nJoyLY = ps2x.Analog(PSS_LY); // read y-joystick
   //
-  nJoyLX = map(nJoyLX, 0, 255, -10, 10);
-  nJoyLY = map(nJoyLY, 0, 255, 10, -10);
+  nJoyLX = map(nJoyLX, 0, 255, -NUM_RANGE_X, NUM_RANGE_X);
+  nJoyLY = map(nJoyLY, 0, 255, NUM_RANGE_Y, -NUM_RANGE_Y);
   //
   if (nJoyLX >= MIN_BOUND_X || nJoyLX <= -MIN_BOUND_X || nJoyLY >= MIN_BOUND_Y || nJoyLY <= -MIN_BOUND_Y)
   {
-    if (!user_onLeftJoystickChanged) {
+    if (debugEnabled) {
       Serial.println("Left Joystick: ");
       Serial.print("- nJoyLX: ");
       Serial.println(nJoyLX);
       Serial.print("- nJoyLY: ");
       Serial.println(nJoyLY);
-    } else {
+    }
+    if (user_onLeftJoystickChanged) {
       user_onLeftJoystickChanged(nJoyLX, nJoyLY);
+    } else {
+      if (debugEnabled) {
+        Serial.println("onLeftJoystickChanged() has not registered");
+      }
     }
   }
 };
