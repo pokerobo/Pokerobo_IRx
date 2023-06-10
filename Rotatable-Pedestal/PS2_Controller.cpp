@@ -68,6 +68,10 @@ void PS2Controller::onLeftJoystickChanged(void (*function)(int, int)) {
   user_onLeftJoystickChanged = function;
 };
 
+void PS2Controller::onRightJoystickChanged(void (*function)(int, int)) {
+  user_onRightJoystickChanged = function;
+};
+
 int PS2Controller::loop() {
   if(hasError()) { //skip loop if no controller found
     showError();
@@ -122,9 +126,14 @@ int PS2Controller::check() {
     return 1;
   }
   //
+  processJoystickButton(PSS_LX, PSS_LY, user_onLeftJoystickChanged, "Left Joystick");
   //
-  int nJoyLX = ps2x.Analog(PSS_LX); // read x-joystick
-  int nJoyLY = ps2x.Analog(PSS_LY); // read y-joystick
+  processJoystickButton(PSS_RX, PSS_RY, user_onRightJoystickChanged, "Right Joystick");
+};
+
+void PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(int, int), const char label[]) {
+  int nJoyLX = ps2x.Analog(xKey); // read x-joystick
+  int nJoyLY = ps2x.Analog(yKey); // read y-joystick
   //
   nJoyLX = map(nJoyLX, 0, 255, -NUM_RANGE_X, NUM_RANGE_X);
   nJoyLY = map(nJoyLY, 0, 255, NUM_RANGE_Y, -NUM_RANGE_Y);
@@ -132,17 +141,19 @@ int PS2Controller::check() {
   if (nJoyLX >= MIN_BOUND_X || nJoyLX <= -MIN_BOUND_X || nJoyLY >= MIN_BOUND_Y || nJoyLY <= -MIN_BOUND_Y)
   {
     if (debugEnabled) {
-      Serial.println("Left Joystick: ");
+      Serial.print(label);
+      Serial.println(": ");
       Serial.print("- nJoyLX: ");
       Serial.println(nJoyLX);
       Serial.print("- nJoyLY: ");
       Serial.println(nJoyLY);
     }
-    if (user_onLeftJoystickChanged) {
-      user_onLeftJoystickChanged(nJoyLX, nJoyLY);
+    if (onChange) {
+      onChange(nJoyLX, nJoyLY);
     } else {
       if (debugEnabled) {
-        Serial.println("onLeftJoystickChanged() has not registered");
+        Serial.print(label);
+        Serial.println(" event listener has not registered");
       }
     }
   }

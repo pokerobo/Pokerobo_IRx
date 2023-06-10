@@ -24,6 +24,7 @@
 
 static void (*user_onDPadButtonPressed)(uint16_t);
 static void (*user_onLeftJoystickChanged)(int, int);
+static void (*user_onRightJoystickChanged)(int, int);
 
 class PS2Controller {
   public:
@@ -35,8 +36,10 @@ class PS2Controller {
     void reload();
     void onDPadButtonPressed(void (*function)(uint16_t));
     void onLeftJoystickChanged(void (*function)(int, int));
+    void onRightJoystickChanged(void (*function)(int, int));
     int check();
   private:
+    void processJoystickButton(byte, byte, void (*function)(int, int), const char c[]);
     PS2X ps2x;
     bool debugEnabled;
     int errorCode;
