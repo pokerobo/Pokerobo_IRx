@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include "Pedestal_Handler.h"
 
-#define MOVING_AMOUNT      2
-
 PedestalHandler::PedestalHandler() {
   PedestalHandler(HORIZONTAL_SERVO_PIN, VERTICAL_SERVO_PIN);
 }
@@ -48,55 +46,19 @@ void PedestalHandler::test() {
 }
 
 bool PedestalHandler::verticalServoUp() {
-  int vPos = verticalServo.read();
-  if (vPos >= 180) {
-    return false;
-  }
-  vPos += MOVING_AMOUNT;
-  if (vPos > 180) {
-    vPos = 180;
-  }
-  verticalServo.write(vPos);
-  return true;
+  return changeVerticalServo(MOVING_AMOUNT);
 }
 
 bool PedestalHandler::verticalServoDown() {
-  int vPos = verticalServo.read();
-  if (vPos <= 0) {
-    return false;
-  }
-  vPos -= MOVING_AMOUNT;
-  if (vPos < 0) {
-    vPos = 0;
-  }
-  verticalServo.write(vPos);
-  return true;
+  return changeVerticalServo(-MOVING_AMOUNT);
 }
 
 bool PedestalHandler::horizontalServoLeft() {
-  int hPos = horizontalServo.read();
-  if (hPos >= 180) {
-    return false;
-  }
-  hPos += MOVING_AMOUNT;
-  if (hPos > 180) {
-    hPos = 180;
-  }
-  horizontalServo.write(hPos);
-  return true;
+  return changeHorizontalServo(MOVING_AMOUNT);
 }
 
 bool PedestalHandler::horizontalServoRight() {
-  int hPos = horizontalServo.read();
-  if (hPos <= 0) {
-    return false;
-  }
-  hPos -= MOVING_AMOUNT;
-  if (hPos < 0) {
-    hPos = 0;
-  }
-  horizontalServo.write(hPos);
-  return true;
+  return changeHorizontalServo(-MOVING_AMOUNT);
 }
 
 bool PedestalHandler::changeHorizontalServo(int hDelta) {
@@ -104,6 +66,12 @@ bool PedestalHandler::changeHorizontalServo(int hDelta) {
     return false;
   }
   int hPos = horizontalServo.read();
+  //
+  Serial.print("changeHorizontalServo, hDelta: ");
+  Serial.print(hDelta);
+  Serial.print("; hPos: ");
+  Serial.println(hPos);
+  //
   if (hDelta < 0 && hPos <= 0) {
     return false;
   }
@@ -122,6 +90,9 @@ bool PedestalHandler::changeHorizontalServo(int hDelta) {
 }
 
 bool PedestalHandler::changeVerticalServo(int vDelta) {
+  Serial.print("changeVerticalServo: ");
+  Serial.println(vDelta);
+  //
   if (vDelta == 0) {
     return false;
   }
@@ -144,6 +115,11 @@ bool PedestalHandler::changeVerticalServo(int vDelta) {
 }
 
 bool PedestalHandler::change(int hDelta, int vDelta) {
+  Serial.print("hDelta: ");
+  Serial.print(hDelta);
+  Serial.print("vDelta: ");
+  Serial.print(vDelta);
+  Serial.println();
   bool hChanged = changeHorizontalServo(hDelta);
   bool vChanged = changeVerticalServo(vDelta);
   return hChanged || vChanged;

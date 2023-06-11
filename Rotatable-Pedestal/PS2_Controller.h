@@ -39,7 +39,8 @@ class PS2Controller {
     void onRightJoystickChanged(void (*function)(int, int));
     int check();
   private:
-    void processJoystickButton(byte, byte, void (*function)(int, int), const char c[]);
+    int processPadButtonPress(uint16_t button, const char buttonLabel[]);
+    int processJoystickButton(byte, byte, void (*function)(int, int), const char c[]);
     PS2X ps2x;
     bool debugEnabled;
     int errorCode;

@@ -89,49 +89,45 @@ int PS2Controller::check() {
   //
   // Perform movements based on D-pad buttons
   //
+  uint16_t buttonPressed;
+  //
   // MOVE FORWARD
-  if(ps2x.Button(PSB_PAD_UP)) {
-    Serial.println("PSB_PAD_UP is pushed");
-    if (!user_onDPadButtonPressed) {
-      return -1;
-    }
-    user_onDPadButtonPressed(PSB_PAD_UP);
-    return 1;
-  }
+  buttonPressed |= processPadButtonPress(PSB_PAD_UP, "PSB_PAD_UP");
   // MOVE BACK
-  if(ps2x.Button(PSB_PAD_DOWN)){
-    Serial.println("PSB_PAD_DOWN is pushed");
-    if (!user_onDPadButtonPressed) {
-      return -1;
-    }
-    user_onDPadButtonPressed(PSB_PAD_DOWN);
-    return 1;
-  }
+  buttonPressed |= processPadButtonPress(PSB_PAD_DOWN, "PSB_PAD_DOWN");
   // TURN LEFT
-  if(ps2x.Button(PSB_PAD_LEFT)){
-    Serial.println("PSB_PAD_LEFT is pushed");
-    if (!user_onDPadButtonPressed) {
-      return -1;
-    }
-    user_onDPadButtonPressed(PSB_PAD_LEFT);
-    return 1;
-  }
+  buttonPressed |= processPadButtonPress(PSB_PAD_LEFT, "PSB_PAD_LEFT");
   // TURN RIGHT
-  if(ps2x.Button(PSB_PAD_RIGHT)){
-    Serial.println("PSB_PAD_RIGHT is pushed");
-    if (!user_onDPadButtonPressed) {
-      return -1;
-    }
-    user_onDPadButtonPressed(PSB_PAD_RIGHT);
-    return 1;
-  }
+  buttonPressed |= processPadButtonPress(PSB_PAD_RIGHT, "PSB_PAD_RIGHT");
   //
   processJoystickButton(PSS_LX, PSS_LY, user_onLeftJoystickChanged, "Left Joystick");
   //
   processJoystickButton(PSS_RX, PSS_RY, user_onRightJoystickChanged, "Right Joystick");
 };
 
-void PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(int, int), const char label[]) {
+int PS2Controller::processPadButtonPress(uint16_t button, const char buttonLabel[]) {
+  if (!user_onDPadButtonPressed) {
+    return 0;
+  }
+  if(ps2x.Button(button)) {
+    if (buttonLabel) {
+      Serial.print(buttonLabel);
+      Serial.println(" is pushed");
+    }
+    user_onDPadButtonPressed(button);
+    return button;
+  }
+  return 0;
+}
+
+int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(int, int), const char label[]) {
+  if (!onChange) {
+    if (debugEnabled) {
+      Serial.print(label);
+      Serial.println(" event listener has not registered");
+    }
+    return -1;
+  }
   int nJoyLX = ps2x.Analog(xKey); // read x-joystick
   int nJoyLY = ps2x.Analog(yKey); // read y-joystick
   //
@@ -150,11 +146,10 @@ void PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)
     }
     if (onChange) {
       onChange(nJoyLX, nJoyLY);
+      return 1;
     } else {
-      if (debugEnabled) {
-        Serial.print(label);
-        Serial.println(" event listener has not registered");
-      }
+      return -1;
     }
   }
+  return 0;
 };
