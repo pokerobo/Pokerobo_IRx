@@ -22,7 +22,7 @@ void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMa
   verticalServo.attach(verticalServoPin);
   verticalMinAngle = (vMinAngle < 0) ? 0 : vMinAngle;
   verticalMaxAngle = (vMaxAngle > 180) ? 180 : vMaxAngle;
-  verticalServo.write(vMinAngle);
+  verticalServo.write(verticalMinAngle);
 }
 
 void PedestalHandler::test() {
@@ -79,18 +79,18 @@ bool PedestalHandler::changeHorizontalServo(int hDelta) {
   Serial.print("; hPos: ");
   Serial.println(hPos);
   //
-  if (hDelta < 0 && hPos <= 0) {
+  if (hDelta < 0 && hPos <= horizontalMinAngle) {
     return false;
   }
-  if (hDelta > 0 && hPos >= 180) {
+  if (hDelta > 0 && hPos >= horizontalMaxAngle) {
     return false;
   }
   hPos += hDelta;
-  if (hPos < 0) {
-    hPos = 0;
+  if (hPos < horizontalMinAngle) {
+    hPos = horizontalMinAngle;
   }
-  if (hPos > 180) {
-    hPos = 180;
+  if (hPos > horizontalMaxAngle) {
+    hPos = horizontalMaxAngle;
   }
   horizontalServo.write(hPos);
   return true;
@@ -107,18 +107,18 @@ bool PedestalHandler::changeVerticalServo(int vDelta) {
   Serial.print("; vPos: ");
   Serial.println(vPos);
   //
-  if (vDelta < 0 && vPos <= 0) {
+  if (vDelta < 0 && vPos <= verticalMinAngle) {
     return false;
   }
-  if (vDelta > 0 && vPos >= 180) {
+  if (vDelta > 0 && vPos >= verticalMaxAngle) {
     return false;
   }
   vPos += vDelta;
-  if (vPos < 0) {
-    vPos = 0;
+  if (vPos < verticalMinAngle) {
+    vPos = verticalMinAngle;
   }
-  if (vPos > 180) {
-    vPos = 180;
+  if (vPos > verticalMaxAngle) {
+    vPos = verticalMaxAngle;
   }
   verticalServo.write(vPos);
   return true;

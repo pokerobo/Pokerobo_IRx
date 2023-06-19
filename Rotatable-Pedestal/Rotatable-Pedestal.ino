@@ -13,7 +13,7 @@ void setup() {
   Serial.begin(57600);
   Serial.println("Setup starting ...");
   //
-  pedestalHandler.begin(0, 180, 0, 100);
+  pedestalHandler.begin(0, 180, 0, 90);
   //
   ps2Controller.begin();
   ps2Controller.onDPadButtonPressed(processDPadButtonPressedEvent);
@@ -63,9 +63,8 @@ void processDPadButtonPressedEvent(uint16_t padButton) {
 }
 
 void processLeftJoystickChangeEvent(int nJoyLX, int nJoyLY) {
-  Serial.print("processLeftJoystickChangeEvent() is invoked");
   bool changed = pedestalHandler.change(nJoyLX, nJoyLY);
-  Serial.println("... done");
+  Serial.print("processLeftJoystickChangeEvent() is invoked");
   return changed;
 }
 
