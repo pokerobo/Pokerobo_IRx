@@ -106,9 +106,9 @@ int PS2Controller::check() {
     return buttonPressed;
   }
   //
-  processJoystickButton(PSS_LX, PSS_LY, user_onLeftJoystickChanged, "Left Joystick");
+  int lstatus = processJoystickButton(PSS_LX, PSS_LY, user_onLeftJoystickChanged, "Left Joystick");
   //
-  processJoystickButton(PSS_RX, PSS_RY, user_onRightJoystickChanged, "Right Joystick");
+  int rstatus = processJoystickButton(PSS_RX, PSS_RY, user_onRightJoystickChanged, "Right Joystick");
 };
 
 int PS2Controller::processPadButtonPress(uint16_t button, const char buttonLabel[]) {
@@ -129,8 +129,10 @@ int PS2Controller::processPadButtonPress(uint16_t button, const char buttonLabel
 int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(int, int), const char label[]) {
   if (!onChange) {
     if (debugEnabled) {
+      Serial.print("PS2Controller::processJoystickButton() - ");
       Serial.print(label);
-      Serial.println(" event listener has not registered");
+      Serial.print(": ");
+      Serial.println("event listener has not registered");
     }
     return -1;
   }
@@ -143,11 +145,12 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
   if (nJoyLX >= MIN_BOUND_X || nJoyLX <= -MIN_BOUND_X || nJoyLY >= MIN_BOUND_Y || nJoyLY <= -MIN_BOUND_Y)
   {
     if (debugEnabled) {
+      Serial.print("PS2Controller::processJoystickButton() - ");
       Serial.print(label);
       Serial.println(": ");
-      Serial.print("- nJoyLX: ");
+      Serial.print("- X: ");
       Serial.println(nJoyLX);
-      Serial.print("- nJoyLY: ");
+      Serial.print("- Y: ");
       Serial.println(nJoyLY);
     }
     if (onChange) {
@@ -155,7 +158,7 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
       return 1;
     } else {
       if (debugEnabled) {
-        Serial.println("processJoystickButton()/onChange has not been registered");
+        Serial.println("PS2Controller::processJoystickButton() - onChange has not been registered");
       }
       return -1;
     }
