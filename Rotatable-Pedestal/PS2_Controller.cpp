@@ -89,7 +89,7 @@ int PS2Controller::check() {
   //
   // Perform movements based on D-pad buttons
   //
-  uint16_t buttonPressed;
+  uint16_t buttonPressed = 0;
   //
   // MOVE FORWARD
   buttonPressed |= processPadButtonPress(PSB_PAD_UP, "PSB_PAD_UP");
@@ -99,6 +99,12 @@ int PS2Controller::check() {
   buttonPressed |= processPadButtonPress(PSB_PAD_LEFT, "PSB_PAD_LEFT");
   // TURN RIGHT
   buttonPressed |= processPadButtonPress(PSB_PAD_RIGHT, "PSB_PAD_RIGHT");
+  //
+  if (buttonPressed > 0) {
+    Serial.print("buttonPressed flag: ");
+    Serial.println(buttonPressed, HEX);
+    return buttonPressed;
+  }
   //
   processJoystickButton(PSS_LX, PSS_LY, user_onLeftJoystickChanged, "Left Joystick");
   //
@@ -148,6 +154,9 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
       onChange(nJoyLX, nJoyLY);
       return 1;
     } else {
+      if (debugEnabled) {
+        Serial.println("processJoystickButton()/onChange has not been registered");
+      }
       return -1;
     }
   }

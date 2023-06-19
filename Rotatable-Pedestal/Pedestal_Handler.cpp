@@ -1,21 +1,28 @@
 #include <Arduino.h>
 #include "Pedestal_Handler.h"
 
-PedestalHandler::PedestalHandler() {
-  PedestalHandler(HORIZONTAL_SERVO_PIN, VERTICAL_SERVO_PIN);
-}
-
 PedestalHandler::PedestalHandler(int hPin, int vPin) {
   count = 0;
-  horizontalServoPin = hPin;
-  verticalServoPin = vPin;
+  horizontalServoPin = (hPin > 0) ? hPin : HORIZONTAL_SERVO_PIN;
+  verticalServoPin = (vPin > 0) ? vPin : VERTICAL_SERVO_PIN;
+  Serial.println("PedestalHandler(int hPin, int vPin) is invoked");
 }
 
-void PedestalHandler::begin() {
+void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMaxAngle) {
+  Serial.print("- horizontalServoPin: ");
+  Serial.println(horizontalServoPin);
+  Serial.print("- verticalServoPin: ");
+  Serial.println(verticalServoPin);
+  //
   horizontalServo.attach(horizontalServoPin);
-  horizontalServo.write(90);
+  horizontalMinAngle = (hMinAngle < 0) ? 0 : hMinAngle;
+  horizontalMaxAngle = (hMaxAngle > 180) ? 180 : hMaxAngle;
+  horizontalServo.write( (horizontalMaxAngle - horizontalMinAngle) / 2);
+  //
   verticalServo.attach(verticalServoPin);
-  verticalServo.write(0);
+  verticalMinAngle = (vMinAngle < 0) ? 0 : vMinAngle;
+  verticalMaxAngle = (vMaxAngle > 180) ? 180 : vMaxAngle;
+  verticalServo.write(vMinAngle);
 }
 
 void PedestalHandler::test() {
@@ -90,13 +97,16 @@ bool PedestalHandler::changeHorizontalServo(int hDelta) {
 }
 
 bool PedestalHandler::changeVerticalServo(int vDelta) {
-  Serial.print("changeVerticalServo: ");
-  Serial.println(vDelta);
-  //
   if (vDelta == 0) {
     return false;
   }
   int vPos = verticalServo.read();
+  //
+  Serial.print("changeVerticalServo, vDelta: ");
+  Serial.println(vDelta);
+  Serial.print("; vPos: ");
+  Serial.println(vPos);
+  //
   if (vDelta < 0 && vPos <= 0) {
     return false;
   }
