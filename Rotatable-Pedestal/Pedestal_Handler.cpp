@@ -1,18 +1,34 @@
 #include <Arduino.h>
 #include "Pedestal_Handler.h"
 
-PedestalHandler::PedestalHandler(int hPin, int vPin) {
+PedestalHandler::PedestalHandler(int hPin, int vPin, bool _debugEnabled) {
   count = 0;
   horizontalServoPin = (hPin > 0) ? hPin : HORIZONTAL_SERVO_PIN;
   verticalServoPin = (vPin > 0) ? vPin : VERTICAL_SERVO_PIN;
-  Serial.println("PedestalHandler(int hPin, int vPin) is invoked");
+  debugEnabled = _debugEnabled;
+  if (debugEnabled) {
+    Serial.print("PedestalHandler::PedestalHandler() - hPin: ");
+    Serial.print(hPin);
+    Serial.print(" => horizontalServoPin: ");
+    Serial.println(horizontalServoPin);
+    Serial.print("PedestalHandler::PedestalHandler() - vPin: ");
+    Serial.print(vPin);
+    Serial.print(" => verticalServoPin: ");
+    Serial.println(verticalServoPin);
+  }
 }
 
 void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMaxAngle) {
-  Serial.print("- horizontalServoPin: ");
-  Serial.println(horizontalServoPin);
-  Serial.print("- verticalServoPin: ");
-  Serial.println(verticalServoPin);
+  if (debugEnabled) {
+    Serial.print("PedestalHandler::begin() - hMinAngle: ");
+    Serial.println(hMinAngle);
+    Serial.print("PedestalHandler::begin() - hMaxAngle: ");
+    Serial.println(hMaxAngle);
+    Serial.print("PedestalHandler::begin() - vMinAngle: ");
+    Serial.println(vMinAngle);
+    Serial.print("PedestalHandler::begin() - vMaxAngle: ");
+    Serial.println(vMaxAngle);
+  }
   //
   horizontalServo.attach(horizontalServoPin);
   horizontalMinAngle = (hMinAngle < 0) ? 0 : hMinAngle;
@@ -70,14 +86,19 @@ bool PedestalHandler::horizontalServoRight() {
 
 bool PedestalHandler::changeHorizontalServo(int hDelta) {
   if (hDelta == 0) {
+    if (debugEnabled) {
+      Serial.print("PedestalHandler::changeVerticalServo() - vDelta is 0, do nothing");
+    }
     return false;
   }
   int hPos = horizontalServo.read();
   //
-  Serial.print("changeHorizontalServo, hDelta: ");
-  Serial.print(hDelta);
-  Serial.print("; hPos: ");
-  Serial.println(hPos);
+  if (debugEnabled) {
+    Serial.print("PedestalHandler::changeHorizontalServo() - hDelta: ");
+    Serial.print(hDelta);
+    Serial.print("; hPos: ");
+    Serial.println(hPos);
+  }
   //
   if (hDelta < 0 && hPos <= horizontalMinAngle) {
     return false;
@@ -98,14 +119,19 @@ bool PedestalHandler::changeHorizontalServo(int hDelta) {
 
 bool PedestalHandler::changeVerticalServo(int vDelta) {
   if (vDelta == 0) {
+    if (debugEnabled) {
+      Serial.print("PedestalHandler::changeVerticalServo() - vDelta is 0, do nothing");
+    }
     return false;
   }
   int vPos = verticalServo.read();
   //
-  Serial.print("changeVerticalServo, vDelta: ");
-  Serial.println(vDelta);
-  Serial.print("; vPos: ");
-  Serial.println(vPos);
+  if (debugEnabled) {
+    Serial.print("PedestalHandler::changeVerticalServo() - vDelta: ");
+    Serial.println(vDelta);
+    Serial.print("; vPos: ");
+    Serial.println(vPos);
+  }
   //
   if (vDelta < 0 && vPos <= verticalMinAngle) {
     return false;
@@ -125,11 +151,14 @@ bool PedestalHandler::changeVerticalServo(int vDelta) {
 }
 
 bool PedestalHandler::change(int hDelta, int vDelta) {
-  Serial.print("hDelta: ");
-  Serial.print(hDelta);
-  Serial.print("vDelta: ");
-  Serial.print(vDelta);
-  Serial.println();
+  if (debugEnabled) {
+    Serial.print("PedestalHandler::change() - ");
+    Serial.print("hDelta: ");
+    Serial.print(hDelta);
+    Serial.print("vDelta: ");
+    Serial.print(vDelta);
+    Serial.println();
+  }
   bool hChanged = changeHorizontalServo(hDelta);
   bool vChanged = changeVerticalServo(vDelta);
   return hChanged || vChanged;

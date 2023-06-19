@@ -13,7 +13,7 @@ static Servo verticalServo;
 
 class PedestalHandler {
   public:
-    PedestalHandler(int hPin=HORIZONTAL_SERVO_PIN, int vPin=VERTICAL_SERVO_PIN);
+    PedestalHandler(int hPin=HORIZONTAL_SERVO_PIN, int vPin=VERTICAL_SERVO_PIN, bool dbg=false);
     void begin(int hMinAngle=0, int hMaxAngle=180, int vMinAngle=0, int vMaxAngle=180);
     void test();
 
@@ -34,6 +34,7 @@ class PedestalHandler {
     int verticalServoPin;
     int verticalMinAngle;
     int verticalMaxAngle;
+    bool debugEnabled;
 };
 
 #endif
