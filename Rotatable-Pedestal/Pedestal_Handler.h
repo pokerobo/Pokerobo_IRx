@@ -8,9 +8,6 @@
 
 #define MOVING_AMOUNT         2
 
-static Servo horizontalServo;
-static Servo verticalServo;
-
 class PedestalHandler {
   public:
     PedestalHandler(int hPin=HORIZONTAL_SERVO_PIN, int vPin=VERTICAL_SERVO_PIN, bool debugEnabled=true);
@@ -29,9 +26,11 @@ class PedestalHandler {
 
   private:
     int count;
+    Servo horizontalServo;
     int horizontalServoPin;
     int horizontalMinAngle;
     int horizontalMaxAngle;
+    Servo verticalServo;
     int verticalServoPin;
     int verticalMinAngle;
     int verticalMaxAngle;
