@@ -10,12 +10,13 @@ void setup() {
   while (!Serial) {// Wait for the serial connection to be establised.
     delay(100);
   }
-  Serial.begin(57600);
+  Serial.begin(115200);
   Serial.println("main() - Setup starting ...");
   //
-  pedestalHandler.begin(0, 180, 0, 90);
+  pedestalHandler.begin(0, 180, 30, 90);
   //
   ps2Controller.begin();
+  ps2Controller.onStartButtonPressed(processStartButtonPressedEvent);
   ps2Controller.onDPadButtonPressed(processDPadButtonPressedEvent);
   ps2Controller.onLeftJoystickChanged(processLeftJoystickChangeEvent);
   ps2Controller.onRightJoystickChanged(processRightJoystickChangeEvent);
@@ -35,6 +36,14 @@ uint32_t getDelayAmount(int status) {
   } else {
     return 200;
   }
+}
+
+void processStartButtonPressedEvent() {
+  processStartButtonPressedEventFor(pedestalHandler);
+}
+
+void processStartButtonPressedEventFor(PedestalHandler pedestalHandler) {
+  pedestalHandler.reset();
 }
 
 void processDPadButtonPressedEvent(uint16_t padButton) {
@@ -71,10 +80,14 @@ void processLeftJoystickChangeEvent(int nJoyLX, int nJoyLY) {
 }
 
 void processLeftJoystickChangeEventFor(PedestalHandler pedestalHandler, int nJoyLX, int nJoyLY) {
-  bool changed = pedestalHandler.change(nJoyLX, nJoyLY);
-  Serial.println("main() - processLeftJoystickChangeEvent() is invoked");
-  return changed;
 }
 
 void processRightJoystickChangeEvent(int nJoyRX, int nJoyRY) {
+  processRightJoystickChangeEventFor(pedestalHandler, nJoyRX, nJoyRY);
+}
+
+void processRightJoystickChangeEventFor(PedestalHandler pedestalHandler, int nJoyX, int nJoyY) {
+  bool changed = pedestalHandler.change(nJoyX, nJoyY);
+  Serial.println("main() - processLeftJoystickChangeEvent() is invoked");
+  return changed;
 }

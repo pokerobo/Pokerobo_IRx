@@ -60,6 +60,10 @@ void PS2Controller::reload() {
   return begin();
 };
 
+void PS2Controller::onStartButtonPressed(void (*function)()) {
+  user_onStartButtonPressed = function;
+};
+
 void PS2Controller::onDPadButtonPressed(void (*function)(uint16_t)) {
   user_onDPadButtonPressed = function;
 };
@@ -87,6 +91,13 @@ int PS2Controller::loop() {
 int PS2Controller::check() {
   ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
   //
+  //
+  //
+  uint16_t startButtonPressed = processStartButtonPress();
+  if (startButtonPressed) {
+    return startButtonPressed;
+  }
+  //
   // Perform movements based on D-pad buttons
   //
   uint16_t buttonPressed = 0;
@@ -101,8 +112,10 @@ int PS2Controller::check() {
   buttonPressed |= processPadButtonPress(PSB_PAD_RIGHT, "PSB_PAD_RIGHT");
   //
   if (buttonPressed > 0) {
-    Serial.print("buttonPressed flag: ");
-    Serial.println(buttonPressed, HEX);
+    if (debugEnabled) {
+      Serial.print("buttonPressed flag: ");
+      Serial.println(buttonPressed, HEX);
+    }
     return buttonPressed;
   }
   //
@@ -110,6 +123,21 @@ int PS2Controller::check() {
   //
   int rstatus = processJoystickButton(PSS_RX, PSS_RY, user_onRightJoystickChanged, "Right Joystick");
 };
+
+int PS2Controller::processStartButtonPress() {
+  uint16_t button = PSB_START;
+  if (!user_onStartButtonPressed) {
+    return 0;
+  }
+  if(ps2x.Button(button)) {
+    if (debugEnabled) {
+      Serial.println("PSB_START is pushed");
+    }
+    user_onStartButtonPressed();
+    return button;
+  }
+  return 0;
+}
 
 int PS2Controller::processPadButtonPress(uint16_t button, const char buttonLabel[]) {
   if (!user_onDPadButtonPressed) {
@@ -136,25 +164,25 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
     }
     return -1;
   }
-  int nJoyLX = ps2x.Analog(xKey); // read x-joystick
-  int nJoyLY = ps2x.Analog(yKey); // read y-joystick
+  int nJoyX = ps2x.Analog(xKey); // read x-joystick
+  int nJoyY = ps2x.Analog(yKey); // read y-joystick
   //
-  nJoyLX = map(nJoyLX, 0, 255, -NUM_RANGE_X, NUM_RANGE_X);
-  nJoyLY = map(nJoyLY, 0, 255, NUM_RANGE_Y, -NUM_RANGE_Y);
+  nJoyX = map(nJoyX, 0, 255, -NUM_RANGE_X, NUM_RANGE_X);
+  nJoyY = map(nJoyY, 0, 255, NUM_RANGE_Y, -NUM_RANGE_Y);
   //
-  if (nJoyLX >= MIN_BOUND_X || nJoyLX <= -MIN_BOUND_X || nJoyLY >= MIN_BOUND_Y || nJoyLY <= -MIN_BOUND_Y)
+  if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y)
   {
     if (debugEnabled) {
       Serial.print("PS2Controller::processJoystickButton() - ");
       Serial.print(label);
       Serial.println(": ");
       Serial.print("- X: ");
-      Serial.println(nJoyLX);
+      Serial.println(nJoyX);
       Serial.print("- Y: ");
-      Serial.println(nJoyLY);
+      Serial.println(nJoyY);
     }
     if (onChange) {
-      onChange(nJoyLX, nJoyLY);
+      onChange(nJoyX, nJoyY);
       return 1;
     } else {
       if (debugEnabled) {

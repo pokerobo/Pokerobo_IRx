@@ -41,6 +41,11 @@ void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMa
   verticalServo.write(verticalMinAngle);
 }
 
+void PedestalHandler::reset() {
+  horizontalServo.write( (horizontalMaxAngle - horizontalMinAngle) / 2);
+  verticalServo.write(verticalMinAngle);
+}
+
 void PedestalHandler::test() {
   if (count >= 3) {
     Serial.print(count);
