@@ -22,11 +22,6 @@
 #define GAMEPAD_DATA        12
 #define GAMEPAD_CLOCK       13
 
-static void (*user_onStartButtonPressed)();
-static void (*user_onDPadButtonPressed)(uint16_t);
-static void (*user_onLeftJoystickChanged)(int, int);
-static void (*user_onRightJoystickChanged)(int, int);
-
 class PS2Controller {
   public:
     PS2Controller();
@@ -40,16 +35,21 @@ class PS2Controller {
     void onLeftJoystickChanged(void (*function)(int, int));
     void onRightJoystickChanged(void (*function)(int, int));
     int check();
-  private:
+  protected:
     int processStartButtonPress();
     int processPadButtonPress(uint16_t button, const char buttonLabel[]);
     int processJoystickButton(byte, byte, void (*function)(int, int), const char c[]);
+  private:
     PS2X ps2x;
     bool debugEnabled;
     int errorCode;
     bool errorDisplayed;
     byte ps2Type;
     byte vibrate;
+    void (*user_onStartButtonPressed)();
+    void (*user_onDPadButtonPressed)(uint16_t);
+    void (*user_onLeftJoystickChanged)(int, int);
+    void (*user_onRightJoystickChanged)(int, int);
 };
 
 #endif
