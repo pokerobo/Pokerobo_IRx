@@ -33,12 +33,12 @@ void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMa
   horizontalServo.attach(horizontalServoPin);
   horizontalMinAngle = (hMinAngle < 0) ? 0 : hMinAngle;
   horizontalMaxAngle = (hMaxAngle > 180) ? 180 : hMaxAngle;
-  horizontalServo.write( (horizontalMaxAngle - horizontalMinAngle) / 2);
   //
   verticalServo.attach(verticalServoPin);
   verticalMinAngle = (vMinAngle < 0) ? 0 : vMinAngle;
   verticalMaxAngle = (vMaxAngle > 180) ? 180 : vMaxAngle;
-  verticalServo.write(verticalMinAngle);
+  //
+  reset();
 }
 
 void PedestalHandler::reset() {
