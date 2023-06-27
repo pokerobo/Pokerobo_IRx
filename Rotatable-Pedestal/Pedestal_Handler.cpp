@@ -42,8 +42,58 @@ void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMa
 }
 
 void PedestalHandler::reset() {
-  horizontalServo.write( (horizontalMaxAngle - horizontalMinAngle) / 2);
+  horizontalServo.write( (horizontalMaxAngle + horizontalMinAngle) / 2);
   verticalServo.write(verticalMinAngle);
+}
+
+int PedestalHandler::getHorizontalPosition() {
+  return horizontalServo.read();
+}
+
+int PedestalHandler::setHorizontalPosition(int hPos, int hCurrentPos) {
+  if (hPos < horizontalMinAngle) {
+    hPos = horizontalMinAngle;
+  }
+  if (hPos > horizontalMaxAngle) {
+    hPos = horizontalMaxAngle;
+  }
+  //
+  if (hCurrentPos < 0) {
+    hCurrentPos = horizontalServo.read();
+  }
+  if (hPos != hCurrentPos) {
+    horizontalServo.write(hPos);
+  }
+  //
+  return hPos - hCurrentPos;
+}
+
+int PedestalHandler::getVerticalPosition() {
+  return verticalServo.read();
+}
+
+int PedestalHandler::setVerticalPosition(int vPos, int vCurrentPos) {
+  if (vPos < verticalMinAngle) {
+    vPos = verticalMinAngle;
+  }
+  if (vPos > verticalMaxAngle) {
+    vPos = verticalMaxAngle;
+  }
+  //
+  if (vCurrentPos < 0) {
+    vCurrentPos = verticalServo.read();
+  }
+  if (vPos != vCurrentPos) {
+    verticalServo.write(vPos);
+  }
+  //
+  return vPos - vCurrentPos;
+}
+
+bool PedestalHandler::syncWith(PedestalHandler master) {
+  int hDelta = setHorizontalPosition(master.getHorizontalPosition());
+  int vDelta = setVerticalPosition(master.getVerticalPosition());
+  return (hDelta != 0) || (vDelta != 0);
 }
 
 void PedestalHandler::test() {
@@ -96,7 +146,8 @@ bool PedestalHandler::changeHorizontalServo(int hDelta) {
     }
     return false;
   }
-  int hPos = horizontalServo.read();
+  int hCurrentPos = horizontalServo.read();
+  int hPos = hCurrentPos;
   //
   if (debugEnabled) {
     Serial.print("PedestalHandler::changeHorizontalServo() - hDelta: ");
@@ -118,7 +169,11 @@ bool PedestalHandler::changeHorizontalServo(int hDelta) {
   if (hPos > horizontalMaxAngle) {
     hPos = horizontalMaxAngle;
   }
-  horizontalServo.write(hPos);
+  //
+  if (hPos != hCurrentPos) {
+    horizontalServo.write(hPos);
+  }
+  //
   return true;
 }
 
@@ -129,7 +184,8 @@ bool PedestalHandler::changeVerticalServo(int vDelta) {
     }
     return false;
   }
-  int vPos = verticalServo.read();
+  int vCurrentPos = verticalServo.read();
+  int vPos = vCurrentPos;
   //
   if (debugEnabled) {
     Serial.print("PedestalHandler::changeVerticalServo() - vDelta: ");
@@ -151,7 +207,10 @@ bool PedestalHandler::changeVerticalServo(int vDelta) {
   if (vPos > verticalMaxAngle) {
     vPos = verticalMaxAngle;
   }
-  verticalServo.write(vPos);
+  //
+  if (vPos != vCurrentPos) {
+    verticalServo.write(vPos);
+  }
   return true;
 }
 

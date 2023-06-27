@@ -155,19 +155,10 @@ int PS2Controller::processPadButtonPress(uint16_t button, const char buttonLabel
 }
 
 int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(int, int), const char label[]) {
-  if (!onChange) {
-    if (debugEnabled) {
-      Serial.print("PS2Controller::processJoystickButton() - ");
-      Serial.print(label);
-      Serial.print(": ");
-      Serial.println("event listener has not registered");
-    }
-    return -1;
-  }
   int nJoyX = ps2x.Analog(xKey); // read x-joystick
   int nJoyY = ps2x.Analog(yKey); // read y-joystick
   //
-  nJoyX = map(nJoyX, 0, 255, -NUM_RANGE_X, NUM_RANGE_X);
+  nJoyX = map(nJoyX, 0, 255, NUM_RANGE_X, -NUM_RANGE_X);
   nJoyY = map(nJoyY, 0, 255, NUM_RANGE_Y, -NUM_RANGE_Y);
   //
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y)
@@ -186,7 +177,10 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
       return 1;
     } else {
       if (debugEnabled) {
-        Serial.println("PS2Controller::processJoystickButton() - onChange has not been registered");
+        Serial.print("PS2Controller::processJoystickButton() - ");
+        Serial.print(label);
+        Serial.print(": ");
+        Serial.println("event listener has not registered");
       }
       return -1;
     }
