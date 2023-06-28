@@ -3,10 +3,10 @@
 #ifndef __PEDESTAL_HANDLER_H__
 #define __PEDESTAL_HANDLER_H__
 
-#define HORIZONTAL_SERVO_PIN  8
-#define VERTICAL_SERVO_PIN    9
+#define HORIZONTAL_SERVO_PIN  4
+#define VERTICAL_SERVO_PIN    5
 
-#define MOVING_AMOUNT         2
+#define MOVING_AMOUNT         5
 
 class PedestalHandler {
   public:
@@ -20,8 +20,8 @@ class PedestalHandler {
     bool horizontalServoLeft();
     bool horizontalServoRight();  
 
-    bool changeHorizontalServo(int hDelta);
-    bool changeVerticalServo(int vDelta);
+    int changeHorizontalServo(int hDelta);
+    int changeVerticalServo(int vDelta);
     bool change(int hDelta, int vDelta);
     int getHorizontalPosition();
     int setHorizontalPosition(int hPos, int hCurrentPos = -1);

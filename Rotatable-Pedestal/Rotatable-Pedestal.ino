@@ -12,7 +12,7 @@ void setup() {
   while (!Serial) {// Wait for the serial connection to be establised.
     delay(100);
   }
-  Serial.begin(19200);
+  Serial.begin(57600);
   Serial.println("main() - Setup starting ...");
   //
   pedestalHandler1.begin(30, 150, 30, 90);
@@ -35,9 +35,9 @@ void loop() {
 
 uint32_t getDelayAmount(int status) {
   if (status >= 1) {
-    return 20;
+    return 10;
   } else {
-    return 500;
+    return 100;
   }
 }
 

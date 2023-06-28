@@ -139,7 +139,7 @@ bool PedestalHandler::horizontalServoRight() {
   return changeHorizontalServo(-MOVING_AMOUNT);
 }
 
-bool PedestalHandler::changeHorizontalServo(int hDelta) {
+int PedestalHandler::changeHorizontalServo(int hDelta) {
   if (hDelta == 0) {
     if (debugEnabled) {
       Serial.print("PedestalHandler::changeVerticalServo() - vDelta is 0, do nothing");
@@ -163,21 +163,11 @@ bool PedestalHandler::changeHorizontalServo(int hDelta) {
     return false;
   }
   hPos += hDelta;
-  if (hPos < horizontalMinAngle) {
-    hPos = horizontalMinAngle;
-  }
-  if (hPos > horizontalMaxAngle) {
-    hPos = horizontalMaxAngle;
-  }
   //
-  if (hPos != hCurrentPos) {
-    horizontalServo.write(hPos);
-  }
-  //
-  return true;
+  return setHorizontalPosition(hPos, hCurrentPos);
 }
 
-bool PedestalHandler::changeVerticalServo(int vDelta) {
+int PedestalHandler::changeVerticalServo(int vDelta) {
   if (vDelta == 0) {
     if (debugEnabled) {
       Serial.print("PedestalHandler::changeVerticalServo() - vDelta is 0, do nothing");
@@ -201,17 +191,8 @@ bool PedestalHandler::changeVerticalServo(int vDelta) {
     return false;
   }
   vPos += vDelta;
-  if (vPos < verticalMinAngle) {
-    vPos = verticalMinAngle;
-  }
-  if (vPos > verticalMaxAngle) {
-    vPos = verticalMaxAngle;
-  }
   //
-  if (vPos != vCurrentPos) {
-    verticalServo.write(vPos);
-  }
-  return true;
+  return setVerticalPosition(vPos, vCurrentPos);
 }
 
 bool PedestalHandler::change(int hDelta, int vDelta) {
@@ -223,7 +204,7 @@ bool PedestalHandler::change(int hDelta, int vDelta) {
     Serial.print(vDelta);
     Serial.println();
   }
-  bool hChanged = changeHorizontalServo(hDelta);
-  bool vChanged = changeVerticalServo(vDelta);
-  return hChanged || vChanged;
+  int hChanged = changeHorizontalServo(hDelta);
+  int vChanged = changeVerticalServo(vDelta);
+  return (hChanged != 0) || (vChanged != 0);
 }
