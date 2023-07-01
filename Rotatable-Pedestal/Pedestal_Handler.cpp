@@ -50,7 +50,7 @@ int PedestalHandler::getHorizontalPosition() {
   return horizontalServo.read();
 }
 
-int PedestalHandler::setHorizontalPosition(int hPos, int hCurrentPos) {
+int PedestalHandler::updateHorizontalPosition(int hPos, int hCurrentPos) {
   if (hPos < horizontalMinAngle) {
     hPos = horizontalMinAngle;
   }
@@ -59,7 +59,7 @@ int PedestalHandler::setHorizontalPosition(int hPos, int hCurrentPos) {
   }
   //
   if (hCurrentPos < 0) {
-    hCurrentPos = horizontalServo.read();
+    hCurrentPos = getHorizontalPosition();
   }
   if (hPos != hCurrentPos) {
     horizontalServo.write(hPos);
@@ -72,7 +72,7 @@ int PedestalHandler::getVerticalPosition() {
   return verticalServo.read();
 }
 
-int PedestalHandler::setVerticalPosition(int vPos, int vCurrentPos) {
+int PedestalHandler::updateVerticalPosition(int vPos, int vCurrentPos) {
   if (vPos < verticalMinAngle) {
     vPos = verticalMinAngle;
   }
@@ -81,7 +81,7 @@ int PedestalHandler::setVerticalPosition(int vPos, int vCurrentPos) {
   }
   //
   if (vCurrentPos < 0) {
-    vCurrentPos = verticalServo.read();
+    vCurrentPos = getVerticalPosition();
   }
   if (vPos != vCurrentPos) {
     verticalServo.write(vPos);
@@ -91,8 +91,8 @@ int PedestalHandler::setVerticalPosition(int vPos, int vCurrentPos) {
 }
 
 bool PedestalHandler::syncWith(PedestalHandler master) {
-  int hDelta = setHorizontalPosition(master.getHorizontalPosition());
-  int vDelta = setVerticalPosition(master.getVerticalPosition());
+  int hDelta = updateHorizontalPosition(master.getHorizontalPosition());
+  int vDelta = updateVerticalPosition(master.getVerticalPosition());
   return (hDelta != 0) || (vDelta != 0);
 }
 
@@ -146,7 +146,7 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
     }
     return false;
   }
-  int hCurrentPos = horizontalServo.read();
+  int hCurrentPos = getHorizontalPosition();
   int hPos = hCurrentPos;
   //
   if (debugEnabled) {
@@ -164,7 +164,7 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
   }
   hPos += hDelta;
   //
-  return setHorizontalPosition(hPos, hCurrentPos);
+  return updateHorizontalPosition(hPos, hCurrentPos);
 }
 
 int PedestalHandler::changeVerticalServo(int vDelta) {
@@ -174,7 +174,7 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
     }
     return false;
   }
-  int vCurrentPos = verticalServo.read();
+  int vCurrentPos = getVerticalPosition();
   int vPos = vCurrentPos;
   //
   if (debugEnabled) {
@@ -192,7 +192,7 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
   }
   vPos += vDelta;
   //
-  return setVerticalPosition(vPos, vCurrentPos);
+  return updateVerticalPosition(vPos, vCurrentPos);
 }
 
 bool PedestalHandler::change(int hDelta, int vDelta) {

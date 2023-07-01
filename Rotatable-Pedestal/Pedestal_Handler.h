@@ -24,9 +24,9 @@ class PedestalHandler {
     int changeVerticalServo(int vDelta);
     bool change(int hDelta, int vDelta);
     int getHorizontalPosition();
-    int setHorizontalPosition(int hPos, int hCurrentPos = -1);
+    int updateHorizontalPosition(int hPos, int hCurrentPos = -1);
     int getVerticalPosition();
-    int setVerticalPosition(int vPos, int vCurrentPos = -1);
+    int updateVerticalPosition(int vPos, int vCurrentPos = -1);
     bool syncWith(PedestalHandler master);
 
   private:
