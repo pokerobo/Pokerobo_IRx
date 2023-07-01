@@ -42,12 +42,16 @@ void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMa
 }
 
 void PedestalHandler::reset() {
-  horizontalServo.write( (horizontalMaxAngle + horizontalMinAngle) / 2);
-  verticalServo.write(verticalMinAngle);
+  setHorizontalPosition( (horizontalMaxAngle + horizontalMinAngle) / 2);
+  setVerticalPosition(verticalMinAngle);
 }
 
 int PedestalHandler::getHorizontalPosition() {
   return horizontalServo.read();
+}
+
+void PedestalHandler::setHorizontalPosition(int hPos) {
+  horizontalServo.write(hPos);
 }
 
 int PedestalHandler::updateHorizontalPosition(int hPos, int hCurrentPos) {
@@ -62,7 +66,7 @@ int PedestalHandler::updateHorizontalPosition(int hPos, int hCurrentPos) {
     hCurrentPos = getHorizontalPosition();
   }
   if (hPos != hCurrentPos) {
-    horizontalServo.write(hPos);
+    setHorizontalPosition(hPos);
   }
   //
   return hPos - hCurrentPos;
@@ -70,6 +74,10 @@ int PedestalHandler::updateHorizontalPosition(int hPos, int hCurrentPos) {
 
 int PedestalHandler::getVerticalPosition() {
   return verticalServo.read();
+}
+
+void PedestalHandler::setVerticalPosition(int vPos) {
+  verticalServo.write(vPos);
 }
 
 int PedestalHandler::updateVerticalPosition(int vPos, int vCurrentPos) {
@@ -84,7 +92,7 @@ int PedestalHandler::updateVerticalPosition(int vPos, int vCurrentPos) {
     vCurrentPos = getVerticalPosition();
   }
   if (vPos != vCurrentPos) {
-    verticalServo.write(vPos);
+    setVerticalPosition(vPos);
   }
   //
   return vPos - vCurrentPos;
@@ -105,8 +113,8 @@ void PedestalHandler::test() {
   count++;
   //
   for (int pos = 0; pos <= 180; pos += 5) {
-    horizontalServo.write(pos);
-    verticalServo.write(pos);
+    setHorizontalPosition(pos);
+    setVerticalPosition(pos);
     Serial.print("Pos= ");
     Serial.print(pos);
     Serial.println();
@@ -114,8 +122,8 @@ void PedestalHandler::test() {
   }
   //
   for (int pos = 180; pos >= 0; pos -= 5) {
-    horizontalServo.write(pos);
-    verticalServo.write(pos);
+    setHorizontalPosition(pos);
+    setVerticalPosition(pos);
     Serial.print("Pos= ");
     Serial.print(pos);
     Serial.println();
