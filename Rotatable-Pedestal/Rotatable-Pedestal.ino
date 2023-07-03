@@ -14,7 +14,8 @@ void setup() {
     delay(100);
   }
   Serial.begin(57600);
-  Serial.println("main() - Setup starting ...");
+  Serial.print("main() - ");
+  Serial.println("Setup starting ...");
   //
   PedestalHandler::init();
   pedestalHandler0.begin(30, 120, 30, 90);
@@ -29,7 +30,8 @@ void setup() {
   //
   // irController.begin();
   //
-  Serial.println("main() - Setup has done!");
+  Serial.print("main() - ");
+  Serial.println("Setup has done!");
 }
 
 void loop() {
@@ -65,22 +67,38 @@ void processDPadButtonPressedEventFor(PedestalHandler pedestalHandler, uint16_t 
   //
   // MOVE FORWARD
   if(padButton == PSB_PAD_UP) {
-    Serial.println("main() - PSB_PAD_UP is pushed");
+#ifdef __RUNNING_LOG_ENABLED__
+    Serial.print("main() - ");
+    Serial.print("PSB_PAD_UP");
+    Serial.println(" is pushed");
+#endif
     activated = pedestalHandler.verticalServoUp();
   }
   // MOVE BACK
   if(padButton == PSB_PAD_DOWN) {
-    Serial.println("main() - PSB_PAD_DOWN is pushed");
+#ifdef __RUNNING_LOG_ENABLED__
+    Serial.print("main() - ");
+    Serial.print("PSB_PAD_DOWN");
+    Serial.println(" is pushed");
+#endif
     activated = pedestalHandler.verticalServoDown();
   }
   // TURN LEFT
   if(padButton == PSB_PAD_LEFT) {
-    Serial.println("main() - PSB_PAD_LEFT is pushed");
+#ifdef __RUNNING_LOG_ENABLED__
+    Serial.print("main() - ");
+    Serial.print("PSB_PAD_LEFT");
+    Serial.println(" is pushed");
+#endif
     activated = pedestalHandler.horizontalServoLeft();
   }
   // TURN RIGHT
   if(padButton == PSB_PAD_RIGHT) {
-    Serial.println("main() - PSB_PAD_RIGHT is pushed");
+#ifdef __RUNNING_LOG_ENABLED__
+    Serial.print("main() - ");
+    Serial.print("PSB_PAD_RIGHT");
+    Serial.println(" is pushed");
+#endif
     activated = pedestalHandler.horizontalServoRight();
   }
 }
@@ -95,7 +113,8 @@ void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJo
   bool changed = pedestalHandler->change(nJoyX, nJoyY);
   if (changed) {
 #ifdef __RUNNING_LOG_ENABLED__
-    Serial.println("main() - processLeftJoystickChangeEvent() is invoked");
+    Serial.print("main() - ");
+    Serial.println("processLeftJoystickChangeEvent() is invoked");
 #endif
   }
 }

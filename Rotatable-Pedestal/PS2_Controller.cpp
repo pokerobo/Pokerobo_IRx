@@ -112,10 +112,12 @@ int PS2Controller::check() {
   buttonPressed |= processPadButtonPress(PSB_PAD_RIGHT, "PSB_PAD_RIGHT");
   //
   if (buttonPressed > 0) {
+#ifdef __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("buttonPressed flag: ");
       Serial.println(buttonPressed, HEX);
     }
+#endif
     return buttonPressed;
   }
   //
@@ -130,9 +132,12 @@ int PS2Controller::processStartButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
+#ifdef __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.println("PSB_START is pushed");
+      Serial.print("PSB_START");
+      Serial.println(" is pushed");
     }
+#endif
     user_onStartButtonPressed();
     return button;
   }
@@ -144,10 +149,12 @@ int PS2Controller::processPadButtonPress(uint16_t button, const char buttonLabel
     return 0;
   }
   if(ps2x.Button(button)) {
-    if (buttonLabel) {
+#ifdef __RUNNING_LOG_ENABLED__
+    if (debugEnabled && buttonLabel) {
       Serial.print(buttonLabel);
       Serial.println(" is pushed");
     }
+#endif
     user_onDPadButtonPressed(button);
     return button;
   }
