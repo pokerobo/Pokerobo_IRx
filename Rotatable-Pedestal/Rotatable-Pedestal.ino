@@ -5,8 +5,9 @@
 // IRController irController;
 PS2Controller ps2Controller;
 
+PedestalHandler pedestalHandler0(0, 1);
 PedestalHandler pedestalHandler1(4, 5);
-PedestalHandler pedestalHandler3(6, 7);
+PedestalHandler pedestalHandler3(8, 9);
 
 void setup() {
   while (!Serial) {// Wait for the serial connection to be establised.
@@ -15,8 +16,9 @@ void setup() {
   Serial.begin(57600);
   Serial.println("main() - Setup starting ...");
   //
-  pedestalHandler1.begin(30, 150, 30, 90);
-  pedestalHandler3.begin(30, 150, 30, 90);
+  pedestalHandler0.begin(30, 120, 30, 90);
+  pedestalHandler1.begin(30, 120, 30, 90);
+  pedestalHandler3.begin(30, 120, 30, 90);
   //
   ps2Controller.begin();
   ps2Controller.onStartButtonPressed(processStartButtonPressedEvent);
@@ -35,13 +37,14 @@ void loop() {
 
 uint32_t getDelayAmount(int status) {
   if (status >= 1) {
-    return 10;
+    return 1;
   } else {
-    return 100;
+    return 5;
   }
 }
 
 void processStartButtonPressedEvent() {
+  processStartButtonPressedEventFor(pedestalHandler0);
   processStartButtonPressedEventFor(pedestalHandler1);
   processStartButtonPressedEventFor(pedestalHandler3);
 }
@@ -51,6 +54,7 @@ void processStartButtonPressedEventFor(PedestalHandler pedestalHandler) {
 }
 
 void processDPadButtonPressedEvent(uint16_t padButton) {
+  processDPadButtonPressedEventFor(pedestalHandler0, padButton);
   processDPadButtonPressedEventFor(pedestalHandler1, padButton);
   processDPadButtonPressedEventFor(pedestalHandler3, padButton);
 }
@@ -81,18 +85,20 @@ void processDPadButtonPressedEventFor(PedestalHandler pedestalHandler, uint16_t 
 }
 
 void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
-  processLeftJoystickChangeEventFor(pedestalHandler1, nJoyX, nJoyY);
-  processLeftJoystickChangeEventFor(pedestalHandler3, nJoyX, nJoyY);
+  processLeftJoystickChangeEventFor(&pedestalHandler0, nJoyX, nJoyY);
+  processLeftJoystickChangeEventFor(&pedestalHandler1, nJoyX, nJoyY);
+  processLeftJoystickChangeEventFor(&pedestalHandler3, nJoyX, nJoyY);
 }
 
-void processLeftJoystickChangeEventFor(PedestalHandler pedestalHandler, int nJoyX, int nJoyY) {
-  bool changed = pedestalHandler.change(nJoyX, nJoyY);
+void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
+  bool changed = pedestalHandler->change(nJoyX, nJoyY);
   if (changed) {
     Serial.println("main() - processLeftJoystickChangeEvent() is invoked");
   }
 }
 
 void processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
+  processRightJoystickChangeEventFor(pedestalHandler0, nJoyX, nJoyY);
   processRightJoystickChangeEventFor(pedestalHandler1, nJoyX, nJoyY);
   processRightJoystickChangeEventFor(pedestalHandler3, nJoyX, nJoyY);
 }

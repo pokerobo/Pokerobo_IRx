@@ -4,16 +4,17 @@
 // All text above must be included in any redistribution.
 
 // include libraries
+#include "Commons.h"
 #include <PS2X_lib.h>
 
 #ifndef __PS2_CONTROLLER_H__
 #define __PS2_CONTROLLER_H__
 
-#define MIN_BOUND_X      5
-#define MIN_BOUND_Y      5
+#define MIN_BOUND_X      3
+#define MIN_BOUND_Y      3
 
-#define NUM_RANGE_X      10
-#define NUM_RANGE_Y      10
+#define NUM_RANGE_X      6
+#define NUM_RANGE_Y      6
 
 #define DEBUG_DEFAULT       true
 

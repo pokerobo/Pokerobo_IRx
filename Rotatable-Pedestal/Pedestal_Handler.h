@@ -1,7 +1,13 @@
-#include <Servo.h>
+#include "Commons.h"
 
 #ifndef __PEDESTAL_HANDLER_H__
 #define __PEDESTAL_HANDLER_H__
+
+#ifndef __HCPCA9685_ENABLED__
+#include <Servo.h>
+#else
+#include "HCPCA9685.h"
+#endif
 
 #define HORIZONTAL_SERVO_PIN  4
 #define VERTICAL_SERVO_PIN    5
@@ -10,7 +16,7 @@
 
 class PedestalHandler {
   public:
-    PedestalHandler(int hPin=HORIZONTAL_SERVO_PIN, int vPin=VERTICAL_SERVO_PIN, bool debugEnabled=true);
+    PedestalHandler(byte hPin=HORIZONTAL_SERVO_PIN, byte vPin=VERTICAL_SERVO_PIN, bool debugEnabled=true);
     void begin(int hMinAngle=0, int hMaxAngle=180, int vMinAngle=0, int vMaxAngle=180);
     void reset();
     void test();
@@ -33,12 +39,18 @@ class PedestalHandler {
 
   private:
     int count;
+#ifndef __HCPCA9685_ENABLED__
     Servo horizontalServo;
-    int horizontalServoPin;
+#endif
+    byte horizontalServoPin;
+    int horizontalServoPos;
     int horizontalMinAngle;
     int horizontalMaxAngle;
+#ifndef __HCPCA9685_ENABLED__
     Servo verticalServo;
-    int verticalServoPin;
+#endif
+    byte verticalServoPin;
+    int verticalServoPos;
     int verticalMinAngle;
     int verticalMaxAngle;
     bool debugEnabled;

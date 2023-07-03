@@ -163,8 +163,10 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
   //
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y)
   {
+#ifdef __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PS2Controller::processJoystickButton() - ");
+      Serial.print("PS2Controller::");
+      Serial.print("processJoystickButton() - ");
       Serial.print(label);
       Serial.println(": ");
       Serial.print("- X: ");
@@ -172,16 +174,20 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
       Serial.print("- Y: ");
       Serial.println(nJoyY);
     }
+#endif
     if (onChange) {
       onChange(nJoyX, nJoyY);
       return 1;
     } else {
+#ifdef __RUNNING_LOG_ENABLED__
       if (debugEnabled) {
-        Serial.print("PS2Controller::processJoystickButton() - ");
+        Serial.print("PS2Controller::");
+        Serial.print("processJoystickButton() - ");
         Serial.print(label);
         Serial.print(": ");
         Serial.println("event listener has not registered");
       }
+#endif
       return -1;
     }
   }
