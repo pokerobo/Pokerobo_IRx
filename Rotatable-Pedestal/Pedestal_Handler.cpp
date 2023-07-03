@@ -9,6 +9,16 @@
 HCPCA9685 hcpca9685(I2C_ADDR);
 #endif
 
+static void PedestalHandler::init() {
+#ifdef __HCPCA9685_ENABLED__
+  /* Initialise the library and set it to 'servo mode' */ 
+  hcpca9685.Init(SERVO_MODE);
+
+  /* Wake the device up */
+  hcpca9685.Sleep(false);
+#endif
+}
+
 PedestalHandler::PedestalHandler(byte hPin, byte vPin, bool _debugEnabled) {
   count = 0;
   horizontalServoPin = (hPin >= 0) ? hPin : HORIZONTAL_SERVO_PIN;
@@ -18,27 +28,23 @@ PedestalHandler::PedestalHandler(byte hPin, byte vPin, bool _debugEnabled) {
   debugEnabled = _debugEnabled;
 #ifdef __LOADING_LOG_ENABLED__
   if (debugEnabled) {
-    Serial.print("PedestalHandler::PedestalHandler() - hPin: ");
+    Serial.print("PedestalHandler::");
+    Serial.print("PedestalHandler() - ");
+    Serial.print("hPin: ");
     Serial.print(hPin);
-    Serial.print(" => horizontalServoPin: ");
+    Serial.print(" => ");
     Serial.println(horizontalServoPin);
-    Serial.print("PedestalHandler::PedestalHandler() - vPin: ");
+    Serial.print("PedestalHandler::");
+    Serial.print("PedestalHandler() - ");
+    Serial.print("vPin: ");
     Serial.print(vPin);
-    Serial.print(" => verticalServoPin: ");
+    Serial.print(" => ");
     Serial.println(verticalServoPin);
   }
 #endif
 }
 
 void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMaxAngle) {
-#ifdef __HCPCA9685_ENABLED__
-  /* Initialise the library and set it to 'servo mode' */ 
-  hcpca9685.Init(SERVO_MODE);
-
-  /* Wake the device up */
-  hcpca9685.Sleep(false);
-#endif
-  //
 #ifdef __LOADING_LOG_ENABLED__
   if (debugEnabled) {
     Serial.print("PedestalHandler::");
@@ -175,7 +181,7 @@ void PedestalHandler::test() {
   for (int pos = 0; pos <= 180; pos += 5) {
     setHorizontalPosition(pos);
     setVerticalPosition(pos);
-    Serial.print("Pos= ");
+    Serial.print("hPos: ");
     Serial.print(pos);
     Serial.println();
     delay(100);
@@ -184,7 +190,7 @@ void PedestalHandler::test() {
   for (int pos = 180; pos >= 0; pos -= 5) {
     setHorizontalPosition(pos);
     setVerticalPosition(pos);
-    Serial.print("Pos= ");
+    Serial.print("hPos: ");
     Serial.print(pos);
     Serial.println();
     delay(100);
@@ -209,11 +215,14 @@ bool PedestalHandler::horizontalServoRight() {
 
 int PedestalHandler::changeHorizontalServo(int hDelta) {
   if (hDelta == 0) {
+#ifdef __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PedestalHandler::");
       Serial.print("changeHorizontalServo() - ");
-      Serial.println("hDelta is 0, do nothing");
+      Serial.print("hDelta: ");
+      Serial.println("0, do nothing");
     }
+#endif
     return false;
   }
   int hCurrentPos = getHorizontalPosition();
@@ -225,7 +234,8 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
     Serial.print("changeHorizontalServo() - ");
     Serial.print("hDelta: ");
     Serial.print(hDelta);
-    Serial.print("; hPos: ");
+    Serial.print("; ");
+    Serial.print("hPos: ");
     Serial.println(hPos);
   }
 #endif
@@ -247,7 +257,8 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
     if (debugEnabled) {
       Serial.print("PedestalHandler::");
       Serial.print("changeVerticalServo() - ");
-      Serial.println("vDelta is 0, do nothing");
+      Serial.print("vDelta: ");
+      Serial.println("0, do nothing");
     }
 #endif
     return false;
@@ -261,7 +272,8 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
     Serial.print("changeVerticalServo() - ");
     Serial.print("vDelta: ");
     Serial.print(vDelta);
-    Serial.print("; vPos: ");
+    Serial.print("; ");
+    Serial.print("vPos: ");
     Serial.println(vPos);
   }
 #endif
@@ -283,7 +295,8 @@ bool PedestalHandler::change(int hDelta, int vDelta) {
     Serial.print("PedestalHandler::change() - ");
     Serial.print("hDelta: ");
     Serial.print(hDelta);
-    Serial.print("; vDelta: ");
+    Serial.print("; ");
+    Serial.print("vDelta: ");
     Serial.print(vDelta);
     Serial.println();
   }

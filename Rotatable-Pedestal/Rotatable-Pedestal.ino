@@ -16,6 +16,7 @@ void setup() {
   Serial.begin(57600);
   Serial.println("main() - Setup starting ...");
   //
+  PedestalHandler::init();
   pedestalHandler0.begin(30, 120, 30, 90);
   pedestalHandler1.begin(30, 120, 30, 90);
   pedestalHandler3.begin(30, 120, 30, 90);
@@ -93,7 +94,9 @@ void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
 void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
   bool changed = pedestalHandler->change(nJoyX, nJoyY);
   if (changed) {
+#ifdef __RUNNING_LOG_ENABLED__
     Serial.println("main() - processLeftJoystickChangeEvent() is invoked");
+#endif
   }
 }
 

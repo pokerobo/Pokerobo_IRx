@@ -16,6 +16,7 @@
 
 class PedestalHandler {
   public:
+    static void init();
     PedestalHandler(byte hPin=HORIZONTAL_SERVO_PIN, byte vPin=VERTICAL_SERVO_PIN, bool debugEnabled=true);
     void begin(int hMinAngle=0, int hMaxAngle=180, int vMinAngle=0, int vMaxAngle=180);
     void reset();
