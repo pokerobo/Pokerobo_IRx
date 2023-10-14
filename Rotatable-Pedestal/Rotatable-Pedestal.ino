@@ -25,6 +25,14 @@ PedestalHandler pedestalHandler0(0, 1);
 PedestalHandler pedestalHandler1(4, 5);
 PedestalHandler pedestalHandler3(8, 9);
 
+PedestalHandler* pedestalHandlers[3] = {
+  &pedestalHandler0,
+  &pedestalHandler1,
+  &pedestalHandler3,
+};
+
+int pedestalHandlersTotal = 3;
+
 void setup() {
   while (!Serial) {// Wait for the serial connection to be establised.
     delay(100);
@@ -34,9 +42,9 @@ void setup() {
   Serial.println("Setup starting");
 
   PedestalHandler::init();
-  pedestalHandler0.begin(30, 120, 30, 90);
-  pedestalHandler1.begin(30, 120, 30, 90);
-  pedestalHandler3.begin(30, 120, 30, 90);
+  for (int i=0; i<pedestalHandlersTotal; i++) {
+    pedestalHandlers[i]->begin(30, 120, 30, 90);
+  }
 
 #if (CONTROLLER == CONTROLLER_PS2)
   ps2Controller.begin();
@@ -82,75 +90,71 @@ uint32_t getDelayAmount(int status) {
 }
 
 void processStartButtonPressedEvent() {
-  processStartButtonPressedEventFor(pedestalHandler0);
-  processStartButtonPressedEventFor(pedestalHandler1);
-  processStartButtonPressedEventFor(pedestalHandler3);
+  for (int i=0; i<pedestalHandlersTotal; i++) {
+    processStartButtonPressedEventFor(pedestalHandlers[i]);
+  }
 }
 
-void processStartButtonPressedEventFor(PedestalHandler pedestalHandler) {
-  pedestalHandler.reset();
+void processStartButtonPressedEventFor(PedestalHandler *pedestalHandler) {
+  pedestalHandler->reset();
 }
 
 void processDPadUpButtonPressedEvent() {
-  processDPadUpButtonPressedEventFor(pedestalHandler0);
-  processDPadUpButtonPressedEventFor(pedestalHandler1);
-  processDPadUpButtonPressedEventFor(pedestalHandler3);
+  for (int i=0; i<pedestalHandlersTotal; i++) {
+    processDPadUpButtonPressedEventFor(pedestalHandlers[i]);
+  }
 #if (__RUNNING_LOG_ENABLED__)
   Serial.print("main() - "), Serial.print("UP"), Serial.println(" is pushed");
 #endif
 }
 
-void processDPadUpButtonPressedEventFor(PedestalHandler pedestalHandler) {
-  bool activated = false;
-  activated = pedestalHandler.verticalServoUp();
+void processDPadUpButtonPressedEventFor(PedestalHandler *pedestalHandler) {
+  pedestalHandler->verticalServoUp();
 }
 
 void processDPadRightButtonPressedEvent() {
-  processDPadRightButtonPressedEventFor(pedestalHandler0);
-  processDPadRightButtonPressedEventFor(pedestalHandler1);
-  processDPadRightButtonPressedEventFor(pedestalHandler3);
+  for (int i=0; i<pedestalHandlersTotal; i++) {
+    processDPadRightButtonPressedEventFor(pedestalHandlers[i]);
+  }
 #if (__RUNNING_LOG_ENABLED__)
   Serial.print("main() - "), Serial.print("RIGHT"), Serial.println(" is pushed");
 #endif
 }
 
-void processDPadRightButtonPressedEventFor(PedestalHandler pedestalHandler) {
-  bool activated = false;
-  activated = pedestalHandler.horizontalServoRight();
+void processDPadRightButtonPressedEventFor(PedestalHandler *pedestalHandler) {
+  pedestalHandler->horizontalServoRight();
 }
 
 void processDPadDownButtonPressedEvent() {
-  processDPadDownButtonPressedEventFor(pedestalHandler0);
-  processDPadDownButtonPressedEventFor(pedestalHandler1);
-  processDPadDownButtonPressedEventFor(pedestalHandler3);
+  for (int i=0; i<pedestalHandlersTotal; i++) {
+    processDPadDownButtonPressedEventFor(pedestalHandlers[i]);
+  }
 #if (__RUNNING_LOG_ENABLED__)
   Serial.print("main() - "), Serial.print("DOWN"), Serial.println(" is pushed");
 #endif
 }
 
-void processDPadDownButtonPressedEventFor(PedestalHandler pedestalHandler) {
-  bool activated = false;
-  activated = pedestalHandler.verticalServoDown();
+void processDPadDownButtonPressedEventFor(PedestalHandler *pedestalHandler) {
+  pedestalHandler->verticalServoDown();
 }
 
 void processDPadLeftButtonPressedEvent() {
-  processDPadLeftButtonPressedEventFor(pedestalHandler0);
-  processDPadLeftButtonPressedEventFor(pedestalHandler1);
-  processDPadLeftButtonPressedEventFor(pedestalHandler3);
+  for (int i=0; i<pedestalHandlersTotal; i++) {
+    processDPadLeftButtonPressedEventFor(pedestalHandlers[i]);
+  }
 #if (__RUNNING_LOG_ENABLED__)
   Serial.print("main() - "), Serial.print("LEFT"), Serial.println(" is pushed");
 #endif
 }
 
-void processDPadLeftButtonPressedEventFor(PedestalHandler pedestalHandler) {
-  bool activated = false;
-  activated = pedestalHandler.horizontalServoLeft();
+void processDPadLeftButtonPressedEventFor(PedestalHandler *pedestalHandler) {
+  pedestalHandler->horizontalServoLeft();
 }
 
 void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
-  processLeftJoystickChangeEventFor(&pedestalHandler0, nJoyX, nJoyY);
-  processLeftJoystickChangeEventFor(&pedestalHandler1, nJoyX, nJoyY);
-  processLeftJoystickChangeEventFor(&pedestalHandler3, nJoyX, nJoyY);
+  for (int i=0; i<pedestalHandlersTotal; i++) {
+    processLeftJoystickChangeEventFor(pedestalHandlers[i], nJoyX, nJoyY);
+  }
 }
 
 void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
@@ -164,11 +168,11 @@ void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJo
 }
 
 void processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
-  processRightJoystickChangeEventFor(pedestalHandler0, nJoyX, nJoyY);
-  processRightJoystickChangeEventFor(pedestalHandler1, nJoyX, nJoyY);
-  processRightJoystickChangeEventFor(pedestalHandler3, nJoyX, nJoyY);
+  for (int i=0; i<pedestalHandlersTotal; i++) {
+    processRightJoystickChangeEventFor(pedestalHandlers[i], nJoyX, nJoyY);
+  }
 }
 
-void processRightJoystickChangeEventFor(PedestalHandler pedestalHandler, int nJoyX, int nJoyY) {
+void processRightJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
   // do nothing
 }
