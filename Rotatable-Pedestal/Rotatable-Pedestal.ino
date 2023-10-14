@@ -62,6 +62,10 @@ void setup() {
 
 #if (CONTROLLER == CONTROLLER_RF24)
   rf24Controller.begin();
+  rf24Controller.onDPadUpButtonPressed(processDPadUpButtonPressedEvent);
+  rf24Controller.onDPadRightButtonPressed(processDPadRightButtonPressedEvent);
+  rf24Controller.onDPadDownButtonPressed(processDPadDownButtonPressedEvent);
+  rf24Controller.onDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
   rf24Controller.onLeftJoystickChanged(processLeftJoystickChangeEvent);
 #endif
 

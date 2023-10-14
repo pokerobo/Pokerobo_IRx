@@ -2,6 +2,14 @@
 
 #define __BINARY_ENCODING__ 1
 
+#define FLAG_UP     1 << 0
+#define FLAG_RIGHT  1 << 1
+#define FLAG_DOWN   1 << 2
+#define FLAG_LEFT   1 << 3
+#define FLAG_START  1 << 4
+#define FLAG_SELECT 1 << 5
+#define FLAG_ANALOG 1 << 6
+
 RF24 radio(9, 10);  // CE, CSN
 
 RF24Controller::RF24Controller() {
@@ -51,9 +59,87 @@ int RF24Controller::loop() {
     if (!ok) {
       return -1;
     }
+
+    uint8_t pressed = processButtonPress(buttons);
+    if (pressed) {
+      return pressed;
+    }
+
     return processJoystickButton(jX, jY, user_onLeftJoystickChanged, "Left Joystick");
   }
   return 0;
+}
+
+int RF24Controller::processButtonPress(uint8_t pressed) {
+  uint8_t checked = 0;
+
+  if(pressed & FLAG_START && user_onStartButtonPressed) {
+#if (__RUNNING_LOG_ENABLED__)
+    if (debugEnabled) {
+      Serial.print("JOY_"), Serial.print("START");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onStartButtonPressed();
+    checked |= FLAG_START;
+  }
+
+  if(pressed & FLAG_SELECT && user_onSelectButtonPressed) {
+#if (__RUNNING_LOG_ENABLED__)
+    if (debugEnabled) {
+      Serial.print("JOY_"), Serial.print("SELECT");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onSelectButtonPressed();
+    checked |= FLAG_START;
+  }
+
+  if(pressed & FLAG_UP && user_onDPadUpButtonPressed) {
+#if (__RUNNING_LOG_ENABLED__)
+    if (debugEnabled) {
+      Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("UP");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onDPadUpButtonPressed();
+    checked |= FLAG_UP;
+  }
+
+  if(pressed & FLAG_RIGHT && user_onDPadRightButtonPressed) {
+#if (__RUNNING_LOG_ENABLED__)
+    if (debugEnabled) {
+      Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("RIGHT");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onDPadRightButtonPressed();
+    checked |= FLAG_RIGHT;
+  }
+
+  if(pressed & FLAG_DOWN && user_onDPadDownButtonPressed) {
+#if (__RUNNING_LOG_ENABLED__)
+    if (debugEnabled) {
+      Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("DOWN");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onDPadDownButtonPressed();
+    checked |= FLAG_DOWN;
+  }
+
+  if(pressed & FLAG_LEFT && user_onDPadLeftButtonPressed) {
+#if (__RUNNING_LOG_ENABLED__)
+    if (debugEnabled) {
+      Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("LEFT");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onDPadLeftButtonPressed();
+    checked |= FLAG_LEFT;
+  }
+
+  return checked;
 }
 
 int RF24Controller::processJoystickButton(int nJoyX, int nJoyY, void (*onChange)(int, int), const char label[]) {
