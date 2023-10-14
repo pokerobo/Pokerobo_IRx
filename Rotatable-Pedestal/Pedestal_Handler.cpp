@@ -172,8 +172,7 @@ bool PedestalHandler::syncWith(PedestalHandler master) {
 
 void PedestalHandler::test() {
   if (count >= 3) {
-    Serial.print(count);
-    Serial.print(" rounds are done!");
+    Serial.print(count), Serial.println(" rounds are done!");
     return;
   }
   count++;
@@ -181,18 +180,14 @@ void PedestalHandler::test() {
   for (int pos = 0; pos <= 180; pos += 5) {
     setHorizontalPosition(pos);
     setVerticalPosition(pos);
-    Serial.print("hPos: ");
-    Serial.print(pos);
-    Serial.println();
+    Serial.print("hPos: "), Serial.println(pos);
     delay(100);
   }
   //
   for (int pos = 180; pos >= 0; pos -= 5) {
     setHorizontalPosition(pos);
     setVerticalPosition(pos);
-    Serial.print("hPos: ");
-    Serial.print(pos);
-    Serial.println();
+    Serial.print("hPos: "), Serial.println(pos);
     delay(100);
   }
 }

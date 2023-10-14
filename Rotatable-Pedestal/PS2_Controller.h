@@ -32,13 +32,20 @@ class PS2Controller {
     void showError();
     void reload();
     void onStartButtonPressed(void (*function)());
-    void onDPadButtonPressed(void (*function)(uint16_t));
+    void onSelectButtonPressed(void (*function)());
+    void onDPadUpButtonPressed(void (*function)());
+    void onDPadRightButtonPressed(void (*function)());
+    void onDPadDownButtonPressed(void (*function)());
+    void onDPadLeftButtonPressed(void (*function)());
     void onLeftJoystickChanged(void (*function)(int, int));
     void onRightJoystickChanged(void (*function)(int, int));
     int check();
   protected:
     int processStartButtonPress();
-    int processPadButtonPress(uint16_t button, const char buttonLabel[]);
+    int processDPadUpButtonPress();
+    int processDPadRightButtonPress();
+    int processDPadDownButtonPress();
+    int processDPadLeftButtonPress();
     int processJoystickButton(byte, byte, void (*function)(int, int), const char c[]);
   private:
     PS2X ps2x;
@@ -48,6 +55,11 @@ class PS2Controller {
     byte ps2Type;
     byte vibrate;
     void (*user_onStartButtonPressed)();
+    void (*user_onSelectButtonPressed)();
+    void (*user_onDPadUpButtonPressed)();
+    void (*user_onDPadRightButtonPressed)();
+    void (*user_onDPadDownButtonPressed)();
+    void (*user_onDPadLeftButtonPressed)();
     void (*user_onDPadButtonPressed)(uint16_t);
     void (*user_onLeftJoystickChanged)(int, int);
     void (*user_onRightJoystickChanged)(int, int);

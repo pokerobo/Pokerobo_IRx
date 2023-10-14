@@ -40,8 +40,7 @@ void PS2Controller::begin() {
       Serial.println("GuitarHero Controller Found");
       break;
     default:
-      Serial.print("Invalid Controller type: ");
-      Serial.println(ps2Type);
+      Serial.print("Invalid Controller type: "), Serial.println(ps2Type);
   }
 };
 
@@ -64,8 +63,24 @@ void PS2Controller::onStartButtonPressed(void (*function)()) {
   user_onStartButtonPressed = function;
 };
 
-void PS2Controller::onDPadButtonPressed(void (*function)(uint16_t)) {
-  user_onDPadButtonPressed = function;
+void PS2Controller::onSelectButtonPressed(void (*function)()) {
+  user_onSelectButtonPressed = function;
+};
+
+void PS2Controller::onDPadUpButtonPressed(void (*function)()) {
+  user_onDPadUpButtonPressed = function;
+};
+
+void PS2Controller::onDPadRightButtonPressed(void (*function)()) {
+  user_onDPadRightButtonPressed = function;
+};
+
+void PS2Controller::onDPadDownButtonPressed(void (*function)()) {
+  user_onDPadDownButtonPressed = function;
+};
+
+void PS2Controller::onDPadLeftButtonPressed(void (*function)()) {
+  user_onDPadLeftButtonPressed = function;
 };
 
 void PS2Controller::onLeftJoystickChanged(void (*function)(int, int)) {
@@ -101,20 +116,16 @@ int PS2Controller::check() {
   // Perform movements based on D-pad buttons
   //
   uint16_t buttonPressed = 0;
-  //
-  // MOVE FORWARD
-  buttonPressed |= processPadButtonPress(PSB_PAD_UP, "PSB_PAD_UP");
-  // MOVE BACK
-  buttonPressed |= processPadButtonPress(PSB_PAD_DOWN, "PSB_PAD_DOWN");
-  // TURN LEFT
-  buttonPressed |= processPadButtonPress(PSB_PAD_LEFT, "PSB_PAD_LEFT");
-  // TURN RIGHT
-  buttonPressed |= processPadButtonPress(PSB_PAD_RIGHT, "PSB_PAD_RIGHT");
+  buttonPressed |= processDPadUpButtonPress();
+  buttonPressed |= processDPadRightButtonPress();
+  buttonPressed |= processDPadDownButtonPress();
+  buttonPressed |= processDPadLeftButtonPress();
+
   //
   if (buttonPressed > 0) {
 #ifdef __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("buttonPressed flag: ");
+      Serial.print("buttonPressed: ");
       Serial.println(buttonPressed, HEX);
     }
 #endif
@@ -134,7 +145,7 @@ int PS2Controller::processStartButtonPress() {
   if(ps2x.Button(button)) {
 #ifdef __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PSB_START");
+      Serial.print("PSB_"), Serial.print("START");
       Serial.println(" is pushed");
     }
 #endif
@@ -144,18 +155,73 @@ int PS2Controller::processStartButtonPress() {
   return 0;
 }
 
-int PS2Controller::processPadButtonPress(uint16_t button, const char buttonLabel[]) {
-  if (!user_onDPadButtonPressed) {
+int PS2Controller::processDPadUpButtonPress() {
+  uint16_t button = PSB_PAD_UP;
+  if (!user_onDPadUpButtonPressed) {
     return 0;
   }
   if(ps2x.Button(button)) {
 #ifdef __RUNNING_LOG_ENABLED__
-    if (debugEnabled && buttonLabel) {
-      Serial.print(buttonLabel);
+    if (debugEnabled) {
+      Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("UP");
       Serial.println(" is pushed");
     }
 #endif
-    user_onDPadButtonPressed(button);
+    user_onDPadUpButtonPressed();
+    return button;
+  }
+  return 0;
+}
+
+int PS2Controller::processDPadRightButtonPress() {
+  uint16_t button = PSB_PAD_RIGHT;
+  if (!user_onDPadRightButtonPressed) {
+    return 0;
+  }
+  if(ps2x.Button(button)) {
+#ifdef __RUNNING_LOG_ENABLED__
+    if (debugEnabled) {
+      Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("RIGHT");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onDPadRightButtonPressed();
+    return button;
+  }
+  return 0;
+}
+
+int PS2Controller::processDPadDownButtonPress() {
+  uint16_t button = PSB_PAD_DOWN;
+  if (!user_onDPadDownButtonPressed) {
+    return 0;
+  }
+  if(ps2x.Button(button)) {
+#ifdef __RUNNING_LOG_ENABLED__
+    if (debugEnabled) {
+      Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("DOWN");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onDPadDownButtonPressed();
+    return button;
+  }
+  return 0;
+}
+
+int PS2Controller::processDPadLeftButtonPress() {
+  uint16_t button = PSB_PAD_LEFT;
+  if (!user_onDPadLeftButtonPressed) {
+    return 0;
+  }
+  if(ps2x.Button(button)) {
+#ifdef __RUNNING_LOG_ENABLED__
+    if (debugEnabled) {
+      Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("LEFT");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onDPadLeftButtonPressed();
     return button;
   }
   return 0;
