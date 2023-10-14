@@ -47,7 +47,7 @@ class PS2Controller {
     int processDPadRightButtonPress();
     int processDPadDownButtonPress();
     int processDPadLeftButtonPress();
-    int processJoystickButton(byte, byte, void (*function)(int, int), const char c[]);
+    int processJoystickChange(byte, byte, void (*function)(int, int), const char c[]);
   private:
     PS2X ps2x;
     bool debugEnabled;

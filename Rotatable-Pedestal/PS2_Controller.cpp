@@ -137,9 +137,9 @@ int PS2Controller::check() {
     return buttonPressed;
   }
   //
-  int lstatus = processJoystickButton(PSS_LX, PSS_LY, user_onLeftJoystickChanged, "Left Joystick");
+  int lstatus = processJoystickChange(PSS_LX, PSS_LY, user_onLeftJoystickChanged, "Left Joystick");
   //
-  int rstatus = processJoystickButton(PSS_RX, PSS_RY, user_onRightJoystickChanged, "Right Joystick");
+  int rstatus = processJoystickChange(PSS_RX, PSS_RY, user_onRightJoystickChanged, "Right Joystick");
 };
 
 int PS2Controller::processStartButtonPress() {
@@ -250,7 +250,7 @@ int PS2Controller::processDPadLeftButtonPress() {
   return 0;
 }
 
-int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(int, int), const char label[]) {
+int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(int, int), const char label[]) {
   int nJoyX = ps2x.Analog(xKey); // read x-joystick
   int nJoyY = ps2x.Analog(yKey); // read y-joystick
   //
@@ -262,7 +262,7 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
 #if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("PS2Controller::");
-      Serial.print("processJoystickButton() - ");
+      Serial.print("processJoystickChange() - ");
       Serial.print(label);
       Serial.println(": ");
       Serial.print("- X: ");
@@ -278,7 +278,7 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
 #if (__RUNNING_LOG_ENABLED__)
       if (debugEnabled) {
         Serial.print("PS2Controller::");
-        Serial.print("processJoystickButton() - ");
+        Serial.print("processJoystickChange() - ");
         Serial.print(label);
         Serial.print(": ");
         Serial.println("event listener has not registered");
