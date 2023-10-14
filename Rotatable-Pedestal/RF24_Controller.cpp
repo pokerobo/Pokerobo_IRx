@@ -40,7 +40,7 @@ int RF24Controller::loop() {
     }
 #endif
 
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     Serial.print("No: "); Serial.print(count);
     Serial.print("; Buttons: "); Serial.print(buttons);
     Serial.print("; X="); Serial.print(jX);
@@ -64,7 +64,7 @@ int RF24Controller::processJoystickButton(int nJoyX, int nJoyY, void (*onChange)
   //
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y)
   {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("RF24Controller::");
       Serial.print("processJoystickButton() - ");
@@ -80,7 +80,7 @@ int RF24Controller::processJoystickButton(int nJoyX, int nJoyY, void (*onChange)
       onChange(nJoyX, nJoyY);
       return 1;
     } else {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
       if (debugEnabled) {
         Serial.print("RF24Controller::");
         Serial.print("processJoystickButton() - ");

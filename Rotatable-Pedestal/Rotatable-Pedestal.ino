@@ -95,7 +95,7 @@ void processDPadUpButtonPressedEvent() {
   processDPadUpButtonPressedEventFor(pedestalHandler0);
   processDPadUpButtonPressedEventFor(pedestalHandler1);
   processDPadUpButtonPressedEventFor(pedestalHandler3);
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
   Serial.print("main() - "), Serial.print("UP"), Serial.println(" is pushed");
 #endif
 }
@@ -109,7 +109,7 @@ void processDPadRightButtonPressedEvent() {
   processDPadRightButtonPressedEventFor(pedestalHandler0);
   processDPadRightButtonPressedEventFor(pedestalHandler1);
   processDPadRightButtonPressedEventFor(pedestalHandler3);
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
   Serial.print("main() - "), Serial.print("RIGHT"), Serial.println(" is pushed");
 #endif
 }
@@ -123,7 +123,7 @@ void processDPadDownButtonPressedEvent() {
   processDPadDownButtonPressedEventFor(pedestalHandler0);
   processDPadDownButtonPressedEventFor(pedestalHandler1);
   processDPadDownButtonPressedEventFor(pedestalHandler3);
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
   Serial.print("main() - "), Serial.print("DOWN"), Serial.println(" is pushed");
 #endif
 }
@@ -137,7 +137,7 @@ void processDPadLeftButtonPressedEvent() {
   processDPadLeftButtonPressedEventFor(pedestalHandler0);
   processDPadLeftButtonPressedEventFor(pedestalHandler1);
   processDPadLeftButtonPressedEventFor(pedestalHandler3);
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
   Serial.print("main() - "), Serial.print("LEFT"), Serial.println(" is pushed");
 #endif
 }
@@ -156,7 +156,7 @@ void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
 void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
   bool changed = pedestalHandler->change(nJoyX, nJoyY);
   if (changed) {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     Serial.print("main() - ");
     Serial.println("processLeftJoystickChangeEvent() is invoked");
 #endif

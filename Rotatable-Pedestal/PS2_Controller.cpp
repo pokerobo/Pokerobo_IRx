@@ -123,7 +123,7 @@ int PS2Controller::check() {
 
   //
   if (buttonPressed > 0) {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("buttonPressed: ");
       Serial.println(buttonPressed, HEX);
@@ -143,7 +143,7 @@ int PS2Controller::processStartButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("START");
       Serial.println(" is pushed");
@@ -161,7 +161,7 @@ int PS2Controller::processDPadUpButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("UP");
       Serial.println(" is pushed");
@@ -179,7 +179,7 @@ int PS2Controller::processDPadRightButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("RIGHT");
       Serial.println(" is pushed");
@@ -197,7 +197,7 @@ int PS2Controller::processDPadDownButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("DOWN");
       Serial.println(" is pushed");
@@ -215,7 +215,7 @@ int PS2Controller::processDPadLeftButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("LEFT");
       Serial.println(" is pushed");
@@ -236,7 +236,7 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
   //
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y)
   {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("PS2Controller::");
       Serial.print("processJoystickButton() - ");
@@ -252,7 +252,7 @@ int PS2Controller::processJoystickButton(byte xKey, byte yKey, void (*onChange)(
       onChange(nJoyX, nJoyY);
       return 1;
     } else {
-#ifdef __RUNNING_LOG_ENABLED__
+#if (__RUNNING_LOG_ENABLED__)
       if (debugEnabled) {
         Serial.print("PS2Controller::");
         Serial.print("processJoystickButton() - ");
