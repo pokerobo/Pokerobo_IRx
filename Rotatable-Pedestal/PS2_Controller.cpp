@@ -113,6 +113,11 @@ int PS2Controller::check() {
     return startButtonPressed;
   }
   //
+  uint16_t selectButtonPressed = processSelectButtonPress();
+  if (selectButtonPressed) {
+    return selectButtonPressed;
+  }
+  //
   // Perform movements based on D-pad buttons
   //
   uint16_t buttonPressed = 0;
@@ -150,6 +155,24 @@ int PS2Controller::processStartButtonPress() {
     }
 #endif
     user_onStartButtonPressed();
+    return button;
+  }
+  return 0;
+}
+
+int PS2Controller::processSelectButtonPress() {
+  uint16_t button = PSB_SELECT;
+  if (!user_onSelectButtonPressed) {
+    return 0;
+  }
+  if(ps2x.Button(button)) {
+#if (__RUNNING_LOG_ENABLED__)
+    if (debugEnabled) {
+      Serial.print("PSB_"), Serial.print("SELECT");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onSelectButtonPressed();
     return button;
   }
   return 0;

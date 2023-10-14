@@ -42,6 +42,7 @@ class PS2Controller {
     int check();
   protected:
     int processStartButtonPress();
+    int processSelectButtonPress();
     int processDPadUpButtonPress();
     int processDPadRightButtonPress();
     int processDPadDownButtonPress();
