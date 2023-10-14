@@ -62,10 +62,15 @@ void setup() {
 
 #if (CONTROLLER == CONTROLLER_RF24)
   rf24Controller.begin();
+
+  rf24Controller.onStartButtonPressed(processStartButtonPressedEvent);
+  rf24Controller.onAnalogButtonPressed(processAnalogButtonPressedEvent);
+
   rf24Controller.onDPadUpButtonPressed(processDPadUpButtonPressedEvent);
   rf24Controller.onDPadRightButtonPressed(processDPadRightButtonPressedEvent);
   rf24Controller.onDPadDownButtonPressed(processDPadDownButtonPressedEvent);
   rf24Controller.onDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+
   rf24Controller.onLeftJoystickChanged(processLeftJoystickChangeEvent);
 #endif
 
@@ -87,9 +92,9 @@ void loop() {
 
 uint32_t getDelayAmount(int status) {
   if (status >= 1) {
-    return 10;
+    return 5;
   } else {
-    return 50;
+    return 10;
   }
 }
 
@@ -101,6 +106,15 @@ void processStartButtonPressedEvent() {
 
 void processStartButtonPressedEventFor(PedestalHandler *pedestalHandler) {
   pedestalHandler->reset();
+}
+
+void processAnalogButtonPressedEvent() {
+  for (int i=0; i<pedestalHandlersTotal; i++) {
+    processAnalogButtonPressedEventFor(pedestalHandlers[i]);
+  }
+}
+
+void processAnalogButtonPressedEventFor(PedestalHandler *pedestalHandler) {
 }
 
 void processDPadUpButtonPressedEvent() {

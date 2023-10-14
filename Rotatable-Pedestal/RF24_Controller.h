@@ -1,4 +1,3 @@
-
 #ifndef __RF24_CONTROLLER_H__
 #define __RF24_CONTROLLER_H__
 
@@ -21,6 +20,7 @@ class RF24Controller {
     int loop();
     void onStartButtonPressed(void (*function)());
     void onSelectButtonPressed(void (*function)());
+    void onAnalogButtonPressed(void (*function)());
     void onDPadUpButtonPressed(void (*function)());
     void onDPadRightButtonPressed(void (*function)());
     void onDPadDownButtonPressed(void (*function)());
@@ -35,6 +35,7 @@ class RF24Controller {
     uint16_t debugLimit;
     void (*user_onStartButtonPressed)();
     void (*user_onSelectButtonPressed)();
+    void (*user_onAnalogButtonPressed)();
     void (*user_onDPadUpButtonPressed)();
     void (*user_onDPadRightButtonPressed)();
     void (*user_onDPadDownButtonPressed)();

@@ -1,7 +1,7 @@
-#include "Commons.h"
-
 #ifndef __PEDESTAL_HANDLER_H__
 #define __PEDESTAL_HANDLER_H__
+
+#include "Commons.h"
 
 #ifndef __HCPCA9685_ENABLED__
 #include <Servo.h>

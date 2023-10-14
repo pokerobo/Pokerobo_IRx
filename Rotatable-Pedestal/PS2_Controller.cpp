@@ -257,8 +257,7 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(
   nJoyX = map(nJoyX, 0, 255, NUM_RANGE_X, -NUM_RANGE_X);
   nJoyY = map(nJoyY, 0, 255, NUM_RANGE_Y, -NUM_RANGE_Y);
   //
-  if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y)
-  {
+  if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
 #if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("PS2Controller::");

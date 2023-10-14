@@ -2,13 +2,13 @@
 
 #define __BINARY_ENCODING__ 1
 
-#define FLAG_UP     1 << 0
-#define FLAG_RIGHT  1 << 1
-#define FLAG_DOWN   1 << 2
-#define FLAG_LEFT   1 << 3
-#define FLAG_START  1 << 4
-#define FLAG_SELECT 1 << 5
-#define FLAG_ANALOG 1 << 6
+#define BIT_UP_BUTTON     1 << 0
+#define BIT_RIGHT_BUTTON  1 << 1
+#define BIT_DOWN_BUTTON   1 << 2
+#define BIT_LEFT_BUTTON   1 << 3
+#define BIT_START_BUTTON  1 << 4
+#define BIT_SELECT_BUTTON 1 << 5
+#define BIT_ANALOG_BUTTON 1 << 6
 
 RF24 radio(9, 10);  // CE, CSN
 
@@ -73,7 +73,7 @@ int RF24Controller::loop() {
 int RF24Controller::processButtonPress(uint8_t pressed) {
   uint8_t checked = 0;
 
-  if(pressed & FLAG_START && user_onStartButtonPressed) {
+  if(pressed & BIT_START_BUTTON && user_onStartButtonPressed) {
 #if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("START");
@@ -81,10 +81,10 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
     }
 #endif
     user_onStartButtonPressed();
-    checked |= FLAG_START;
+    checked |= BIT_START_BUTTON;
   }
 
-  if(pressed & FLAG_SELECT && user_onSelectButtonPressed) {
+  if(pressed & BIT_SELECT_BUTTON && user_onSelectButtonPressed) {
 #if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("SELECT");
@@ -92,10 +92,21 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
     }
 #endif
     user_onSelectButtonPressed();
-    checked |= FLAG_START;
+    checked |= BIT_SELECT_BUTTON;
   }
 
-  if(pressed & FLAG_UP && user_onDPadUpButtonPressed) {
+  if(pressed & BIT_ANALOG_BUTTON && user_onAnalogButtonPressed) {
+#if (__RUNNING_LOG_ENABLED__)
+    if (debugEnabled) {
+      Serial.print("JOY_"), Serial.print("ANALOG");
+      Serial.println(" is pushed");
+    }
+#endif
+    user_onAnalogButtonPressed();
+    checked |= BIT_ANALOG_BUTTON;
+  }
+
+  if(pressed & BIT_UP_BUTTON && user_onDPadUpButtonPressed) {
 #if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("UP");
@@ -103,10 +114,10 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
     }
 #endif
     user_onDPadUpButtonPressed();
-    checked |= FLAG_UP;
+    checked |= BIT_UP_BUTTON;
   }
 
-  if(pressed & FLAG_RIGHT && user_onDPadRightButtonPressed) {
+  if(pressed & BIT_RIGHT_BUTTON && user_onDPadRightButtonPressed) {
 #if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("RIGHT");
@@ -114,10 +125,10 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
     }
 #endif
     user_onDPadRightButtonPressed();
-    checked |= FLAG_RIGHT;
+    checked |= BIT_RIGHT_BUTTON;
   }
 
-  if(pressed & FLAG_DOWN && user_onDPadDownButtonPressed) {
+  if(pressed & BIT_DOWN_BUTTON && user_onDPadDownButtonPressed) {
 #if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("DOWN");
@@ -125,10 +136,10 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
     }
 #endif
     user_onDPadDownButtonPressed();
-    checked |= FLAG_DOWN;
+    checked |= BIT_DOWN_BUTTON;
   }
 
-  if(pressed & FLAG_LEFT && user_onDPadLeftButtonPressed) {
+  if(pressed & BIT_LEFT_BUTTON && user_onDPadLeftButtonPressed) {
 #if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("LEFT");
@@ -136,7 +147,7 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
     }
 #endif
     user_onDPadLeftButtonPressed();
-    checked |= FLAG_LEFT;
+    checked |= BIT_LEFT_BUTTON;
   }
 
   return checked;
@@ -144,12 +155,10 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
 
 int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)(int, int), const char label[]) {
 
-  //
   nJoyX = map(nJoyX, 0, 726, NUM_RANGE_X, -NUM_RANGE_X);
   nJoyY = map(nJoyY, 0, 726, NUM_RANGE_Y, -NUM_RANGE_Y);
-  //
-  if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y)
-  {
+
+  if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
 #if (__RUNNING_LOG_ENABLED__)
     if (debugEnabled) {
       Serial.print("RF24Controller::");
@@ -187,6 +196,10 @@ void RF24Controller::onStartButtonPressed(void (*function)()) {
 
 void RF24Controller::onSelectButtonPressed(void (*function)()) {
   user_onSelectButtonPressed = function;
+};
+
+void RF24Controller::onAnalogButtonPressed(void (*function)()) {
+  user_onAnalogButtonPressed = function;
 };
 
 void RF24Controller::onDPadUpButtonPressed(void (*function)()) {

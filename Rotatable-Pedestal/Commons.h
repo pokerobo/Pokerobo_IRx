@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define __HCPCA9685_ENABLED__
+#define __HCPCA9685_ENABLED__   1
 
 #define __LOADING_LOG_ENABLED__ 0
 #define __RUNNING_LOG_ENABLED__ 0

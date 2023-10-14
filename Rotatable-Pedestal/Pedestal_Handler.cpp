@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "Pedestal_Handler.h"
 
 #ifdef __HCPCA9685_ENABLED__
