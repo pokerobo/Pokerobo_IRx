@@ -26,17 +26,17 @@ int RF24Controller::loop() {
     radio.read(&msg, sizeof(msg));
 
     bool ok = false;
-    uint8_t buttons;
+    uint16_t buttons;
     uint16_t jX, jY;
     uint32_t count;
 
 #if __RF24_BINARY_ENCODING__
-    if (msg[0] == 'J') {
+    if (msg[0] == 'J' && msg[1] == 'S') {
       ok = true;
-      buttons = msg[1];
-      jX = decodeInteger(&msg[2], 2);
-      jY = decodeInteger(&msg[4], 2);
-      count = decodeInteger(&msg[6], 4);
+      buttons = decodeInteger(&msg[2], 2);
+      jX = decodeInteger(&msg[4], 2);
+      jY = decodeInteger(&msg[6], 2);
+      count = decodeInteger(&msg[8], 4);
     }
 #else
     char cmdId;
@@ -58,7 +58,7 @@ int RF24Controller::loop() {
       return -1;
     }
 
-    uint8_t pressed = processButtonPress(buttons);
+    uint16_t pressed = processButtonPress(buttons);
     if (pressed) {
       return pressed;
     }
@@ -68,8 +68,8 @@ int RF24Controller::loop() {
   return 0;
 }
 
-int RF24Controller::processButtonPress(uint8_t pressed) {
-  uint8_t checked = 0;
+int RF24Controller::processButtonPress(uint16_t pressed) {
+  uint16_t checked = 0;
 
   if(pressed & BIT_START_BUTTON && user_onStartButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
