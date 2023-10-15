@@ -27,15 +27,15 @@ PedestalHandler::PedestalHandler(byte hPin, byte vPin, bool _debugEnabled) {
   debugEnabled = _debugEnabled;
 #if __LOADING_LOG_ENABLED__
   if (debugEnabled) {
-    Serial.print("PedestalHandler::");
-    Serial.print("PedestalHandler()"), Serial.print(" - ");
-    Serial.print("hPin: ");
+    Serial.print("PedestalHandler"), Serial.print("::");
+    Serial.print("PedestalHandler"), Serial.print("()"), Serial.print(" - ");
+    Serial.print("hPin"), Serial.print(": ");
     Serial.print(hPin);
     Serial.print(" => ");
     Serial.println(horizontalServoPin);
-    Serial.print("PedestalHandler::");
-    Serial.print("PedestalHandler()"), Serial.print(" - ");
-    Serial.print("vPin: ");
+    Serial.print("PedestalHandler"), Serial.print("::");
+    Serial.print("PedestalHandler"), Serial.print("()"), Serial.print(" - ");
+    Serial.print("vPin"), Serial.print(": ");
     Serial.print(vPin);
     Serial.print(" => ");
     Serial.println(verticalServoPin);
@@ -46,15 +46,15 @@ PedestalHandler::PedestalHandler(byte hPin, byte vPin, bool _debugEnabled) {
 void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMaxAngle) {
 #if __LOADING_LOG_ENABLED__
   if (debugEnabled) {
-    Serial.print("PedestalHandler::");
+    Serial.print("PedestalHandler"), Serial.print("::");
     Serial.println("begin():");
-    Serial.print(" - hMinAngle: ");
+    Serial.print(" - "), Serial.print("hMinAngle"), Serial.print(": ");
     Serial.println(hMinAngle);
-    Serial.print(" - hMaxAngle: ");
+    Serial.print(" - "), Serial.print("hMaxAngle"), Serial.print(": ");
     Serial.println(hMaxAngle);
-    Serial.print(" - vMinAngle: ");
+    Serial.print(" - "), Serial.print("vMinAngle"), Serial.print(": ");
     Serial.println(vMinAngle);
-    Serial.print(" - vMaxAngle: ");
+    Serial.print(" - "), Serial.print("vMaxAngle"), Serial.print(": ");
     Serial.println(vMaxAngle);
   }
 #endif
@@ -84,7 +84,7 @@ int PedestalHandler::getHorizontalPosition() {
   return horizontalServo.read();
 #else
 #if __RUNNING_LOG_ENABLED__
-  Serial.print("current "), Serial.print("horizontalServoPos: ");
+  Serial.print("old "), Serial.print("horizontalServoPos"), Serial.print(": ");
   Serial.println(horizontalServoPos);
 #endif
   return horizontalServoPos;
@@ -97,12 +97,12 @@ void PedestalHandler::setHorizontalPosition(int hPos) {
 #else
   horizontalServoPos = hPos;
 #if __RUNNING_LOG_ENABLED__
-  Serial.print("new "), Serial.print("horizontalServoPos: ");
+  Serial.print("new "), Serial.print("horizontalServoPos"), Serial.print(": ");
   Serial.print(horizontalServoPos);
 #endif
   int horizontalHcpcaPos = map(horizontalServoPos, 0, 180, 10, 450);
 #if __RUNNING_LOG_ENABLED__
-  Serial.print("; horizontalHcpcaPos: ");
+  Serial.print("; "), Serial.print("horizontalHcpcaPos"), Serial.print(": ");
   Serial.println(horizontalHcpcaPos);
 #endif
   hcpca9685.Servo(horizontalServoPin, horizontalHcpcaPos);
@@ -179,14 +179,14 @@ void PedestalHandler::test() {
   for (int pos = 0; pos <= 180; pos += 5) {
     setHorizontalPosition(pos);
     setVerticalPosition(pos);
-    Serial.print("hPos: "), Serial.println(pos);
+    Serial.print("hPos"), Serial.print(": "), Serial.println(pos);
     delay(100);
   }
   //
   for (int pos = 180; pos >= 0; pos -= 5) {
     setHorizontalPosition(pos);
     setVerticalPosition(pos);
-    Serial.print("hPos: "), Serial.println(pos);
+    Serial.print("hPos"), Serial.print(": "), Serial.println(pos);
     delay(100);
   }
 }
@@ -211,9 +211,9 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
   if (hDelta == 0) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PedestalHandler::");
+      Serial.print("PedestalHandler"), Serial.print("::");
       Serial.print("changeHorizontalServo()"), Serial.print(" - ");
-      Serial.print("hDelta: ");
+      Serial.print("hDelta"), Serial.print(": ");
       Serial.println("0, do nothing");
     }
 #endif
@@ -224,12 +224,12 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
   //
 #if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {
-    Serial.print("PedestalHandler::");
+    Serial.print("PedestalHandler"), Serial.print("::");
     Serial.print("changeHorizontalServo()"), Serial.print(" - ");
-    Serial.print("hDelta: ");
+    Serial.print("hDelta"), Serial.print(": ");
     Serial.print(hDelta);
     Serial.print("; ");
-    Serial.print("hPos: ");
+    Serial.print("hPos"), Serial.print(": ");
     Serial.println(hPos);
   }
 #endif
@@ -249,9 +249,9 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
   if (vDelta == 0) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PedestalHandler::");
+      Serial.print("PedestalHandler"), Serial.print("::");
       Serial.print("changeVerticalServo()"), Serial.print(" - ");
-      Serial.print("vDelta: ");
+      Serial.print("vDelta"), Serial.print(": ");
       Serial.println("0, do nothing");
     }
 #endif
@@ -262,12 +262,12 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
   //
 #if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {
-    Serial.print("PedestalHandler::");
+    Serial.print("PedestalHandler"), Serial.print("::");
     Serial.print("changeVerticalServo()"), Serial.print(" - ");
-    Serial.print("vDelta: ");
+    Serial.print("vDelta"), Serial.print(": ");
     Serial.print(vDelta);
     Serial.print("; ");
-    Serial.print("vPos: ");
+    Serial.print("vPos"), Serial.print(": ");
     Serial.println(vPos);
   }
 #endif
@@ -286,12 +286,12 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
 bool PedestalHandler::change(int hDelta, int vDelta) {
 #if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {
-    Serial.print("PedestalHandler::");
+    Serial.print("PedestalHandler"), Serial.print("::");
     Serial.print("change()"), Serial.print(" - ");
-    Serial.print("hDelta: ");
+    Serial.print("hDelta"), Serial.print(": ");
     Serial.print(hDelta);
     Serial.print("; ");
-    Serial.print("vDelta: ");
+    Serial.print("vDelta"), Serial.print(": ");
     Serial.print(vDelta);
     Serial.println();
   }

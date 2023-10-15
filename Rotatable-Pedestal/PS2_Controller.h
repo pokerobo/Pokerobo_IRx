@@ -10,6 +10,8 @@
 #include "Commons.h"
 #include <PS2X_lib.h>
 
+#define __PS2INIT_LOG_ENABLED__ (__PS2_LOGGING_ENABLED__ || __LOADING_LOG_ENABLED__ || 0)
+
 #define MIN_BOUND_X      3
 #define MIN_BOUND_Y      3
 
@@ -47,7 +49,7 @@ class PS2Controller {
     int processDPadRightButtonPress();
     int processDPadDownButtonPress();
     int processDPadLeftButtonPress();
-    int processJoystickChange(byte, byte, void (*function)(int, int), const char c[]);
+    int processJoystickChange(byte, byte, void (*function)(int, int), const char label);
   private:
     PS2X ps2x;
     bool debugEnabled;

@@ -6,7 +6,9 @@
 #define __HCPCA9685_ENABLED__   1
 
 #define __LOADING_LOG_ENABLED__ 0
-#define __RUNNING_LOG_ENABLED__ 1
+#define __RUNNING_LOG_ENABLED__ 0
+
+#define __PS2_LOGGING_ENABLED__ 0
 
 #define CONTROLLER_PS2    2
 #define CONTROLLER_RF24   24

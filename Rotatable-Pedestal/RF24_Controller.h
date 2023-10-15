@@ -30,7 +30,7 @@ class RF24Controller {
     void onLeftJoystickChanged(void (*function)(int, int));
   protected:
     int processButtonPress(uint16_t buttons);
-    int processJoystickChange(int, int, void (*function)(int, int), const char c[]);
+    int processJoystickChange(int, int, void (*function)(int, int), const char label);
   private:
     uint64_t address = 0xE8E8F0F0E1LL;
     bool debugEnabled;

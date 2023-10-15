@@ -47,10 +47,10 @@ int RF24Controller::loop() {
 #endif
 
 #if __RUNNING_LOG_ENABLED__
-    Serial.print("No: "); Serial.print(count);
-    Serial.print("; Buttons: "); Serial.print(buttons);
-    Serial.print("; X="); Serial.print(jX);
-    Serial.print("; Y="); Serial.print(jY);
+    Serial.print("No"), Serial.print(": "), Serial.print(count);
+    Serial.print("; "), Serial.print("Buttons"), Serial.print(": "), Serial.print(buttons);
+    Serial.print("; "), Serial.print("X"), Serial.print(": "), Serial.print(jX);
+    Serial.print("; "), Serial.print("Y"), Serial.print(": "), Serial.print(jY);
     Serial.println();
 #endif
 
@@ -63,7 +63,7 @@ int RF24Controller::loop() {
       return pressed;
     }
 
-    return processJoystickChange(jX, jY, user_onLeftJoystickChanged, "Left Joystick");
+    return processJoystickChange(jX, jY, user_onLeftJoystickChanged, 'L');
   }
   return 0;
 }
@@ -151,7 +151,7 @@ int RF24Controller::processButtonPress(uint16_t pressed) {
   return checked;
 }
 
-int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)(int, int), const char label[]) {
+int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)(int, int), const char label) {
 
   nJoyX = map(nJoyX, 0, 726, NUM_RANGE_X, -NUM_RANGE_X);
   nJoyY = map(nJoyY, 0, 726, NUM_RANGE_Y, -NUM_RANGE_Y);
@@ -159,13 +159,13 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("RF24Controller::");
-      Serial.print("processJoystickChange()"), Serial.print(" - ");
+      Serial.print("RF24Controller"), Serial.print("::");
+      Serial.print("processJoystickChange"), Serial.print("()"), Serial.print(" - ");
       Serial.print(label);
       Serial.println(": ");
-      Serial.print("- X: ");
+      Serial.print(" - "), Serial.print("X"), Serial.print(": ");
       Serial.println(nJoyX);
-      Serial.print("- Y: ");
+      Serial.print(" - "), Serial.print("Y"), Serial.print(": ");
       Serial.println(nJoyY);
     }
 #endif
@@ -175,8 +175,8 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
     } else {
 #if __RUNNING_LOG_ENABLED__
       if (debugEnabled) {
-        Serial.print("RF24Controller::");
-        Serial.print("processJoystickChange()"), Serial.print(" - ");
+        Serial.print("RF24Controller"), Serial.print("::");
+        Serial.print("processJoystickChange"), Serial.print("()"), Serial.print(" - ");
         Serial.print(label);
         Serial.print(": ");
         Serial.println("event listener has not registered");
