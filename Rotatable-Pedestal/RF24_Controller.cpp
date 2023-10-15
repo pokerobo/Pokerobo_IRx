@@ -160,7 +160,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("RF24Controller::");
-      Serial.print("processJoystickChange() - ");
+      Serial.print("processJoystickChange()"), Serial.print(" - ");
       Serial.print(label);
       Serial.println(": ");
       Serial.print("- X: ");
@@ -176,7 +176,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
 #if __RUNNING_LOG_ENABLED__
       if (debugEnabled) {
         Serial.print("RF24Controller::");
-        Serial.print("processJoystickChange() - ");
+        Serial.print("processJoystickChange()"), Serial.print(" - ");
         Serial.print(label);
         Serial.print(": ");
         Serial.println("event listener has not registered");

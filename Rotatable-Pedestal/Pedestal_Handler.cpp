@@ -25,16 +25,16 @@ PedestalHandler::PedestalHandler(byte hPin, byte vPin, bool _debugEnabled) {
   verticalServoPin = (vPin >= 0) ? vPin : VERTICAL_SERVO_PIN;
   verticalServoPos = 0;
   debugEnabled = _debugEnabled;
-#if (__LOADING_LOG_ENABLED__)
+#if __LOADING_LOG_ENABLED__
   if (debugEnabled) {
     Serial.print("PedestalHandler::");
-    Serial.print("PedestalHandler() - ");
+    Serial.print("PedestalHandler()"), Serial.print(" - ");
     Serial.print("hPin: ");
     Serial.print(hPin);
     Serial.print(" => ");
     Serial.println(horizontalServoPin);
     Serial.print("PedestalHandler::");
-    Serial.print("PedestalHandler() - ");
+    Serial.print("PedestalHandler()"), Serial.print(" - ");
     Serial.print("vPin: ");
     Serial.print(vPin);
     Serial.print(" => ");
@@ -44,7 +44,7 @@ PedestalHandler::PedestalHandler(byte hPin, byte vPin, bool _debugEnabled) {
 }
 
 void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMaxAngle) {
-#if (__LOADING_LOG_ENABLED__)
+#if __LOADING_LOG_ENABLED__
   if (debugEnabled) {
     Serial.print("PedestalHandler::");
     Serial.println("begin():");
@@ -84,7 +84,7 @@ int PedestalHandler::getHorizontalPosition() {
   return horizontalServo.read();
 #else
 #if __RUNNING_LOG_ENABLED__
-  Serial.print("current horizontalServoPos: ");
+  Serial.print("current "), Serial.print("horizontalServoPos: ");
   Serial.println(horizontalServoPos);
 #endif
   return horizontalServoPos;
@@ -97,7 +97,7 @@ void PedestalHandler::setHorizontalPosition(int hPos) {
 #else
   horizontalServoPos = hPos;
 #if __RUNNING_LOG_ENABLED__
-  Serial.print("new horizontalServoPos: ");
+  Serial.print("new "), Serial.print("horizontalServoPos: ");
   Serial.print(horizontalServoPos);
 #endif
   int horizontalHcpcaPos = map(horizontalServoPos, 0, 180, 10, 450);
@@ -212,7 +212,7 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PedestalHandler::");
-      Serial.print("changeHorizontalServo() - ");
+      Serial.print("changeHorizontalServo()"), Serial.print(" - ");
       Serial.print("hDelta: ");
       Serial.println("0, do nothing");
     }
@@ -225,7 +225,7 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
 #if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {
     Serial.print("PedestalHandler::");
-    Serial.print("changeHorizontalServo() - ");
+    Serial.print("changeHorizontalServo()"), Serial.print(" - ");
     Serial.print("hDelta: ");
     Serial.print(hDelta);
     Serial.print("; ");
@@ -250,7 +250,7 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PedestalHandler::");
-      Serial.print("changeVerticalServo() - ");
+      Serial.print("changeVerticalServo()"), Serial.print(" - ");
       Serial.print("vDelta: ");
       Serial.println("0, do nothing");
     }
@@ -263,7 +263,7 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
 #if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {
     Serial.print("PedestalHandler::");
-    Serial.print("changeVerticalServo() - ");
+    Serial.print("changeVerticalServo()"), Serial.print(" - ");
     Serial.print("vDelta: ");
     Serial.print(vDelta);
     Serial.print("; ");
@@ -286,7 +286,8 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
 bool PedestalHandler::change(int hDelta, int vDelta) {
 #if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {
-    Serial.print("PedestalHandler::change() - ");
+    Serial.print("PedestalHandler::");
+    Serial.print("change()"), Serial.print(" - ");
     Serial.print("hDelta: ");
     Serial.print(hDelta);
     Serial.print("; ");

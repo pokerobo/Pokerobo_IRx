@@ -1,5 +1,7 @@
 #include "PS2_Controller.h"
 
+#define __PS2INIT_LOG_ENABLED__ (0 || __LOADING_LOG_ENABLED__)
+
 PS2Controller::PS2Controller() {
   debugEnabled = true;
   errorCode = 0;
@@ -15,32 +17,49 @@ void PS2Controller::begin() {
 
   // Check for error
   if(errorCode == 0) {
+#if __PS2INIT_LOG_ENABLED__
     Serial.println("Found Controller, configured successful");
+#endif
   }
   else if(errorCode == 1) {
+#if __PS2INIT_LOG_ENABLED__
     Serial.println("No controller found, check wiring or reset the Arduino");
+#endif
   }
   else if(errorCode == 2) {
+#if __PS2INIT_LOG_ENABLED__
     Serial.println("Controller found but not accepting commands");
+#endif
   }
   else if(errorCode == 3) {
+#if __PS2INIT_LOG_ENABLED__
     Serial.println("Controller refusing to enter Pressures mode, may not support it.");
+#endif
   }
   //
   // Check for the type of controller
   ps2Type = ps2x.readType();
   switch(ps2Type) {
     case 0:
+#if __PS2INIT_LOG_ENABLED__
       Serial.println("Unknown Controller type");
+#endif
       break;
     case 1:
+#if __PS2INIT_LOG_ENABLED__
       Serial.println("DualShock Controller Found");
+#endif
       break;
     case 2:
+#if __PS2INIT_LOG_ENABLED__
       Serial.println("GuitarHero Controller Found");
+#endif
       break;
     default:
+#if __PS2INIT_LOG_ENABLED__
       Serial.print("Invalid Controller type: "), Serial.println(ps2Type);
+#endif
+      NULL;
   }
 };
 
@@ -261,7 +280,7 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PS2Controller::");
-      Serial.print("processJoystickChange() - ");
+      Serial.print("processJoystickChange()"), Serial.print(" - ");
       Serial.print(label);
       Serial.println(": ");
       Serial.print("- X: ");
@@ -277,7 +296,7 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(
 #if __RUNNING_LOG_ENABLED__
       if (debugEnabled) {
         Serial.print("PS2Controller::");
-        Serial.print("processJoystickChange() - ");
+        Serial.print("processJoystickChange()"), Serial.print(" - ");
         Serial.print(label);
         Serial.print(": ");
         Serial.println("event listener has not registered");

@@ -34,7 +34,6 @@ class RF24Controller {
   private:
     uint64_t address = 0xE8E8F0F0E1LL;
     bool debugEnabled;
-    uint16_t debugLimit;
     void (*user_onStartButtonPressed)();
     void (*user_onSelectButtonPressed)();
     void (*user_onAnalogButtonPressed)();
