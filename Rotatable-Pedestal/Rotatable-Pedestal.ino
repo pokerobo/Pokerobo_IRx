@@ -16,11 +16,13 @@
 
 // IRController irController;
 #if (CONTROLLER == CONTROLLER_PS2)
-PS2Controller ps2Controller;
+PS2Controller ps2ControllerInstance;
+PS2Controller *ps2Controller = &ps2ControllerInstance;
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
-RF24Controller rf24Controller;
+RF24Controller rf24ControllerInstance;
+RF24Controller *rf24Controller = &rf24ControllerInstance;
 #endif
 
 PedestalHandler pedestalHandler1(4, 5);
@@ -60,31 +62,31 @@ void setup() {
   }
 
 #if (CONTROLLER == CONTROLLER_PS2)
-  ps2Controller.begin();
+  ps2Controller->begin();
 
-  ps2Controller.onStartButtonPressed(processStartButtonPressedEvent);
+  ps2Controller->onStartButtonPressed(processStartButtonPressedEvent);
 
-  ps2Controller.onDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  ps2Controller.onDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  ps2Controller.onDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  ps2Controller.onDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+  ps2Controller->onDPadUpButtonPressed(processDPadUpButtonPressedEvent);
+  ps2Controller->onDPadRightButtonPressed(processDPadRightButtonPressedEvent);
+  ps2Controller->onDPadDownButtonPressed(processDPadDownButtonPressedEvent);
+  ps2Controller->onDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
 
-  ps2Controller.onLeftJoystickChanged(processLeftJoystickChangeEvent);
-  ps2Controller.onRightJoystickChanged(processRightJoystickChangeEvent);
+  ps2Controller->onLeftJoystickChanged(processLeftJoystickChangeEvent);
+  ps2Controller->onRightJoystickChanged(processRightJoystickChangeEvent);
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
-  rf24Controller.begin();
+  rf24Controller->begin();
 
-  rf24Controller.onStartButtonPressed(processStartButtonPressedEvent);
-  rf24Controller.onAnalogButtonPressed(processAnalogButtonPressedEvent);
+  rf24Controller->onStartButtonPressed(processStartButtonPressedEvent);
+  rf24Controller->onAnalogButtonPressed(processAnalogButtonPressedEvent);
 
-  rf24Controller.onDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  rf24Controller.onDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  rf24Controller.onDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  rf24Controller.onDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+  rf24Controller->onDPadUpButtonPressed(processDPadUpButtonPressedEvent);
+  rf24Controller->onDPadRightButtonPressed(processDPadRightButtonPressedEvent);
+  rf24Controller->onDPadDownButtonPressed(processDPadDownButtonPressedEvent);
+  rf24Controller->onDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
 
-  rf24Controller.onLeftJoystickChanged(processLeftJoystickChangeEvent);
+  rf24Controller->onLeftJoystickChanged(processLeftJoystickChangeEvent);
 #endif
 
   //
@@ -97,10 +99,10 @@ void setup() {
 
 void loop() {
 #if (CONTROLLER == CONTROLLER_PS2)
-  delay(getDelayAmount(ps2Controller.loop()));
+  delay(getDelayAmount(ps2Controller->loop()));
 #endif
 #if (CONTROLLER == CONTROLLER_RF24)
-  delay(getDelayAmount(rf24Controller.loop()));
+  delay(getDelayAmount(rf24Controller->loop()));
 #endif
 }
 
