@@ -1,7 +1,5 @@
 #include "RF24_Controller.h"
 
-#define __BINARY_ENCODING__ 1
-
 #define BIT_UP_BUTTON     1 << 0
 #define BIT_RIGHT_BUTTON  1 << 1
 #define BIT_DOWN_BUTTON   1 << 2
@@ -32,7 +30,7 @@ int RF24Controller::loop() {
     uint16_t jX, jY;
     uint32_t count;
 
-#ifdef __BINARY_ENCODING__
+#if __RF24_BINARY_ENCODING__
     if (msg[0] == 'J') {
       ok = true;
       buttons = msg[1];
@@ -48,7 +46,7 @@ int RF24Controller::loop() {
     }
 #endif
 
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     Serial.print("No: "); Serial.print(count);
     Serial.print("; Buttons: "); Serial.print(buttons);
     Serial.print("; X="); Serial.print(jX);
@@ -74,7 +72,7 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
   uint8_t checked = 0;
 
   if(pressed & BIT_START_BUTTON && user_onStartButtonPressed) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("START");
       Serial.println(" is pushed");
@@ -85,7 +83,7 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
   }
 
   if(pressed & BIT_SELECT_BUTTON && user_onSelectButtonPressed) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("SELECT");
       Serial.println(" is pushed");
@@ -96,7 +94,7 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
   }
 
   if(pressed & BIT_ANALOG_BUTTON && user_onAnalogButtonPressed) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("ANALOG");
       Serial.println(" is pushed");
@@ -107,7 +105,7 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
   }
 
   if(pressed & BIT_UP_BUTTON && user_onDPadUpButtonPressed) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("UP");
       Serial.println(" is pushed");
@@ -118,7 +116,7 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
   }
 
   if(pressed & BIT_RIGHT_BUTTON && user_onDPadRightButtonPressed) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("RIGHT");
       Serial.println(" is pushed");
@@ -129,7 +127,7 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
   }
 
   if(pressed & BIT_DOWN_BUTTON && user_onDPadDownButtonPressed) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("DOWN");
       Serial.println(" is pushed");
@@ -140,7 +138,7 @@ int RF24Controller::processButtonPress(uint8_t pressed) {
   }
 
   if(pressed & BIT_LEFT_BUTTON && user_onDPadLeftButtonPressed) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("JOY_"), Serial.print("PAD_"), Serial.print("LEFT");
       Serial.println(" is pushed");
@@ -159,7 +157,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
   nJoyY = map(nJoyY, 0, 726, NUM_RANGE_Y, -NUM_RANGE_Y);
 
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("RF24Controller::");
       Serial.print("processJoystickChange() - ");
@@ -175,7 +173,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
       onChange(nJoyX, nJoyY);
       return 1;
     } else {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
       if (debugEnabled) {
         Serial.print("RF24Controller::");
         Serial.print("processJoystickChange() - ");

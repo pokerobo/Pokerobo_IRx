@@ -128,7 +128,7 @@ int PS2Controller::check() {
 
   //
   if (buttonPressed > 0) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("buttonPressed: ");
       Serial.println(buttonPressed, HEX);
@@ -148,7 +148,7 @@ int PS2Controller::processStartButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("START");
       Serial.println(" is pushed");
@@ -166,7 +166,7 @@ int PS2Controller::processSelectButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("SELECT");
       Serial.println(" is pushed");
@@ -184,7 +184,7 @@ int PS2Controller::processDPadUpButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("UP");
       Serial.println(" is pushed");
@@ -202,7 +202,7 @@ int PS2Controller::processDPadRightButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("RIGHT");
       Serial.println(" is pushed");
@@ -220,7 +220,7 @@ int PS2Controller::processDPadDownButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("DOWN");
       Serial.println(" is pushed");
@@ -238,7 +238,7 @@ int PS2Controller::processDPadLeftButtonPress() {
     return 0;
   }
   if(ps2x.Button(button)) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("LEFT");
       Serial.println(" is pushed");
@@ -258,7 +258,7 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(
   nJoyY = map(nJoyY, 0, 255, NUM_RANGE_Y, -NUM_RANGE_Y);
   //
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PS2Controller::");
       Serial.print("processJoystickChange() - ");
@@ -274,7 +274,7 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(
       onChange(nJoyX, nJoyY);
       return 1;
     } else {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
       if (debugEnabled) {
         Serial.print("PS2Controller::");
         Serial.print("processJoystickChange() - ");

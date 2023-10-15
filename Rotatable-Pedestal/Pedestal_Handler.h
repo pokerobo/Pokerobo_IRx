@@ -3,7 +3,7 @@
 
 #include "Commons.h"
 
-#ifndef __HCPCA9685_ENABLED__
+#if !__HCPCA9685_ENABLED__
 #include <Servo.h>
 #else
 #include "HCPCA9685.h"
@@ -40,14 +40,14 @@ class PedestalHandler {
 
   private:
     int count;
-#ifndef __HCPCA9685_ENABLED__
+#if !__HCPCA9685_ENABLED__
     Servo horizontalServo;
 #endif
     byte horizontalServoPin;
     int horizontalServoPos;
     int horizontalMinAngle;
     int horizontalMaxAngle;
-#ifndef __HCPCA9685_ENABLED__
+#if !__HCPCA9685_ENABLED__
     Servo verticalServo;
 #endif
     byte verticalServoPin;

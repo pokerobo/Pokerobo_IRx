@@ -1,6 +1,6 @@
 #include "Pedestal_Handler.h"
 
-#ifdef __HCPCA9685_ENABLED__
+#if __HCPCA9685_ENABLED__
 /* I2C slave address for the device/module. For the HCMODU0097 the default I2C address is 0x40 */
 #define  I2C_ADDR             0x40
 
@@ -9,7 +9,7 @@ HCPCA9685 hcpca9685(I2C_ADDR);
 #endif
 
 static void PedestalHandler::init() {
-#ifdef __HCPCA9685_ENABLED__
+#if __HCPCA9685_ENABLED__
   /* Initialise the library and set it to 'servo mode' */ 
   hcpca9685.Init(SERVO_MODE);
 
@@ -59,13 +59,13 @@ void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMa
   }
 #endif
   //
-#ifndef __HCPCA9685_ENABLED__
+#if !__HCPCA9685_ENABLED__
   horizontalServo.attach(horizontalServoPin);
 #endif
   horizontalMinAngle = (hMinAngle < 0) ? 0 : hMinAngle;
   horizontalMaxAngle = (hMaxAngle > 180) ? 180 : hMaxAngle;
   //
-#ifndef __HCPCA9685_ENABLED__
+#if !__HCPCA9685_ENABLED__
   verticalServo.attach(verticalServoPin);
 #endif
   verticalMinAngle = (vMinAngle < 0) ? 0 : vMinAngle;
@@ -80,10 +80,10 @@ void PedestalHandler::reset() {
 }
 
 int PedestalHandler::getHorizontalPosition() {
-#ifndef __HCPCA9685_ENABLED__
+#if !__HCPCA9685_ENABLED__
   return horizontalServo.read();
 #else
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
   Serial.print("current horizontalServoPos: ");
   Serial.println(horizontalServoPos);
 #endif
@@ -92,16 +92,16 @@ int PedestalHandler::getHorizontalPosition() {
 }
 
 void PedestalHandler::setHorizontalPosition(int hPos) {
-#ifndef __HCPCA9685_ENABLED__
+#if !__HCPCA9685_ENABLED__
   horizontalServo.write(hPos);
 #else
   horizontalServoPos = hPos;
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
   Serial.print("new horizontalServoPos: ");
   Serial.print(horizontalServoPos);
 #endif
   int horizontalHcpcaPos = map(horizontalServoPos, 0, 180, 10, 450);
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
   Serial.print("; horizontalHcpcaPos: ");
   Serial.println(horizontalHcpcaPos);
 #endif
@@ -128,7 +128,7 @@ int PedestalHandler::updateHorizontalPosition(int hPos, int hCurrentPos) {
 }
 
 int PedestalHandler::getVerticalPosition() {
-#ifndef __HCPCA9685_ENABLED__
+#if !__HCPCA9685_ENABLED__
   return verticalServo.read();
 #else
   return verticalServoPos;
@@ -136,7 +136,7 @@ int PedestalHandler::getVerticalPosition() {
 }
 
 void PedestalHandler::setVerticalPosition(int vPos) {
-#ifndef __HCPCA9685_ENABLED__
+#if !__HCPCA9685_ENABLED__
   verticalServo.write(vPos);
 #else
   verticalServoPos = vPos;
@@ -209,7 +209,7 @@ bool PedestalHandler::horizontalServoRight() {
 
 int PedestalHandler::changeHorizontalServo(int hDelta) {
   if (hDelta == 0) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PedestalHandler::");
       Serial.print("changeHorizontalServo() - ");
@@ -222,7 +222,7 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
   int hCurrentPos = getHorizontalPosition();
   int hPos = hCurrentPos;
   //
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {
     Serial.print("PedestalHandler::");
     Serial.print("changeHorizontalServo() - ");
@@ -247,7 +247,7 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
 
 int PedestalHandler::changeVerticalServo(int vDelta) {
   if (vDelta == 0) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       Serial.print("PedestalHandler::");
       Serial.print("changeVerticalServo() - ");
@@ -260,7 +260,7 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
   int vCurrentPos = getVerticalPosition();
   int vPos = vCurrentPos;
   //
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {
     Serial.print("PedestalHandler::");
     Serial.print("changeVerticalServo() - ");
@@ -284,7 +284,7 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
 }
 
 bool PedestalHandler::change(int hDelta, int vDelta) {
-#if (__RUNNING_LOG_ENABLED__)
+#if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {
     Serial.print("PedestalHandler::change() - ");
     Serial.print("hDelta: ");

@@ -1,6 +1,8 @@
 #ifndef __RF24_CONTROLLER_H__
 #define __RF24_CONTROLLER_H__
 
+#define __RF24_BINARY_ENCODING__ 1
+
 #include "Commons.h"
 
 #include <SPI.h>
