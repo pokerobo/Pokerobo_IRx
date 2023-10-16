@@ -73,7 +73,7 @@ void PS2Controller::showError() {
 };
 
 void PS2Controller::reload() {
-  return begin();
+  begin();
 };
 
 void PS2Controller::onStartButtonPressed(void (*function)()) {

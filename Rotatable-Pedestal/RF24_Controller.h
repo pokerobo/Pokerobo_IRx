@@ -29,7 +29,7 @@ class RF24Controller {
     void onDPadLeftButtonPressed(void (*function)());
     void onLeftJoystickChanged(void (*function)(int, int));
   protected:
-    int processButtonPress(uint16_t buttons);
+    uint16_t processButtonPress(uint16_t buttons);
     int processJoystickChange(int, int, void (*function)(int, int), const char label);
   private:
     uint64_t address = 0xE8E8F0F0E1LL;

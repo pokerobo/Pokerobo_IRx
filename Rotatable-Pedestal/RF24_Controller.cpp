@@ -1,12 +1,12 @@
 #include "RF24_Controller.h"
 
-#define BIT_UP_BUTTON     1 << 0
-#define BIT_RIGHT_BUTTON  1 << 1
-#define BIT_DOWN_BUTTON   1 << 2
-#define BIT_LEFT_BUTTON   1 << 3
-#define BIT_START_BUTTON  1 << 4
-#define BIT_SELECT_BUTTON 1 << 5
-#define BIT_ANALOG_BUTTON 1 << 6
+#define BIT_UP_BUTTON     1U << 0
+#define BIT_RIGHT_BUTTON  1U << 1
+#define BIT_DOWN_BUTTON   1U << 2
+#define BIT_LEFT_BUTTON   1U << 3
+#define BIT_START_BUTTON  1U << 4
+#define BIT_SELECT_BUTTON 1U << 5
+#define BIT_ANALOG_BUTTON 1U << 6
 
 RF24 radio(9, 10);  // CE, CSN
 
@@ -68,7 +68,7 @@ int RF24Controller::loop() {
   return 0;
 }
 
-int RF24Controller::processButtonPress(uint16_t pressed) {
+uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   uint16_t checked = 0;
 
   if(pressed & BIT_START_BUTTON && user_onStartButtonPressed) {

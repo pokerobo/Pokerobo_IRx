@@ -2,7 +2,9 @@
 
 #define PEDESTALS_MAX   8
 
-// #include "IR_Controller.h"
+#if (CONTROLLER_IR)
+#include "IR_Controller.h"
+#endif
 
 #if (CONTROLLER == CONTROLLER_PS2)
 #include "PS2_Controller.h"
@@ -14,15 +16,19 @@
 
 #include "Pedestal_Handler.h"
 
-// IRController irController;
+#if (CONTROLLER_IR)
+IRController irControllerInstance;
+IRController* irController = &irControllerInstance;
+#endif
+
 #if (CONTROLLER == CONTROLLER_PS2)
 PS2Controller ps2ControllerInstance;
-PS2Controller *ps2Controller = &ps2ControllerInstance;
+PS2Controller* ps2Controller = &ps2ControllerInstance;
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
 RF24Controller rf24ControllerInstance;
-RF24Controller *rf24Controller = &rf24ControllerInstance;
+RF24Controller* rf24Controller = &rf24ControllerInstance;
 #endif
 
 PedestalHandler pedestalHandler1(4, 5);
@@ -36,8 +42,8 @@ PedestalHandler* pedestalHandlers[PEDESTALS_MAX] = {
 int pedestalsTotal = PEDESTALS_MAX;
 
 void setup() {
-  while (!Serial) {// Wait for the serial connection to be establised.
-    delay(100);
+  while (!Serial) {
+    delay(100); // Wait for the serial connection to be establised.
   }
   Serial.begin(57600);
 
@@ -89,9 +95,15 @@ void setup() {
   rf24Controller->onLeftJoystickChanged(processLeftJoystickChangeEvent);
 #endif
 
-  //
-  // irController.begin();
-  //
+#if (CONTROLLER_IR)
+  irController->begin();
+
+  irController->setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
+  irController->setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
+  irController->setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
+  irController->setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+#endif
+
 #if __LOADING_LOG_ENABLED__
   Serial.print("main()"), Serial.print(" - "), Serial.println("Setup has done!");
 #endif
@@ -103,6 +115,9 @@ void loop() {
 #endif
 #if (CONTROLLER == CONTROLLER_RF24)
   delay(getDelayAmount(rf24Controller->loop()));
+#endif
+#if (CONTROLLER_IR)
+  delay(getDelayAmount(irController->loop()));
 #endif
 }
 
