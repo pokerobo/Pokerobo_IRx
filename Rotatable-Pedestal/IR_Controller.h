@@ -2,11 +2,14 @@
 #define __IR_CONTROLLER_H__
 
 #include "Commons.h"
+#include "IR_Code_Mapping.h"
 
 class IRController {
   public:
     IRController();
+    IRController(IRCodeMapper* irCodeMapper);
     void begin();
+    void setCodeMapper(IRCodeMapper* irCodeMapper);
     void setOnOkButtonPressed(void (*function)());
     void setOnDPadUpButtonPressed(void (*function)());
     void setOnDPadRightButtonPressed(void (*function)());
@@ -20,7 +23,8 @@ class IRController {
   protected:
     uint32_t processButtonPress(uint32_t buttons);
   private:
-    bool debugEnabled;
+    bool _debugEnabled;
+    IRCodeMapper* _irCodeMapper;
     void (*user_onOkButtonPressed)();
     void (*user_onDPadUpButtonPressed)();
     void (*user_onDPadRightButtonPressed)();

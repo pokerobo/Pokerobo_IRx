@@ -1,4 +1,5 @@
 #include "IR_Controller.h"
+#include "IR_Code_Mapping.h"
 #include <IRremote.hpp>
 
 #define RECV_PIN 2
@@ -32,10 +33,16 @@
                           BIT_DIGIT8_BUTTON |\
                           BIT_DIGIT9_BUTTON
 
-uint32_t detectButtonPress(IRData);
+uint32_t detectButtonPress(IRData, IRCodeMapper*);
 
 IRController::IRController() {
-  debugEnabled = true;
+  _debugEnabled = true;
+  _irCodeMapper = NULL;
+}
+
+IRController::IRController(IRCodeMapper* irCodeMapper) {
+  _debugEnabled = true;
+  _irCodeMapper = irCodeMapper;
 }
 
 void IRController::begin() {
@@ -50,7 +57,7 @@ int IRController::loop() {
     return 0;
   }
 
-  uint16_t buttons = detectButtonPress(IrReceiver.decodedIRData);
+  uint16_t buttons = detectButtonPress(IrReceiver.decodedIRData, _irCodeMapper);
   uint16_t checked = processButtonPress(buttons);
 
   IrReceiver.resume();
@@ -62,12 +69,16 @@ int IRController::loop() {
   return -1;
 }
 
+void IRController::setCodeMapper(IRCodeMapper* irCodeMapper) {
+  _irCodeMapper = irCodeMapper;
+}
+
 uint32_t IRController::processButtonPress(uint32_t pressed) {
   uint32_t checked = 0;
 
   if(pressed & BIT_OK_BUTTON && user_onOkButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       Serial.print("onOkButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
@@ -77,7 +88,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & BIT_UP_BUTTON && user_onDPadUpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       Serial.print("onDPadUpButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
@@ -87,7 +98,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & BIT_RIGHT_BUTTON && user_onDPadRightButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       Serial.print("onDPadRightButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
@@ -97,7 +108,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & BIT_DOWN_BUTTON && user_onDPadDownButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       Serial.print("onDPadDownButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
@@ -107,7 +118,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & BIT_LEFT_BUTTON && user_onDPadLeftButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       Serial.print("onDPadLeftButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
@@ -117,7 +128,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & BIT_ASTERISK_BUTTON && user_onAsteriskButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       Serial.print("onAsteriskButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
@@ -127,7 +138,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & BIT_SHARP_BUTTON && user_onSharpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       Serial.print("onSharpButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
@@ -137,7 +148,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & BIT_DIGITS_BUTTON && user_onDigitButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       Serial.print("onDigitButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
@@ -147,7 +158,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed && user_onAnyButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       Serial.print("onAnyButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
@@ -158,351 +169,22 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   return checked;
 }
 
-uint32_t detectButtonPress(IRData decodedIRData) {
+uint32_t detectButtonPress(IRData decodedIRData, IRCodeMapper* _irCodeMapper) {
   uint32_t buttons = 0;
 
-  switch (decodedIRData.protocol) {
-    case SONY:
-      switch (decodedIRData.command) {
-        case 0x65:
+  if (_irCodeMapper != NULL) {
+    uint8_t pos = _irCodeMapper->getPosition((uint8_t)decodedIRData.protocol, decodedIRData.command);
+    if (_irCodeMapper->isValid(pos)) {
+      buttons |= (1UL << pos);
 #if __RUNNING_LOG_ENABLED__
-          Serial.println("OK");
+      Serial.print("Buttons: "), Serial.print(pos), Serial.println(" is pressed");
 #endif
-          buttons |= BIT_OK_BUTTON;
-          break;
-        case 0x74:
+      return buttons;
+    } else {
 #if __RUNNING_LOG_ENABLED__
-          Serial.println("UP");
+      IrReceiver.printIRResultShort(&Serial);
 #endif
-          buttons |= BIT_UP_BUTTON;
-          break;
-        case 0x33:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("RIGHT");
-#endif
-          buttons |= BIT_RIGHT_BUTTON;
-          break;
-        case 0x75:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("DOWN");
-#endif
-          buttons |= BIT_DOWN_BUTTON;
-          break;
-        case 0x34:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("LEFT");
-#endif
-          buttons |= BIT_LEFT_BUTTON;
-          break;
-
-        case 0x00:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("1");
-#endif
-          buttons |= BIT_DIGIT1_BUTTON;
-          break;
-        case 0x01:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("2");
-#endif
-          buttons |= BIT_DIGIT2_BUTTON;
-          break;
-        case 0x02:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("3");
-#endif
-          buttons |= BIT_DIGIT3_BUTTON;
-          break;
-        case 0x03:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("4");
-#endif
-          buttons |= BIT_DIGIT4_BUTTON;
-          break;
-        case 0x04:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("5");
-#endif
-          buttons |= BIT_DIGIT5_BUTTON;
-          break;
-        case 0x05:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("6");
-#endif
-          buttons |= BIT_DIGIT6_BUTTON;
-          break;
-        case 0x06:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("7");
-#endif
-          buttons |= BIT_DIGIT7_BUTTON;
-          break;
-        case 0x07:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("8");
-#endif
-          buttons |= BIT_DIGIT8_BUTTON;
-          break;
-        case 0x08:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("9");
-#endif
-          buttons |= BIT_DIGIT9_BUTTON;
-          break;
-        case 0x09:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("0");
-#endif
-          buttons |= BIT_DIGIT0_BUTTON;
-          break;
-
-        case 0x3A:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("ASTERISK");
-#endif
-          buttons |= BIT_ASTERISK_BUTTON;
-          break;
-        case 0x3F:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("SHARP");
-#endif
-          buttons |= BIT_SHARP_BUTTON;
-          break;
-
-        default:
-          NULL;
-#if __RUNNING_LOG_ENABLED__
-          IrReceiver.printIRResultShort(&Serial);
-#endif
-      };
-      break;
-
-    case PANASONIC:
-      switch (decodedIRData.command) {
-        case 0x49:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("OK");
-#endif
-          buttons |= BIT_OK_BUTTON;
-          break;
-        case 0x34:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("UP");
-#endif
-          buttons |= BIT_UP_BUTTON;
-          break;
-        case 0x20:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("RIGHT");
-#endif
-          buttons |= BIT_RIGHT_BUTTON;
-          break;
-        case 0x35:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("DOWN");
-#endif
-          buttons |= BIT_DOWN_BUTTON;
-          break;
-        case 0x21:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("LEFT");
-#endif
-          buttons |= BIT_LEFT_BUTTON;
-          break;
-
-        case 0x10:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("1");
-#endif
-          buttons |= BIT_DIGIT1_BUTTON;
-          break;
-        case 0x11:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("2");
-#endif
-          buttons |= BIT_DIGIT2_BUTTON;
-          break;
-        case 0x12:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("3");
-#endif
-          buttons |= BIT_DIGIT3_BUTTON;
-          break;
-        case 0x13:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("4");
-#endif
-          buttons |= BIT_DIGIT4_BUTTON;
-          break;
-        case 0x14:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("5");
-#endif
-          buttons |= BIT_DIGIT5_BUTTON;
-          break;
-        case 0x15:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("6");
-#endif
-          buttons |= BIT_DIGIT6_BUTTON;
-          break;
-        case 0x16:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("7");
-#endif
-          buttons |= BIT_DIGIT7_BUTTON;
-          break;
-        case 0x17:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("8");
-#endif
-          buttons |= BIT_DIGIT8_BUTTON;
-          break;
-        case 0x18:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("9");
-#endif
-          buttons |= BIT_DIGIT9_BUTTON;
-          break;
-        case 0x19:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("0");
-#endif
-          buttons |= BIT_DIGIT0_BUTTON;
-          break;
-
-        case 0x39:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("ASTERISK");
-#endif
-          buttons |= BIT_ASTERISK_BUTTON;
-          break;
-        case 0x3B:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("SHARP");
-#endif
-          buttons |= BIT_SHARP_BUTTON;
-          break;
-
-        default:
-          NULL;
-#if __RUNNING_LOG_ENABLED__
-          IrReceiver.printIRResultShort(&Serial);
-#endif
-      };
-      break;
-
-    case NEC:
-      switch(decodedIRData.command) {
-        case 0x19:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("0");
-#endif
-          buttons |= BIT_DIGIT0_BUTTON;
-          break;
-        case 0x45:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("1");
-#endif
-          buttons |= BIT_DIGIT1_BUTTON;
-          break;
-        case 0x46:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("2");
-#endif
-          buttons |= BIT_DIGIT2_BUTTON;
-          break;
-        case 0x47:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("3");
-#endif
-          buttons |= BIT_DIGIT3_BUTTON;
-          break;
-        case 0x44:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("4");
-#endif
-          buttons |= BIT_DIGIT4_BUTTON;
-          break;
-        case 0x40:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("5");
-#endif
-          buttons |= BIT_DIGIT5_BUTTON;
-          break;
-        case 0x43:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("6");
-#endif
-          buttons |= BIT_DIGIT6_BUTTON;
-          break;
-        case 0x07:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("7");
-#endif
-          buttons |= BIT_DIGIT7_BUTTON;
-          break;
-        case 0x15:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("8");
-#endif
-          buttons |= BIT_DIGIT8_BUTTON;
-          break;
-        case 0x09:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("9");
-#endif
-          buttons |= BIT_DIGIT9_BUTTON;
-          break;
-        case 0x1C:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("OK");
-#endif
-          buttons |= BIT_OK_BUTTON;
-          break;
-        case 0x16:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("*");
-#endif
-          buttons |= BIT_ASTERISK_BUTTON;
-          break;
-        case 0x0D:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("#");
-#endif
-          buttons |= BIT_SHARP_BUTTON;
-          break;
-        case 0x18:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("UP");
-#endif
-          buttons |= BIT_UP_BUTTON;
-          break;
-        case 0x5A:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("RIGHT");
-#endif
-          buttons |= BIT_RIGHT_BUTTON;
-          break;
-        case 0x52:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("DOWN");
-#endif
-          buttons |= BIT_DOWN_BUTTON;
-          break;
-        case 0x08:
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("LEFT");
-#endif
-          buttons |= BIT_LEFT_BUTTON;
-          break;
-        default:
-          NULL;
-#if __RUNNING_LOG_ENABLED__
-          Serial.println("NOOP");
-#endif
-      }
-      break;
+    }
   }
 
   return buttons;
