@@ -24,9 +24,11 @@ class IRCodeMapper {
     IRCodeMapper();
     IRCodeMapper(IRCodeMapping* mappings[], uint8_t amount);
     bool addMapping(uint8_t type, uint16_t map[], uint8_t len);
+    bool addMapping(IRCodeMapping* mapping);
     uint8_t getPosition(uint8_t protocol, uint16_t command);
     bool isValid(uint8_t position);
   private:
+    void initialize();
     uint8_t codeMappingCount = 0;
     IRCodeMapping* codeMappings[CODE_MAPPINGS_MAX] = {};
 };

@@ -17,7 +17,27 @@
 #include "Pedestal_Handler.h"
 
 #if (CONTROLLER_IR)
-IRCodeMapper irCodeMapperInstance;
+IRCodeMapping mappingSony(23u, (uint16_t[]) { // SONY (23)
+    0x74,  // BIT_UP_BUTTON
+    0x33,  // BIT_RIGHT_BUTTON
+    0x75,  // BIT_DOWN_BUTTON
+    0x34,  // BIT_LEFT_BUTTON
+    0x65,  // BIT_OK_BUTTON
+    0x3A,  // BIT_ASTERISK_BUTTON
+    0x3F,  // BIT_SHARP_BUTTON
+    0x09,  // BIT_DIGIT0_BUTTON
+    0x00,  // BIT_DIGIT1_BUTTON
+    0x01,  // BIT_DIGIT2_BUTTON
+    0x02,  // BIT_DIGIT3_BUTTON
+    0x03,  // BIT_DIGIT4_BUTTON
+    0x04,  // BIT_DIGIT5_BUTTON
+    0x05,  // BIT_DIGIT6_BUTTON
+    0x06,  // BIT_DIGIT7_BUTTON
+    0x07,  // BIT_DIGIT8_BUTTON
+    0x08,  // BIT_DIGIT9_BUTTON
+  }, 17u);
+
+IRCodeMapper irCodeMapperInstance((IRCodeMapping* []) { &mappingSony }, 1);
 IRCodeMapper* irCodeMapper = &irCodeMapperInstance;
 
 IRController irControllerInstance(irCodeMapper);
@@ -99,7 +119,7 @@ void setup() {
 #endif
 
 #if (CONTROLLER_IR)
-  uint16_t mapping2[] = { // PANASONIC - 11
+  uint16_t mappingPanasonic[] = { // PANASONIC - 11
     0x34,  // BIT_UP_BUTTON
     0x20,  // BIT_RIGHT_BUTTON
     0x35,  // BIT_DOWN_BUTTON
@@ -118,28 +138,7 @@ void setup() {
     0x17,  // BIT_DIGIT8_BUTTON
     0x18,  // BIT_DIGIT9_BUTTON
   };
-  irCodeMapper->addMapping(11u, mapping2, 17u);
-
-  uint16_t mapping1[] = { // SONY (23)
-    0x74,  // BIT_UP_BUTTON
-    0x33,  // BIT_RIGHT_BUTTON
-    0x75,  // BIT_DOWN_BUTTON
-    0x34,  // BIT_LEFT_BUTTON
-    0x65,  // BIT_OK_BUTTON
-    0x3A,  // BIT_ASTERISK_BUTTON
-    0x3F,  // BIT_SHARP_BUTTON
-    0x09,  // BIT_DIGIT0_BUTTON
-    0x00,  // BIT_DIGIT1_BUTTON
-    0x01,  // BIT_DIGIT2_BUTTON
-    0x02,  // BIT_DIGIT3_BUTTON
-    0x03,  // BIT_DIGIT4_BUTTON
-    0x04,  // BIT_DIGIT5_BUTTON
-    0x05,  // BIT_DIGIT6_BUTTON
-    0x06,  // BIT_DIGIT7_BUTTON
-    0x07,  // BIT_DIGIT8_BUTTON
-    0x08,  // BIT_DIGIT9_BUTTON
-  };
-  irCodeMapper->addMapping(23u, mapping1, 17u);
+  irCodeMapper->addMapping(11u, mappingPanasonic, 17u);
 #endif
 
 #if (CONTROLLER_IR)

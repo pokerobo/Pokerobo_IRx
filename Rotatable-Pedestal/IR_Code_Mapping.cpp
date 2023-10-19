@@ -30,6 +30,20 @@ uint8_t IRCodeMapping::getPosition(uint16_t code) {
 };
 
 IRCodeMapper::IRCodeMapper() {
+  initialize();
+};
+
+IRCodeMapper::IRCodeMapper(IRCodeMapping* mappings[], uint8_t amount) {
+  initialize();
+  for (uint8_t i=0; i<amount; i++) {
+    if (mappings[i] == NULL) {
+      continue;
+    }
+    addMapping(mappings[i]);
+  }
+};
+
+void IRCodeMapper::initialize() {
   uint16_t mapping[] = { // NEC (8)
     0x18,  // BIT_UP_BUTTON
     0x5A,  // BIT_RIGHT_BUTTON
@@ -53,10 +67,17 @@ IRCodeMapper::IRCodeMapper() {
 };
 
 bool IRCodeMapper::addMapping(uint8_t type, uint16_t map[], uint8_t len) {
+  return addMapping(new IRCodeMapping(type, map, len));
+};
+
+bool IRCodeMapper::addMapping(IRCodeMapping* mapping) {
+  if (mapping == NULL) {
+    return false;
+  }
   if (codeMappingCount >= CODE_MAPPINGS_MAX) {
     return false;
   }
-  codeMappings[codeMappingCount] = new IRCodeMapping(type, map, len);
+  codeMappings[codeMappingCount] = mapping;
   codeMappingCount++;
   return true;
 };
