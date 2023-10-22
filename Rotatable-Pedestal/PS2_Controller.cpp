@@ -77,36 +77,36 @@ void PS2Controller::reload() {
   begin();
 };
 
-void PS2Controller::onStartButtonPressed(void (*function)()) {
-  user_onStartButtonPressed = function;
+void PS2Controller::setOnStartButtonPressed(void (*function)()) {
+  _onStartButtonPressed = function;
 };
 
-void PS2Controller::onSelectButtonPressed(void (*function)()) {
-  user_onSelectButtonPressed = function;
+void PS2Controller::setOnSelectButtonPressed(void (*function)()) {
+  _onSelectButtonPressed = function;
 };
 
-void PS2Controller::onDPadUpButtonPressed(void (*function)()) {
-  user_onDPadUpButtonPressed = function;
+void PS2Controller::setOnDPadUpButtonPressed(void (*function)()) {
+  _onDPadUpButtonPressed = function;
 };
 
-void PS2Controller::onDPadRightButtonPressed(void (*function)()) {
-  user_onDPadRightButtonPressed = function;
+void PS2Controller::setOnDPadRightButtonPressed(void (*function)()) {
+  _onDPadRightButtonPressed = function;
 };
 
-void PS2Controller::onDPadDownButtonPressed(void (*function)()) {
-  user_onDPadDownButtonPressed = function;
+void PS2Controller::setOnDPadDownButtonPressed(void (*function)()) {
+  _onDPadDownButtonPressed = function;
 };
 
-void PS2Controller::onDPadLeftButtonPressed(void (*function)()) {
-  user_onDPadLeftButtonPressed = function;
+void PS2Controller::setOnDPadLeftButtonPressed(void (*function)()) {
+  _onDPadLeftButtonPressed = function;
 };
 
-void PS2Controller::onLeftJoystickChanged(void (*function)(int, int)) {
-  user_onLeftJoystickChanged = function;
+void PS2Controller::setOnnLeftJoystickChanged(void (*function)(int, int)) {
+  _onLeftJoystickChanged = function;
 };
 
-void PS2Controller::onRightJoystickChanged(void (*function)(int, int)) {
-  user_onRightJoystickChanged = function;
+void PS2Controller::setOnRightJoystickChanged(void (*function)(int, int)) {
+  _onRightJoystickChanged = function;
 };
 
 int PS2Controller::loop() {
@@ -154,14 +154,14 @@ int PS2Controller::check() {
     return buttonPressed;
   }
   //
-  int lstatus = processJoystickChange(PSS_LX, PSS_LY, user_onLeftJoystickChanged, 'L');
+  int lstatus = processJoystickChange(PSS_LX, PSS_LY, _onLeftJoystickChanged, 'L');
   //
-  int rstatus = processJoystickChange(PSS_RX, PSS_RY, user_onRightJoystickChanged, 'R');
+  int rstatus = processJoystickChange(PSS_RX, PSS_RY, _onRightJoystickChanged, 'R');
 };
 
 int PS2Controller::processStartButtonPress() {
   uint16_t button = PSB_START;
-  if (!user_onStartButtonPressed) {
+  if (!_onStartButtonPressed) {
     return 0;
   }
   if(ps2x.Button(button)) {
@@ -170,7 +170,7 @@ int PS2Controller::processStartButtonPress() {
       debugLog("PSB_", "START", " is pushed");
     }
 #endif
-    user_onStartButtonPressed();
+    _onStartButtonPressed();
     return button;
   }
   return 0;
@@ -178,7 +178,7 @@ int PS2Controller::processStartButtonPress() {
 
 int PS2Controller::processSelectButtonPress() {
   uint16_t button = PSB_SELECT;
-  if (!user_onSelectButtonPressed) {
+  if (!_onSelectButtonPressed) {
     return 0;
   }
   if(ps2x.Button(button)) {
@@ -187,7 +187,7 @@ int PS2Controller::processSelectButtonPress() {
       debugLog("PSB_", "SELECT", " is pushed");
     }
 #endif
-    user_onSelectButtonPressed();
+    _onSelectButtonPressed();
     return button;
   }
   return 0;
@@ -195,7 +195,7 @@ int PS2Controller::processSelectButtonPress() {
 
 int PS2Controller::processDPadUpButtonPress() {
   uint16_t button = PSB_PAD_UP;
-  if (!user_onDPadUpButtonPressed) {
+  if (!_onDPadUpButtonPressed) {
     return 0;
   }
   if(ps2x.Button(button)) {
@@ -204,7 +204,7 @@ int PS2Controller::processDPadUpButtonPress() {
       debugLog("PSB_", "PAD_", "UP", " is pushed");
     }
 #endif
-    user_onDPadUpButtonPressed();
+    _onDPadUpButtonPressed();
     return button;
   }
   return 0;
@@ -212,7 +212,7 @@ int PS2Controller::processDPadUpButtonPress() {
 
 int PS2Controller::processDPadRightButtonPress() {
   uint16_t button = PSB_PAD_RIGHT;
-  if (!user_onDPadRightButtonPressed) {
+  if (!_onDPadRightButtonPressed) {
     return 0;
   }
   if(ps2x.Button(button)) {
@@ -221,7 +221,7 @@ int PS2Controller::processDPadRightButtonPress() {
       debugLog("PSB_", "PAD_", "RIGHT", " is pushed");
     }
 #endif
-    user_onDPadRightButtonPressed();
+    _onDPadRightButtonPressed();
     return button;
   }
   return 0;
@@ -229,7 +229,7 @@ int PS2Controller::processDPadRightButtonPress() {
 
 int PS2Controller::processDPadDownButtonPress() {
   uint16_t button = PSB_PAD_DOWN;
-  if (!user_onDPadDownButtonPressed) {
+  if (!_onDPadDownButtonPressed) {
     return 0;
   }
   if(ps2x.Button(button)) {
@@ -238,7 +238,7 @@ int PS2Controller::processDPadDownButtonPress() {
       debugLog("PSB_", "PAD_", "DOWN", " is pushed");
     }
 #endif
-    user_onDPadDownButtonPressed();
+    _onDPadDownButtonPressed();
     return button;
   }
   return 0;
@@ -246,7 +246,7 @@ int PS2Controller::processDPadDownButtonPress() {
 
 int PS2Controller::processDPadLeftButtonPress() {
   uint16_t button = PSB_PAD_LEFT;
-  if (!user_onDPadLeftButtonPressed) {
+  if (!_onDPadLeftButtonPressed) {
     return 0;
   }
   if(ps2x.Button(button)) {
@@ -255,7 +255,7 @@ int PS2Controller::processDPadLeftButtonPress() {
       debugLog("PSB_", "PAD_", "LEFT", " is pushed");
     }
 #endif
-    user_onDPadLeftButtonPressed();
+    _onDPadLeftButtonPressed();
     return button;
   }
   return 0;

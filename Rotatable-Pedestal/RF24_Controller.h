@@ -21,28 +21,28 @@ class RF24Controller {
     RF24Controller();
     void begin();
     int loop();
-    void onStartButtonPressed(void (*function)());
-    void onSelectButtonPressed(void (*function)());
-    void onAnalogButtonPressed(void (*function)());
-    void onDPadUpButtonPressed(void (*function)());
-    void onDPadRightButtonPressed(void (*function)());
-    void onDPadDownButtonPressed(void (*function)());
-    void onDPadLeftButtonPressed(void (*function)());
-    void onLeftJoystickChanged(void (*function)(int, int));
+    void setOnStartButtonPressed(void (*function)());
+    void setOnSelectButtonPressed(void (*function)());
+    void setOnAnalogButtonPressed(void (*function)());
+    void setOnDPadUpButtonPressed(void (*function)());
+    void setOnDPadRightButtonPressed(void (*function)());
+    void setOnDPadDownButtonPressed(void (*function)());
+    void setOnDPadLeftButtonPressed(void (*function)());
+    void setOnnLeftJoystickChanged(void (*function)(int, int));
   protected:
     uint16_t processButtonPress(uint16_t buttons);
     int processJoystickChange(int, int, void (*function)(int, int), const char label);
   private:
     uint64_t address = 0xE8E8F0F0E1LL;
     bool debugEnabled;
-    void (*user_onStartButtonPressed)();
-    void (*user_onSelectButtonPressed)();
-    void (*user_onAnalogButtonPressed)();
-    void (*user_onDPadUpButtonPressed)();
-    void (*user_onDPadRightButtonPressed)();
-    void (*user_onDPadDownButtonPressed)();
-    void (*user_onDPadLeftButtonPressed)();
-    void (*user_onLeftJoystickChanged)(int, int);
+    void (*_onStartButtonPressed)();
+    void (*_onSelectButtonPressed)();
+    void (*_onAnalogButtonPressed)();
+    void (*_onDPadUpButtonPressed)();
+    void (*_onDPadRightButtonPressed)();
+    void (*_onDPadDownButtonPressed)();
+    void (*_onDPadLeftButtonPressed)();
+    void (*_onLeftJoystickChanged)(int, int);
 };
 
 uint32_t decodeInteger(uint8_t* arr, int length);

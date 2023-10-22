@@ -71,7 +71,7 @@ int RF24Controller::loop() {
       return pressed;
     }
 
-    return processJoystickChange(jX, jY, user_onLeftJoystickChanged, 'L');
+    return processJoystickChange(jX, jY, _onLeftJoystickChanged, 'L');
   }
   return 0;
 }
@@ -79,73 +79,73 @@ int RF24Controller::loop() {
 uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   uint16_t checked = 0;
 
-  if(pressed & BIT_START_BUTTON && user_onStartButtonPressed) {
+  if(pressed & BIT_START_BUTTON && _onStartButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("JOY_", "START", " is pushed");
     }
 #endif
-    user_onStartButtonPressed();
+    _onStartButtonPressed();
     checked |= BIT_START_BUTTON;
   }
 
-  if(pressed & BIT_SELECT_BUTTON && user_onSelectButtonPressed) {
+  if(pressed & BIT_SELECT_BUTTON && _onSelectButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("JOY_", "SELECT", " is pushed");
     }
 #endif
-    user_onSelectButtonPressed();
+    _onSelectButtonPressed();
     checked |= BIT_SELECT_BUTTON;
   }
 
-  if(pressed & BIT_ANALOG_BUTTON && user_onAnalogButtonPressed) {
+  if(pressed & BIT_ANALOG_BUTTON && _onAnalogButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("JOY_", "ANALOG", " is pushed");
     }
 #endif
-    user_onAnalogButtonPressed();
+    _onAnalogButtonPressed();
     checked |= BIT_ANALOG_BUTTON;
   }
 
-  if(pressed & BIT_UP_BUTTON && user_onDPadUpButtonPressed) {
+  if(pressed & BIT_UP_BUTTON && _onDPadUpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("JOY_", "PAD_", "UP", " is pushed");
     }
 #endif
-    user_onDPadUpButtonPressed();
+    _onDPadUpButtonPressed();
     checked |= BIT_UP_BUTTON;
   }
 
-  if(pressed & BIT_RIGHT_BUTTON && user_onDPadRightButtonPressed) {
+  if(pressed & BIT_RIGHT_BUTTON && _onDPadRightButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("JOY_", "PAD_", "RIGHT", " is pushed");
     }
 #endif
-    user_onDPadRightButtonPressed();
+    _onDPadRightButtonPressed();
     checked |= BIT_RIGHT_BUTTON;
   }
 
-  if(pressed & BIT_DOWN_BUTTON && user_onDPadDownButtonPressed) {
+  if(pressed & BIT_DOWN_BUTTON && _onDPadDownButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("JOY_", "PAD_", "DOWN", " is pushed");
     }
 #endif
-    user_onDPadDownButtonPressed();
+    _onDPadDownButtonPressed();
     checked |= BIT_DOWN_BUTTON;
   }
 
-  if(pressed & BIT_LEFT_BUTTON && user_onDPadLeftButtonPressed) {
+  if(pressed & BIT_LEFT_BUTTON && _onDPadLeftButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("JOY_", "PAD_", "LEFT", " is pushed");
     }
 #endif
-    user_onDPadLeftButtonPressed();
+    _onDPadLeftButtonPressed();
     checked |= BIT_LEFT_BUTTON;
   }
 
@@ -180,36 +180,36 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
   return 0;
 }
 
-void RF24Controller::onStartButtonPressed(void (*function)()) {
-  user_onStartButtonPressed = function;
+void RF24Controller::setOnStartButtonPressed(void (*function)()) {
+  _onStartButtonPressed = function;
 };
 
-void RF24Controller::onSelectButtonPressed(void (*function)()) {
-  user_onSelectButtonPressed = function;
+void RF24Controller::setOnSelectButtonPressed(void (*function)()) {
+  _onSelectButtonPressed = function;
 };
 
-void RF24Controller::onAnalogButtonPressed(void (*function)()) {
-  user_onAnalogButtonPressed = function;
+void RF24Controller::setOnAnalogButtonPressed(void (*function)()) {
+  _onAnalogButtonPressed = function;
 };
 
-void RF24Controller::onDPadUpButtonPressed(void (*function)()) {
-  user_onDPadUpButtonPressed = function;
+void RF24Controller::setOnDPadUpButtonPressed(void (*function)()) {
+  _onDPadUpButtonPressed = function;
 };
 
-void RF24Controller::onDPadRightButtonPressed(void (*function)()) {
-  user_onDPadRightButtonPressed = function;
+void RF24Controller::setOnDPadRightButtonPressed(void (*function)()) {
+  _onDPadRightButtonPressed = function;
 };
 
-void RF24Controller::onDPadDownButtonPressed(void (*function)()) {
-  user_onDPadDownButtonPressed = function;
+void RF24Controller::setOnDPadDownButtonPressed(void (*function)()) {
+  _onDPadDownButtonPressed = function;
 };
 
-void RF24Controller::onDPadLeftButtonPressed(void (*function)()) {
-  user_onDPadLeftButtonPressed = function;
+void RF24Controller::setOnDPadLeftButtonPressed(void (*function)()) {
+  _onDPadLeftButtonPressed = function;
 };
 
-void RF24Controller::onLeftJoystickChanged(void (*function)(int, int)) {
-  user_onLeftJoystickChanged = function;
+void RF24Controller::setOnnLeftJoystickChanged(void (*function)(int, int)) {
+  _onLeftJoystickChanged = function;
 }
 
 uint32_t decodeInteger(uint8_t* arr, int length) {

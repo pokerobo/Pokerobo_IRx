@@ -35,14 +35,14 @@ class PS2Controller {
     bool hasError();
     void showError();
     void reload();
-    void onStartButtonPressed(void (*function)());
-    void onSelectButtonPressed(void (*function)());
-    void onDPadUpButtonPressed(void (*function)());
-    void onDPadRightButtonPressed(void (*function)());
-    void onDPadDownButtonPressed(void (*function)());
-    void onDPadLeftButtonPressed(void (*function)());
-    void onLeftJoystickChanged(void (*function)(int, int));
-    void onRightJoystickChanged(void (*function)(int, int));
+    void setOnStartButtonPressed(void (*function)());
+    void setOnSelectButtonPressed(void (*function)());
+    void setOnDPadUpButtonPressed(void (*function)());
+    void setOnDPadRightButtonPressed(void (*function)());
+    void setOnDPadDownButtonPressed(void (*function)());
+    void setOnDPadLeftButtonPressed(void (*function)());
+    void setOnnLeftJoystickChanged(void (*function)(int, int));
+    void setOnRightJoystickChanged(void (*function)(int, int));
     int check();
   protected:
     int processStartButtonPress();
@@ -59,15 +59,15 @@ class PS2Controller {
     bool errorDisplayed;
     byte ps2Type;
     byte vibrate;
-    void (*user_onStartButtonPressed)();
-    void (*user_onSelectButtonPressed)();
-    void (*user_onDPadUpButtonPressed)();
-    void (*user_onDPadRightButtonPressed)();
-    void (*user_onDPadDownButtonPressed)();
-    void (*user_onDPadLeftButtonPressed)();
-    void (*user_onDPadButtonPressed)(uint16_t);
-    void (*user_onLeftJoystickChanged)(int, int);
-    void (*user_onRightJoystickChanged)(int, int);
+    void (*_onStartButtonPressed)();
+    void (*_onSelectButtonPressed)();
+    void (*_onDPadUpButtonPressed)();
+    void (*_onDPadRightButtonPressed)();
+    void (*_onDPadDownButtonPressed)();
+    void (*_onDPadLeftButtonPressed)();
+    void (*_onDPadButtonPressed)(uint16_t);
+    void (*_onLeftJoystickChanged)(int, int);
+    void (*_onRightJoystickChanged)(int, int);
 };
 
 #endif

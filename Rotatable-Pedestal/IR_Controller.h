@@ -25,15 +25,15 @@ class IRController {
   private:
     bool _debugEnabled;
     IRCodeMapper* _irCodeMapper;
-    void (*user_onOkButtonPressed)();
-    void (*user_onDPadUpButtonPressed)();
-    void (*user_onDPadRightButtonPressed)();
-    void (*user_onDPadDownButtonPressed)();
-    void (*user_onDPadLeftButtonPressed)();
-    void (*user_onAsteriskButtonPressed)();
-    void (*user_onSharpButtonPressed)();
-    void (*user_onDigitButtonPressed)(uint32_t buttons);
-    void (*user_onAnyButtonPressed)(uint32_t buttons);
+    void (*_onOkButtonPressed)();
+    void (*_onDPadUpButtonPressed)();
+    void (*_onDPadRightButtonPressed)();
+    void (*_onDPadDownButtonPressed)();
+    void (*_onDPadLeftButtonPressed)();
+    void (*_onAsteriskButtonPressed)();
+    void (*_onSharpButtonPressed)();
+    void (*_onDigitButtonPressed)(uint32_t buttons);
+    void (*_onAnyButtonPressed)(uint32_t buttons);
 };
 
 #endif

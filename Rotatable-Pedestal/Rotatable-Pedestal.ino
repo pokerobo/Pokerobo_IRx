@@ -97,29 +97,29 @@ void setup() {
 #if (CONTROLLER == CONTROLLER_PS2)
   ps2Controller->begin();
 
-  ps2Controller->onStartButtonPressed(processStartButtonPressedEvent);
+  ps2Controller->setOnStartButtonPressed(processStartButtonPressedEvent);
 
-  ps2Controller->onDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  ps2Controller->onDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  ps2Controller->onDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  ps2Controller->onDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+  ps2Controller->setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
+  ps2Controller->setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
+  ps2Controller->setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
+  ps2Controller->setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
 
-  ps2Controller->onLeftJoystickChanged(processLeftJoystickChangeEvent);
-  ps2Controller->onRightJoystickChanged(processRightJoystickChangeEvent);
+  ps2Controller->setOnnLeftJoystickChanged(processLeftJoystickChangeEvent);
+  ps2Controller->setOnRightJoystickChanged(processRightJoystickChangeEvent);
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
   rf24Controller->begin();
 
-  rf24Controller->onStartButtonPressed(processStartButtonPressedEvent);
-  rf24Controller->onAnalogButtonPressed(processAnalogButtonPressedEvent);
+  rf24Controller->setOnStartButtonPressed(processStartButtonPressedEvent);
+  rf24Controller->setOnAnalogButtonPressed(processAnalogButtonPressedEvent);
 
-  rf24Controller->onDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  rf24Controller->onDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  rf24Controller->onDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  rf24Controller->onDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+  rf24Controller->setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
+  rf24Controller->setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
+  rf24Controller->setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
+  rf24Controller->setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
 
-  rf24Controller->onLeftJoystickChanged(processLeftJoystickChangeEvent);
+  rf24Controller->setOnnLeftJoystickChanged(processLeftJoystickChangeEvent);
 #endif
 
 #if (CONTROLLER_IR)
