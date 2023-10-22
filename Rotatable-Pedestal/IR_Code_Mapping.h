@@ -14,6 +14,7 @@ class IRCodeMapping {
     uint8_t getPosition(uint16_t code);
     bool hasCode(uint16_t code);
   private:
+    IRCodeMapping();
     uint8_t protocol;
     uint16_t codes[CODE_NUMBER] = {};
     uint8_t length = 0;
@@ -29,8 +30,8 @@ class IRCodeMapper {
     bool isValid(uint8_t position);
   private:
     void initialize();
-    uint8_t codeMappingCount = 0;
-    IRCodeMapping* codeMappings[CODE_MAPPINGS_MAX] = {};
+    uint8_t _codeMappingsTotal = 0;
+    IRCodeMapping* _codeMappings[CODE_MAPPINGS_MAX] = {};
 };
 
 #endif

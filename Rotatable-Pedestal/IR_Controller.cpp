@@ -79,7 +79,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_OK_BUTTON && user_onOkButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onOkButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      Serial.print("onOk"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
     user_onOkButtonPressed();
@@ -89,7 +89,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_UP_BUTTON && user_onDPadUpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDPadUpButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      Serial.print("onDPadUp"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
     user_onDPadUpButtonPressed();
@@ -99,7 +99,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_RIGHT_BUTTON && user_onDPadRightButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDPadRightButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      Serial.print("onDPadRight"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
     user_onDPadRightButtonPressed();
@@ -109,7 +109,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_DOWN_BUTTON && user_onDPadDownButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDPadDownButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      Serial.print("onDPadDown"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
     user_onDPadDownButtonPressed();
@@ -119,7 +119,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_LEFT_BUTTON && user_onDPadLeftButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDPadLeftButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      Serial.print("onDPadLeft"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
     user_onDPadLeftButtonPressed();
@@ -129,7 +129,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_ASTERISK_BUTTON && user_onAsteriskButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onAsteriskButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      Serial.print("onAsterisk"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
     user_onAsteriskButtonPressed();
@@ -139,7 +139,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_SHARP_BUTTON && user_onSharpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onSharpButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      Serial.print("onSharp"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
     user_onSharpButtonPressed();
@@ -149,7 +149,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_DIGITS_BUTTON && user_onDigitButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDigitButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      Serial.print("onDigit"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
     user_onDigitButtonPressed(pressed & BIT_DIGITS_BUTTON);
@@ -159,7 +159,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed && user_onAnyButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onAnyButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      Serial.print("onAny"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
     }
 #endif
     user_onAnyButtonPressed(pressed);

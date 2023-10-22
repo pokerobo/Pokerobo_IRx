@@ -2,6 +2,7 @@
 #define __RF24_CONTROLLER_H__
 
 #define __RF24_BINARY_ENCODING__ 1
+#define __RF24_MESSAGE_LENGTH__ 32
 
 #include "Commons.h"
 
@@ -9,11 +10,11 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-#define MIN_BOUND_X      3
-#define MIN_BOUND_Y      3
+#define MIN_BOUND_X      32
+#define MIN_BOUND_Y      32
 
-#define NUM_RANGE_X      6
-#define NUM_RANGE_Y      6
+#define NUM_RANGE_X      128
+#define NUM_RANGE_Y      128
 
 class RF24Controller {
   public:

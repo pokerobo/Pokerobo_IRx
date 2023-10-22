@@ -17,6 +17,7 @@
 #include "Pedestal_Handler.h"
 
 #if (CONTROLLER_IR)
+#if (CONTROLLER_IR_DEVICE_SONY)
 IRCodeMapping mappingSony(23u, (uint16_t[]) { // SONY (23)
     0x74,  // BIT_UP_BUTTON
     0x33,  // BIT_RIGHT_BUTTON
@@ -36,8 +37,11 @@ IRCodeMapping mappingSony(23u, (uint16_t[]) { // SONY (23)
     0x07,  // BIT_DIGIT8_BUTTON
     0x08,  // BIT_DIGIT9_BUTTON
   }, 17u);
-
 IRCodeMapper irCodeMapperInstance((IRCodeMapping* []) { &mappingSony }, 1);
+#else
+IRCodeMapper irCodeMapperInstance;
+#endif
+
 IRCodeMapper* irCodeMapper = &irCodeMapperInstance;
 
 IRController irControllerInstance(irCodeMapper);
@@ -119,6 +123,7 @@ void setup() {
 #endif
 
 #if (CONTROLLER_IR)
+#if (CONTROLLER_IR_DEVICE_PANASONIC)
   uint16_t mappingPanasonic[] = { // PANASONIC - 11
     0x34,  // BIT_UP_BUTTON
     0x20,  // BIT_RIGHT_BUTTON
@@ -139,7 +144,8 @@ void setup() {
     0x18,  // BIT_DIGIT9_BUTTON
   };
   irCodeMapper->addMapping(11u, mappingPanasonic, 17u);
-#endif
+#endif // CONTROLLER_IR_DEVICE_PANASONIC
+#endif // CONTROLLER_IR
 
 #if (CONTROLLER_IR)
   irController->begin();

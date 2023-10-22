@@ -1,5 +1,7 @@
 #include "IR_Code_Mapping.h"
 
+IRCodeMapping::IRCodeMapping() {}
+
 IRCodeMapping::IRCodeMapping(uint8_t type, uint16_t map[], uint8_t len) {
   protocol = type;
   for (uint8_t i=0; i<len; i++) {
@@ -10,15 +12,15 @@ IRCodeMapping::IRCodeMapping(uint8_t type, uint16_t map[], uint8_t len) {
 
 uint8_t IRCodeMapping::getType() {
   return protocol;
-};
+}
 
 uint8_t IRCodeMapping::getLength() {
   return length;
-};
+}
 
 bool IRCodeMapping::hasCode(uint16_t code) {
   return getPosition(code) < CODE_NUMBER;
-};
+}
 
 uint8_t IRCodeMapping::getPosition(uint16_t code) {
   for (uint8_t i=0; i<CODE_NUMBER; i++) {
@@ -27,11 +29,11 @@ uint8_t IRCodeMapping::getPosition(uint16_t code) {
     }
   }
   return CODE_NUMBER;
-};
+}
 
 IRCodeMapper::IRCodeMapper() {
   initialize();
-};
+}
 
 IRCodeMapper::IRCodeMapper(IRCodeMapping* mappings[], uint8_t amount) {
   initialize();
@@ -41,7 +43,7 @@ IRCodeMapper::IRCodeMapper(IRCodeMapping* mappings[], uint8_t amount) {
     }
     addMapping(mappings[i]);
   }
-};
+}
 
 void IRCodeMapper::initialize() {
   uint16_t mapping[] = { // NEC (8)
@@ -64,29 +66,29 @@ void IRCodeMapper::initialize() {
     0x09,  // BIT_DIGIT9_BUTTON
   };
   addMapping(8u, mapping, 17u);
-};
+}
 
 bool IRCodeMapper::addMapping(uint8_t type, uint16_t map[], uint8_t len) {
   return addMapping(new IRCodeMapping(type, map, len));
-};
+}
 
 bool IRCodeMapper::addMapping(IRCodeMapping* mapping) {
   if (mapping == NULL) {
     return false;
   }
-  if (codeMappingCount >= CODE_MAPPINGS_MAX) {
+  if (_codeMappingsTotal >= CODE_MAPPINGS_MAX) {
     return false;
   }
-  codeMappings[codeMappingCount] = mapping;
-  codeMappingCount++;
+  _codeMappings[_codeMappingsTotal] = mapping;
+  _codeMappingsTotal++;
   return true;
-};
+}
 
 uint8_t IRCodeMapper::getPosition(uint8_t protocol, uint16_t command) {
   IRCodeMapping* codeMapping = NULL;
 
-  for (uint8_t i=0; i<CODE_MAPPINGS_MAX; i++) {
-    IRCodeMapping* cm = codeMappings[i];
+  for (uint8_t i=0; i<_codeMappingsTotal; i++) {
+    IRCodeMapping* cm = _codeMappings[i];
     if (cm->getType() == protocol) {
       codeMapping = cm;
       break;
@@ -98,8 +100,8 @@ uint8_t IRCodeMapper::getPosition(uint8_t protocol, uint16_t command) {
   }
 
   return codeMapping->getPosition(command);
-};
+}
 
 bool IRCodeMapper::isValid(uint8_t position) {
   return position < CODE_NUMBER;
-};
+}

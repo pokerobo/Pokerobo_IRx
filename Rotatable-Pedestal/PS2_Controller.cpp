@@ -10,7 +10,8 @@ PS2Controller::PS2Controller() {
 
 void PS2Controller::begin() {
   //
-  // setup pins and settings:  GamePad(clock, command, attention, data, Pressures?, Rumble?) check for error
+  // setup pins and settings: 
+  // GamePad(clock, command, attention, data, Pressures?, Rumble?) check for error
   errorCode = ps2x.config_gamepad(GAMEPAD_CLOCK, GAMEPAD_COMMAND, GAMEPAD_ATTENTION, GAMEPAD_DATA, false, false);
 
   // Check for error

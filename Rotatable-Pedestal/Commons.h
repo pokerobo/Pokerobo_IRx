@@ -5,12 +5,15 @@
 
 #define __HCPCA9685_ENABLED__   1
 
-#define __LOADING_LOG_ENABLED__ 0
-#define __RUNNING_LOG_ENABLED__ 0
+#define __LOADING_LOG_ENABLED__ 1
+#define __RUNNING_LOG_ENABLED__ 1
 
 #define __PS2_LOGGING_ENABLED__ 0
 
-#define CONTROLLER_IR     1
+#define CONTROLLER_IR                   1
+#define CONTROLLER_IR_DEVICE_PANASONIC  0
+#define CONTROLLER_IR_DEVICE_SONY       0
+
 #define CONTROLLER_PS2    2
 #define CONTROLLER_RF24   24
 #define CONTROLLER CONTROLLER_RF24
@@ -23,5 +26,18 @@ class FlagChecker {
     bool enabled;
     uint32_t limit;
 };
+
+#ifdef __DEBUG_LOG_FUNCTIONS__
+void debugLog(char* s0);
+void debugLog(char* s0, char* s1);
+void debugLog(char* s0, char* s1, char* s2);
+void debugLog(char* s0, char* s1, char* s2, char* s3);
+void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4);
+void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5);
+void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6);
+void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6, char* s7);
+void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6, char* s7, char* s8);
+void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6, char* s7, char* s8, char* s9);
+#endif
 
 #endif

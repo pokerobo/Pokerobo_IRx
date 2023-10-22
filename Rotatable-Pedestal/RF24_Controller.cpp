@@ -8,7 +8,19 @@
 #define BIT_SELECT_BUTTON 1U << 5
 #define BIT_ANALOG_BUTTON 1U << 6
 
-RF24 radio(9, 10);  // CE, CSN
+#ifndef __RF24_CE_PIN__
+#define __RF24_CE_PIN__           9
+#endif
+
+#ifndef __RF24_CSN_PIN__
+#define __RF24_CSN_PIN__          10
+#endif
+
+#ifndef __RF24_MESSAGE_LENGTH__
+#define __RF24_MESSAGE_LENGTH__   32
+#endif
+
+RF24 radio(__RF24_CE_PIN__, __RF24_CSN_PIN__);  // CE, CSN
 
 RF24Controller::RF24Controller() {
   debugEnabled = true;
@@ -22,7 +34,7 @@ void RF24Controller::begin() {
 
 int RF24Controller::loop() {
   if (radio.available()) {
-    uint8_t msg[32] = {0};
+    uint8_t msg[__RF24_MESSAGE_LENGTH__] = {0};
     radio.read(&msg, sizeof(msg));
 
     bool ok = false;
@@ -153,8 +165,8 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 
 int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)(int, int), const char label) {
 
-  nJoyX = map(nJoyX, 0, 726, NUM_RANGE_X, -NUM_RANGE_X);
-  nJoyY = map(nJoyY, 0, 726, NUM_RANGE_Y, -NUM_RANGE_Y);
+  nJoyX = map(nJoyX, 0, 1024, NUM_RANGE_X, -NUM_RANGE_X);
+  nJoyY = map(nJoyY, 0, 1024, -NUM_RANGE_Y, NUM_RANGE_Y);
 
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
 #if __RUNNING_LOG_ENABLED__
