@@ -17,22 +17,22 @@ void PS2Controller::begin() {
   // Check for error
   if(errorCode == 0) {
 #if __PS2INIT_LOG_ENABLED__
-    Serial.println("Found Controller, configured successful");
+    debugLog("Controller", " ", "found, configured successful");
 #endif
   }
   else if(errorCode == 1) {
 #if __PS2INIT_LOG_ENABLED__
-    Serial.println("No controller found, check wiring or reset the Arduino");
+    debugLog("Controller", " ", "not found, check wiring or reset the Arduino");
 #endif
   }
   else if(errorCode == 2) {
 #if __PS2INIT_LOG_ENABLED__
-    Serial.println("Controller found but not accepting commands");
+    debugLog("Controller", " ", "found but not accepting commands");
 #endif
   }
   else if(errorCode == 3) {
 #if __PS2INIT_LOG_ENABLED__
-    Serial.println("Controller refusing to enter Pressures mode, may not support it.");
+    debugLog("Controller", " ", "refusing to enter Pressures mode."); // may not support it
 #endif
   }
   //
@@ -41,22 +41,22 @@ void PS2Controller::begin() {
   switch(ps2Type) {
     case 0:
 #if __PS2INIT_LOG_ENABLED__
-      Serial.println("Unknown Controller type");
+      debugLog("Unknown", " ", "Controller", " ", "type");
 #endif
       break;
     case 1:
 #if __PS2INIT_LOG_ENABLED__
-      Serial.println("DualShock Controller Found");
+      debugLog("DualShock", " ", "Controller", " ", "Found");
 #endif
       break;
     case 2:
 #if __PS2INIT_LOG_ENABLED__
-      Serial.println("GuitarHero Controller Found");
+      debugLog("GuitarHero", " ", "Controller", " ", "Found");
 #endif
       break;
     default:
 #if __PS2INIT_LOG_ENABLED__
-      Serial.print("Invalid Controller type"), Serial.print(": "), Serial.println(ps2Type);
+      debugLog("Invalid", " ", "Controller", " ", "type", ": ", ps2Type);
 #endif
       NULL;
   }
@@ -68,7 +68,7 @@ bool PS2Controller::hasError() {
 
 void PS2Controller::showError() {
   if (!errorDisplayed) {
-    Serial.println("Error, terminated!");
+    debugLog("Error, terminated!");
     errorDisplayed = true;
   }
 };
@@ -112,7 +112,7 @@ void PS2Controller::onRightJoystickChanged(void (*function)(int, int)) {
 int PS2Controller::loop() {
   if(hasError()) { //skip loop if no controller found
     showError();
-    Serial.println("Reload ...");
+    debugLog("Reload ...");
     delay(1000);
     reload();
     return 0;
@@ -148,8 +148,7 @@ int PS2Controller::check() {
   if (buttonPressed > 0) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("buttonPressed"), Serial.print(": ");
-      Serial.println(buttonPressed, HEX);
+      Serial.print("buttonPressed"), Serial.print(": "), Serial.println(buttonPressed, HEX);
     }
 #endif
     return buttonPressed;
@@ -168,8 +167,7 @@ int PS2Controller::processStartButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PSB_"), Serial.print("START");
-      Serial.println(" is pushed");
+      debugLog("PSB_", "START", " is pushed");
     }
 #endif
     user_onStartButtonPressed();
@@ -186,8 +184,7 @@ int PS2Controller::processSelectButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PSB_"), Serial.print("SELECT");
-      Serial.println(" is pushed");
+      debugLog("PSB_", "SELECT", " is pushed");
     }
 #endif
     user_onSelectButtonPressed();
@@ -204,8 +201,7 @@ int PS2Controller::processDPadUpButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("UP");
-      Serial.println(" is pushed");
+      debugLog("PSB_", "PAD_", "UP", " is pushed");
     }
 #endif
     user_onDPadUpButtonPressed();
@@ -222,8 +218,7 @@ int PS2Controller::processDPadRightButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("RIGHT");
-      Serial.println(" is pushed");
+      debugLog("PSB_", "PAD_", "RIGHT", " is pushed");
     }
 #endif
     user_onDPadRightButtonPressed();
@@ -240,8 +235,7 @@ int PS2Controller::processDPadDownButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("DOWN");
-      Serial.println(" is pushed");
+      debugLog("PSB_", "PAD_", "DOWN", " is pushed");
     }
 #endif
     user_onDPadDownButtonPressed();
@@ -258,8 +252,7 @@ int PS2Controller::processDPadLeftButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PSB_"), Serial.print("PAD_"), Serial.print("LEFT");
-      Serial.println(" is pushed");
+      debugLog("PSB_", "PAD_", "LEFT", " is pushed");
     }
 #endif
     user_onDPadLeftButtonPressed();
@@ -278,14 +271,9 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      Serial.print("PS2Controller"), Serial.print("::");
-      Serial.print("processJoystickChange"), Serial.print("()"), Serial.print(" - ");
-      Serial.print(label);
-      Serial.println(": ");
-      Serial.print(" - "), Serial.print("X"), Serial.print(": ");
-      Serial.println(nJoyX);
-      Serial.print(" - "), Serial.print("Y"), Serial.print(": ");
-      Serial.println(nJoyY);
+      debugLog("PS2", "Controller", "::", "processJoystickChange", "()", " - ", label, ": ");
+      debugLog(" - ", "X", ": ", nJoyX);
+      debugLog(" - ", "Y", ": ", nJoyY);
     }
 #endif
     if (onChange) {
@@ -294,11 +282,7 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(
     } else {
 #if __RUNNING_LOG_ENABLED__
       if (debugEnabled) {
-        Serial.print("PS2Controller"), Serial.print("::");
-        Serial.print("processJoystickChange"), Serial.print("()"), Serial.print(" - ");
-        Serial.print(label);
-        Serial.print(": ");
-        Serial.println("event listener has not registered");
+        debugLog("PS2", "Controller", "::", "processJoystickChange", "()", " - ", label, ": ", "not registered");
       }
 #endif
       return -1;

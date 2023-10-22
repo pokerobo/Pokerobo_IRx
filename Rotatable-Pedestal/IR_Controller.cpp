@@ -48,8 +48,7 @@ IRController::IRController(IRCodeMapper* irCodeMapper) {
 void IRController::begin() {
   IrReceiver.begin(RECV_PIN, ENABLE_LED_FEEDBACK);
   //
-  Serial.print("IR is now running and waiting for message on Pin ");
-  Serial.println(RECV_PIN);
+  debugLog("IR is now running on Pin ", RECV_PIN);
 }
 
 int IRController::loop() {
@@ -79,7 +78,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_OK_BUTTON && user_onOkButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onOk"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      debugLog("on", "Ok", "ButtonPressed", "()", " is called");
     }
 #endif
     user_onOkButtonPressed();
@@ -89,7 +88,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_UP_BUTTON && user_onDPadUpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDPadUp"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      debugLog("on", "DPad", "Up", "ButtonPressed", "()", " is called");
     }
 #endif
     user_onDPadUpButtonPressed();
@@ -99,7 +98,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_RIGHT_BUTTON && user_onDPadRightButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDPadRight"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      debugLog("on", "DPad", "Right", "ButtonPressed", "()", " is called");
     }
 #endif
     user_onDPadRightButtonPressed();
@@ -109,7 +108,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_DOWN_BUTTON && user_onDPadDownButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDPadDown"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      debugLog("on", "DPad", "Down", "ButtonPressed", "()", " is called");
     }
 #endif
     user_onDPadDownButtonPressed();
@@ -119,7 +118,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_LEFT_BUTTON && user_onDPadLeftButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDPadLeft"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      debugLog("on", "DPad", "Left", "ButtonPressed", "()", " is called");
     }
 #endif
     user_onDPadLeftButtonPressed();
@@ -129,7 +128,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_ASTERISK_BUTTON && user_onAsteriskButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onAsterisk"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      debugLog("on", "Asterisk", "ButtonPressed", "()", " is called");
     }
 #endif
     user_onAsteriskButtonPressed();
@@ -139,7 +138,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_SHARP_BUTTON && user_onSharpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onSharp"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      debugLog("on", "Sharp", "ButtonPressed", "()", " is called");
     }
 #endif
     user_onSharpButtonPressed();
@@ -149,7 +148,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed & BIT_DIGITS_BUTTON && user_onDigitButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onDigit"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      debugLog("on", "Digit", "ButtonPressed", "()", " is called");
     }
 #endif
     user_onDigitButtonPressed(pressed & BIT_DIGITS_BUTTON);
@@ -159,7 +158,7 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   if(pressed && user_onAnyButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      Serial.print("onAny"), Serial.print("ButtonPressed"), Serial.print("()"), Serial.println(" is called");
+      debugLog("on", "Any", "ButtonPressed", "()", " is called");
     }
 #endif
     user_onAnyButtonPressed(pressed);
@@ -177,7 +176,7 @@ uint32_t detectButtonPress(IRData decodedIRData, IRCodeMapper* _irCodeMapper) {
     if (_irCodeMapper->isValid(pos)) {
       buttons |= (1UL << pos);
 #if __RUNNING_LOG_ENABLED__
-      Serial.print("Buttons: "), Serial.print(pos), Serial.println(" is pressed");
+      debugLog("Buttons", ": ", pos, " is pressed");
 #endif
       return buttons;
     } else {

@@ -10,7 +10,9 @@
 #include "Commons.h"
 #include <PS2X_lib.h>
 
-#define __PS2INIT_LOG_ENABLED__ (__PS2_LOGGING_ENABLED__ || __LOADING_LOG_ENABLED__ || 0)
+#ifndef __PS2INIT_LOG_ENABLED__
+#define __PS2INIT_LOG_ENABLED__ (__LOADING_LOG_ENABLED__ || 0)
+#endif
 
 #define MIN_BOUND_X      3
 #define MIN_BOUND_Y      3

@@ -75,7 +75,7 @@ void setup() {
   Serial.begin(57600);
 
 #if __LOADING_LOG_ENABLED__
-  Serial.print("main()"), Serial.print(" - "), Serial.println("Setup starting");
+  debugLog("main", "()", " - ", "Setup starting");
 #endif
 
   for (int i=0; i<PEDESTALS_MAX; i++) {
@@ -84,7 +84,7 @@ void setup() {
     }
   }
 #if __LOADING_LOG_ENABLED__
-  Serial.print("main()"), Serial.print(" - "), Serial.print("total: "), Serial.println(pedestalsTotal);
+  debugLog("main", "()", " - ", "total", ": ", pedestalsTotal);
 #endif
 
   PedestalHandler::init();
@@ -157,7 +157,7 @@ void setup() {
 #endif
 
 #if __LOADING_LOG_ENABLED__
-  Serial.print("main()"), Serial.print(" - "), Serial.println("Setup has done!");
+  debugLog("main", "()", " - ", "Setup has done!");
 #endif
 }
 
@@ -208,7 +208,7 @@ void processDPadUpButtonPressedEvent() {
     processDPadUpButtonPressedEventFor(pedestalHandlers[i]);
   }
 #if __RUNNING_LOG_ENABLED__
-  Serial.print("main()"), Serial.print(" - "), Serial.print("UP"), Serial.println(" is pushed");
+  debugLog("main", "()", " - ", "UP", " is pushed");
 #endif
 }
 
@@ -222,7 +222,7 @@ void processDPadRightButtonPressedEvent() {
     processDPadRightButtonPressedEventFor(pedestalHandlers[i]);
   }
 #if __RUNNING_LOG_ENABLED__
-  Serial.print("main()"), Serial.print(" - "), Serial.print("RIGHT"), Serial.println(" is pushed");
+  debugLog("main", "()", " - ", "RIGHT", " is pushed");
 #endif
 }
 
@@ -236,7 +236,7 @@ void processDPadDownButtonPressedEvent() {
     processDPadDownButtonPressedEventFor(pedestalHandlers[i]);
   }
 #if __RUNNING_LOG_ENABLED__
-  Serial.print("main()"), Serial.print(" - "), Serial.print("DOWN"), Serial.println(" is pushed");
+  debugLog("main", "()", " - ", "DOWN", " is pushed");
 #endif
 }
 
@@ -250,7 +250,7 @@ void processDPadLeftButtonPressedEvent() {
     processDPadLeftButtonPressedEventFor(pedestalHandlers[i]);
   }
 #if __RUNNING_LOG_ENABLED__
-  Serial.print("main()"), Serial.print(" - "), Serial.print("LEFT"), Serial.println(" is pushed");
+  debugLog("main", "()", " - ", "LEFT", " is pushed");
 #endif
 }
 
@@ -270,7 +270,7 @@ void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJo
   bool changed = pedestalHandler->change(nJoyX, nJoyY);
   if (changed) {
 #if __RUNNING_LOG_ENABLED__
-    Serial.print("main()"), Serial.print(" - "), Serial.println("processLeftJoystickChangeEvent() is invoked");
+    debugLog("main", "()", " - ", "processLeftJoystickChangeEvent", "()", " is called");
 #endif
   }
 }
