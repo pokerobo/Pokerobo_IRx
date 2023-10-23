@@ -231,8 +231,8 @@ void show(IRData decodedIRData, HardwareSerial *serial) {
   switch (decodedIRData.protocol) {
     case NEC: Serial.println("NEC"); break;
     case SONY: Serial.println("SONY"); break;
-    case RC5: Serial.println("RC5"); break;
-    case RC6: Serial.println("RC6"); break;
+    case RC5: Serial.print("RC"), Serial.println("5"); break;
+    case RC6: Serial.print("RC"), Serial.println("6"); break;
     case SHARP: Serial.println("SHARP"); break;
     case JVC: Serial.println("JVC"); break;
     case SAMSUNG: Serial.println("SAMSUNG"); break;
@@ -242,7 +242,7 @@ void show(IRData decodedIRData, HardwareSerial *serial) {
     case DENON: Serial.println("DENON"); break;
     case UNKNOWN: Serial.println("UNKNOWN"); break;
     default:
-      Serial.print("Unknown protocol [");
+      Serial.print("Unknown [");
       Serial.print(decodedIRData.protocol);
       Serial.println("]");
   }

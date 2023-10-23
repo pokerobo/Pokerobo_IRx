@@ -59,7 +59,7 @@ int RF24Controller::loop() {
 #endif
 
 #if __RUNNING_LOG_ENABLED__
-    debugLog("No", ": ", count, "; ", "Buttons", ": ", buttons, "; ", "X", ": ", jX, "; ", "Y", ": ", jY);
+    debugLog("#", count, " - ", "Buttons", ": ", buttons, "; ", "X", ": ", jX, "; ", "Y", ": ", jY);
 #endif
 
     if (!ok) {
@@ -82,7 +82,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   if(pressed & BIT_START_BUTTON && _onStartButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("JOY_", "START", " is pushed");
+      debugLog("JOY", "_", "START", " is pushed");
     }
 #endif
     _onStartButtonPressed();
@@ -92,7 +92,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   if(pressed & BIT_SELECT_BUTTON && _onSelectButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("JOY_", "SELECT", " is pushed");
+      debugLog("JOY", "_", "SELECT", " is pushed");
     }
 #endif
     _onSelectButtonPressed();
@@ -102,7 +102,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   if(pressed & BIT_ANALOG_BUTTON && _onAnalogButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("JOY_", "ANALOG", " is pushed");
+      debugLog("JOY", "_", "ANALOG", " is pushed");
     }
 #endif
     _onAnalogButtonPressed();
@@ -112,7 +112,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   if(pressed & BIT_UP_BUTTON && _onDPadUpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("JOY_", "PAD_", "UP", " is pushed");
+      debugLog("JOY", "_", "PAD", "_", "UP", " is pushed");
     }
 #endif
     _onDPadUpButtonPressed();
@@ -122,7 +122,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   if(pressed & BIT_RIGHT_BUTTON && _onDPadRightButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("JOY_", "PAD_", "RIGHT", " is pushed");
+      debugLog("JOY", "_", "PAD", "_", "RIGHT", " is pushed");
     }
 #endif
     _onDPadRightButtonPressed();
@@ -132,7 +132,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   if(pressed & BIT_DOWN_BUTTON && _onDPadDownButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("JOY_", "PAD_", "DOWN", " is pushed");
+      debugLog("JOY", "_", "PAD", "_", "DOWN", " is pushed");
     }
 #endif
     _onDPadDownButtonPressed();
@@ -142,7 +142,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   if(pressed & BIT_LEFT_BUTTON && _onDPadLeftButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("JOY_", "PAD_", "LEFT", " is pushed");
+      debugLog("JOY", "_", "PAD", "_", "LEFT", " is pushed");
     }
 #endif
     _onDPadLeftButtonPressed();

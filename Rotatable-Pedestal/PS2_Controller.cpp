@@ -167,7 +167,7 @@ int PS2Controller::processStartButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("PSB_", "START", " is pushed");
+      debugLog("PSB", "_", "START", " is pushed");
     }
 #endif
     _onStartButtonPressed();
@@ -184,7 +184,7 @@ int PS2Controller::processSelectButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("PSB_", "SELECT", " is pushed");
+      debugLog("PSB", "_", "SELECT", " is pushed");
     }
 #endif
     _onSelectButtonPressed();
@@ -201,7 +201,7 @@ int PS2Controller::processDPadUpButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("PSB_", "PAD_", "UP", " is pushed");
+      debugLog("PSB", "_", "PAD", "_", "UP", " is pushed");
     }
 #endif
     _onDPadUpButtonPressed();
@@ -218,7 +218,7 @@ int PS2Controller::processDPadRightButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("PSB_", "PAD_", "RIGHT", " is pushed");
+      debugLog("PSB", "_", "PAD", "_", "RIGHT", " is pushed");
     }
 #endif
     _onDPadRightButtonPressed();
@@ -235,7 +235,7 @@ int PS2Controller::processDPadDownButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("PSB_", "PAD_", "DOWN", " is pushed");
+      debugLog("PSB", "_", "PAD", "_", "DOWN", " is pushed");
     }
 #endif
     _onDPadDownButtonPressed();
@@ -252,7 +252,7 @@ int PS2Controller::processDPadLeftButtonPress() {
   if(ps2x.Button(button)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("PSB_", "PAD_", "LEFT", " is pushed");
+      debugLog("PSB", "_", "PAD", "_", "LEFT", " is pushed");
     }
 #endif
     _onDPadLeftButtonPressed();
