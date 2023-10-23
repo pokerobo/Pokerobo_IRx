@@ -1,9 +1,9 @@
 #include "Pedestal_Group.h"
 
-PedestalGroup::PedestalGroup(PedestalHandler* _pedestalHandlers[]) {
+PedestalGroup::PedestalGroup(PedestalHandler* pedestalHandlers[]) {
   for (int i=0; i<PEDESTALS_MAX; i++) {
-    if (_pedestalHandlers[i] != NULL) {
-      _pedestalHandlers[_pedestalsTotal] = _pedestalHandlers[i];
+    if (pedestalHandlers[i] != NULL) {
+      _pedestalHandlers[_pedestalsTotal] = pedestalHandlers[i];
       _pedestalsTotal += 1;
     }
   }
@@ -21,7 +21,7 @@ void PedestalGroup::begin() {
 }
 
 bool PedestalGroup::change(int hAmount, int vAmount) {
-  
+  return false;
 }
 
 void PedestalGroup::processStartButtonPressedEvent() {
