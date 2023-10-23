@@ -160,7 +160,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("RF24", "Controller", "::", "processJoystickChange", "()", " - ", label, ": ");
+      debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", label, ": ");
       debugLog(" - ", "X", ": ", nJoyX);
       debugLog(" - ", "Y", ": ", nJoyY);
     }
@@ -171,7 +171,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
     } else {
 #if __RUNNING_LOG_ENABLED__
       if (debugEnabled) {
-        debugLog("RF24", "Controller", "::", "processJoystickChange", "()", " - ", label, ": ", "not registered");
+        debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", label, ": ", "not registered");
       }
 #endif
       return -1;

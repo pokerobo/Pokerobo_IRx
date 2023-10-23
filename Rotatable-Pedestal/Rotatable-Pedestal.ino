@@ -75,7 +75,7 @@ void setup() {
   Serial.begin(57600);
 
 #if __LOADING_LOG_ENABLED__
-  debugLog("main", "()", " - ", "Setup starting");
+  debugLog("main", "()", " - ", "Starting");
 #endif
 
   for (int i=0; i<PEDESTALS_MAX; i++) {
@@ -157,7 +157,7 @@ void setup() {
 #endif
 
 #if __LOADING_LOG_ENABLED__
-  debugLog("main", "()", " - ", "Setup has done!");
+  debugLog("main", "()", " - ", "Done!");
 #endif
 }
 
@@ -270,7 +270,7 @@ void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJo
   bool changed = pedestalHandler->change(nJoyX, nJoyY);
   if (changed) {
 #if __RUNNING_LOG_ENABLED__
-    debugLog("main", "()", " - ", "processLeftJoystickChangeEvent", "()", " is called");
+    debugLog("main", "()", " - ", "process", "Left", "JoystickChange", "Event", "()", " is called");
 #endif
   }
 }
