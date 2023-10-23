@@ -50,7 +50,10 @@ IRController::IRController(IRCodeMapper* irCodeMapper) {
 void IRController::begin() {
   IrReceiver.begin(RECV_PIN, ENABLE_LED_FEEDBACK);
   //
-  debugLog("IR is now running on Pin", " ", RECV_PIN);
+#if __LOADING_LOG_ENABLED__
+  char buf[7];
+  debugLog("IR is now running on Pin", " ", itoa(RECV_PIN, buf, 10));
+#endif
 }
 
 int IRController::loop() {
@@ -178,7 +181,8 @@ uint32_t detectButtonPress(IRData decodedIRData, IRCodeMapper* _irCodeMapper) {
     if (_irCodeMapper->isValid(pos)) {
       buttons |= (1UL << pos);
 #if __RUNNING_LOG_ENABLED__
-      debugLog("Buttons", ": ", pos, " is pushed");
+      char pos_[7];
+      debugLog("Buttons", ": ", itoa(pos, pos_, 10), " is pushed");
 #endif
       return buttons;
     } else {

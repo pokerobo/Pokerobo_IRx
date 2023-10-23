@@ -56,7 +56,8 @@ void PS2Controller::begin() {
       break;
     default:
 #if __PS2INIT_LOG_ENABLED__
-      debugLog("Invalid", " ", "Controller", " ", "type", ": ", ps2Type);
+      char b_[5];
+      debugLog("Invalid", " ", "Controller", " ", "type", ": ", itoa(ps2Type, b_, 10));
 #endif
       NULL;
   }
@@ -271,9 +272,11 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
-      debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", label, ": ");
-      debugLog(" - ", "X", ": ", nJoyX);
-      debugLog(" - ", "Y", ": ", nJoyY);
+      char l_[2] = { label, '\0' };
+      debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
+      char x_[7], y_[7];
+      debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
+      debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
     }
 #endif
     if (onChange) {
@@ -282,7 +285,8 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(
     } else {
 #if __RUNNING_LOG_ENABLED__
       if (debugEnabled) {
-        debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", label, ": ", "not registered");
+        char l_[2] = { label, '\0' };
+        debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
       }
 #endif
       return -1;

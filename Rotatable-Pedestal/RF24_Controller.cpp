@@ -52,7 +52,10 @@ int RF24Controller::loop() {
 #endif
 
 #if __RUNNING_LOG_ENABLED__
-    debugLog("#", count, " - ", "Buttons", ": ", buttons, "; ", "X", ": ", jX, "; ", "Y", ": ", jY);
+    char c_[11], b_[7], x_[7], y_[7];
+    debugLog("#", ltoa(count, c_, 10), " - ", "Buttons", ": ", itoa(buttons, b_, 10),
+        "; ", "X", ": ", itoa(jX, x_, 10),
+        "; ", "Y", ": ", itoa(jY, y_, 10));
 #endif
 
     if (!ok) {
@@ -153,9 +156,11 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
-      debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", label, ": ");
-      debugLog(" - ", "X", ": ", nJoyX);
-      debugLog(" - ", "Y", ": ", nJoyY);
+      char l_[2] = { label, '\0' };
+      debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
+      char x_[7], y_[7];
+      debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
+      debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
     }
 #endif
     if (onChange) {
@@ -164,7 +169,8 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
     } else {
 #if __RUNNING_LOG_ENABLED__
       if (_debugEnabled) {
-        debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", label, ": ", "not registered");
+        char l_[2] = { label, '\0' };
+        debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
       }
 #endif
       return -1;

@@ -8,7 +8,8 @@ PedestalGroup::PedestalGroup(PedestalHandler* pedestalHandlers[]) {
     }
   }
 #if __LOADING_LOG_ENABLED__
-  debugLog("PedestalGroup", "()", " - ", "total", ": ", _pedestalsTotal);
+  char _pedestalsTotal_[7];
+  debugLog("PedestalGroup", "()", " - ", "total", ": ", itoa(_pedestalsTotal, _pedestalsTotal_, 10));
 #endif
 }
 
