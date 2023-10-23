@@ -1,14 +1,27 @@
 #ifndef __RF24_CONTROLLER_H__
 #define __RF24_CONTROLLER_H__
 
-#define __RF24_BINARY_ENCODING__ 1
-#define __RF24_MESSAGE_LENGTH__ 32
-
 #include "Commons.h"
 
-#include <SPI.h>
-#include <nRF24L01.h>
-#include <RF24.h>
+#ifndef __RF24_BINARY_ENCODING__
+#define __RF24_BINARY_ENCODING__ 1
+#endif
+
+#ifndef __RF24_MESSAGE_LENGTH__
+#define __RF24_MESSAGE_LENGTH__   32
+#endif
+
+#ifndef __RF24_DEFAULT_ADDRESS__
+#define __RF24_DEFAULT_ADDRESS__  0xE8E8F0F0E1LL
+#endif
+
+#ifndef __RF24_CE_PIN__
+#define __RF24_CE_PIN__         9
+#endif
+
+#ifndef __RF24_CSN_PIN__
+#define __RF24_CSN_PIN__        10
+#endif
 
 #define MIN_BOUND_X      32
 #define MIN_BOUND_Y      32
@@ -18,7 +31,7 @@
 
 class RF24Controller {
   public:
-    RF24Controller();
+    RF24Controller(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
     void begin();
     int loop();
     void setOnStartButtonPressed(void (*function)());
@@ -33,8 +46,8 @@ class RF24Controller {
     uint16_t processButtonPress(uint16_t buttons);
     int processJoystickChange(int, int, void (*function)(int, int), const char label);
   private:
-    uint64_t address = 0xE8E8F0F0E1LL;
-    bool debugEnabled;
+    uint64_t _address = __RF24_DEFAULT_ADDRESS__;
+    bool _debugEnabled;
     void (*_onStartButtonPressed)();
     void (*_onSelectButtonPressed)();
     void (*_onAnalogButtonPressed)();

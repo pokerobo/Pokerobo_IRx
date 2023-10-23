@@ -3,16 +3,27 @@
 
 #include "Commons.h"
 
+#ifndef __HCPCA9685_ENABLED__
+#define __HCPCA9685_ENABLED__   1
+#endif
+
 #if !__HCPCA9685_ENABLED__
 #include <Servo.h>
 #else
 #include "HCPCA9685.h"
 #endif
 
+#ifndef HORIZONTAL_SERVO_PIN
 #define HORIZONTAL_SERVO_PIN  4
-#define VERTICAL_SERVO_PIN    5
+#endif
 
+#ifndef VERTICAL_SERVO_PIN
+#define VERTICAL_SERVO_PIN    5
+#endif
+
+#ifndef MOVING_AMOUNT
 #define MOVING_AMOUNT         5
+#endif
 
 class PedestalHandler {
   public:

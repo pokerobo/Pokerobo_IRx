@@ -1,5 +1,9 @@
 #include "RF24_Controller.h"
 
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
 #define BIT_UP_BUTTON     1U << 0
 #define BIT_RIGHT_BUTTON  1U << 1
 #define BIT_DOWN_BUTTON   1U << 2
@@ -8,27 +12,16 @@
 #define BIT_SELECT_BUTTON 1U << 5
 #define BIT_ANALOG_BUTTON 1U << 6
 
-#ifndef __RF24_CE_PIN__
-#define __RF24_CE_PIN__           9
-#endif
-
-#ifndef __RF24_CSN_PIN__
-#define __RF24_CSN_PIN__          10
-#endif
-
-#ifndef __RF24_MESSAGE_LENGTH__
-#define __RF24_MESSAGE_LENGTH__   32
-#endif
-
 RF24 radio(__RF24_CE_PIN__, __RF24_CSN_PIN__);  // CE, CSN
 
-RF24Controller::RF24Controller() {
-  debugEnabled = true;
+RF24Controller::RF24Controller(uint64_t address, bool debugEnabled) {
+  _address = address;
+  _debugEnabled = debugEnabled;
 }
 
 void RF24Controller::begin() {
   radio.begin();
-  radio.openReadingPipe(0, address);
+  radio.openReadingPipe(0, _address);
   radio.startListening();
 }
 
@@ -81,7 +74,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 
   if(pressed & BIT_START_BUTTON && _onStartButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       debugLog("JOY", "_", "START", " is pushed");
     }
 #endif
@@ -91,7 +84,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 
   if(pressed & BIT_SELECT_BUTTON && _onSelectButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       debugLog("JOY", "_", "SELECT", " is pushed");
     }
 #endif
@@ -101,7 +94,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 
   if(pressed & BIT_ANALOG_BUTTON && _onAnalogButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       debugLog("JOY", "_", "ANALOG", " is pushed");
     }
 #endif
@@ -111,7 +104,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 
   if(pressed & BIT_UP_BUTTON && _onDPadUpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "UP", " is pushed");
     }
 #endif
@@ -121,7 +114,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 
   if(pressed & BIT_RIGHT_BUTTON && _onDPadRightButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "RIGHT", " is pushed");
     }
 #endif
@@ -131,7 +124,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 
   if(pressed & BIT_DOWN_BUTTON && _onDPadDownButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "DOWN", " is pushed");
     }
 #endif
@@ -141,7 +134,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 
   if(pressed & BIT_LEFT_BUTTON && _onDPadLeftButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "LEFT", " is pushed");
     }
 #endif
@@ -159,7 +152,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
 
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (_debugEnabled) {
       debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", label, ": ");
       debugLog(" - ", "X", ": ", nJoyX);
       debugLog(" - ", "Y", ": ", nJoyY);
@@ -170,7 +163,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)
       return 1;
     } else {
 #if __RUNNING_LOG_ENABLED__
-      if (debugEnabled) {
+      if (_debugEnabled) {
         debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", label, ": ", "not registered");
       }
 #endif
