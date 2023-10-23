@@ -1,7 +1,5 @@
 #include "Commons.h"
 
-#define PEDESTALS_MAX   8
-
 #if (CONTROLLER_IR)
 #include "IR_Controller.h"
 #endif
@@ -14,7 +12,7 @@
 #include "RF24_Controller.h"
 #endif
 
-#include "Pedestal_Handler.h"
+#include "Pedestal_Group.h"
 
 #if (CONTROLLER_IR)
 #if (CONTROLLER_IR_DEVICE_SONY)
@@ -66,7 +64,8 @@ PedestalHandler* pedestalHandlers[PEDESTALS_MAX] = {
   &pedestalHandler3,
 };
 
-int pedestalsTotal = PEDESTALS_MAX;
+PedestalGroup pedestalGroupInstance(pedestalHandlers);
+PedestalGroup* pedestalGroup = &pedestalGroupInstance;
 
 void setup() {
   while (!Serial) {
@@ -78,21 +77,7 @@ void setup() {
   debugLog("main", "()", " - ", "Starting");
 #endif
 
-  for (int i=0; i<PEDESTALS_MAX; i++) {
-    if (pedestalHandlers[i] != NULL) {
-      pedestalsTotal = (i + 1);
-    }
-  }
-#if __LOADING_LOG_ENABLED__
-  debugLog("main", "()", " - ", "total", ": ", pedestalsTotal);
-#endif
-
-  PedestalHandler::init();
-
-  for (int i=0; i<pedestalsTotal; i++) {
-    if (pedestalHandlers[i] == NULL) continue;
-    pedestalHandlers[i]->begin(30, 120, 30, 90);
-  }
+  pedestalGroup->begin();
 
 #if (CONTROLLER == CONTROLLER_PS2)
   ps2Controller->begin();
@@ -182,106 +167,32 @@ uint32_t getDelayAmount(int status) {
 }
 
 void processStartButtonPressedEvent() {
-  for (int i=0; i<pedestalsTotal; i++) {
-    processStartButtonPressedEventFor(pedestalHandlers[i]);
-  }
-}
-
-void processStartButtonPressedEventFor(PedestalHandler *pedestalHandler) {
-  if (pedestalHandler == NULL) return;
-  pedestalHandler->reset();
+  pedestalGroup->processStartButtonPressedEvent();
 }
 
 void processAnalogButtonPressedEvent() {
-  for (int i=0; i<pedestalsTotal; i++) {
-    processAnalogButtonPressedEventFor(pedestalHandlers[i]);
-  }
-}
-
-void processAnalogButtonPressedEventFor(PedestalHandler *pedestalHandler) {
-  if (pedestalHandler == NULL) return;
-  // do something here
+  pedestalGroup->processAnalogButtonPressedEvent();
 }
 
 void processDPadUpButtonPressedEvent() {
-  for (int i=0; i<pedestalsTotal; i++) {
-    processDPadUpButtonPressedEventFor(pedestalHandlers[i]);
-  }
-#if __RUNNING_LOG_ENABLED__
-  debugLog("main", "()", " - ", "UP", " is pushed");
-#endif
-}
-
-void processDPadUpButtonPressedEventFor(PedestalHandler *pedestalHandler) {
-  if (pedestalHandler == NULL) return;
-  pedestalHandler->verticalServoUp();
+  pedestalGroup->processDPadUpButtonPressedEvent();
 }
 
 void processDPadRightButtonPressedEvent() {
-  for (int i=0; i<pedestalsTotal; i++) {
-    processDPadRightButtonPressedEventFor(pedestalHandlers[i]);
-  }
-#if __RUNNING_LOG_ENABLED__
-  debugLog("main", "()", " - ", "RIGHT", " is pushed");
-#endif
-}
-
-void processDPadRightButtonPressedEventFor(PedestalHandler *pedestalHandler) {
-  if (pedestalHandler == NULL) return;
-  pedestalHandler->horizontalServoRight();
+  pedestalGroup->processDPadRightButtonPressedEvent();
 }
 
 void processDPadDownButtonPressedEvent() {
-  for (int i=0; i<pedestalsTotal; i++) {
-    processDPadDownButtonPressedEventFor(pedestalHandlers[i]);
-  }
-#if __RUNNING_LOG_ENABLED__
-  debugLog("main", "()", " - ", "DOWN", " is pushed");
-#endif
-}
-
-void processDPadDownButtonPressedEventFor(PedestalHandler *pedestalHandler) {
-  if (pedestalHandler == NULL) return;
-  pedestalHandler->verticalServoDown();
+  pedestalGroup->processDPadDownButtonPressedEvent();
 }
 
 void processDPadLeftButtonPressedEvent() {
-  for (int i=0; i<pedestalsTotal; i++) {
-    processDPadLeftButtonPressedEventFor(pedestalHandlers[i]);
-  }
-#if __RUNNING_LOG_ENABLED__
-  debugLog("main", "()", " - ", "LEFT", " is pushed");
-#endif
-}
-
-void processDPadLeftButtonPressedEventFor(PedestalHandler *pedestalHandler) {
-  if (pedestalHandler == NULL) return;
-  pedestalHandler->horizontalServoLeft();
+  pedestalGroup->processDPadLeftButtonPressedEvent();
 }
 
 void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
-  for (int i=0; i<pedestalsTotal; i++) {
-    processLeftJoystickChangeEventFor(pedestalHandlers[i], nJoyX, nJoyY);
-  }
+  pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
 }
-
-void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
-  if (pedestalHandler == NULL) return;
-  bool changed = pedestalHandler->change(nJoyX, nJoyY);
-  if (changed) {
-#if __RUNNING_LOG_ENABLED__
-    debugLog("main", "()", " - ", "process", "Left", "JoystickChange", "Event", "()", " is called");
-#endif
-  }
-}
-
 void processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
-  for (int i=0; i<pedestalsTotal; i++) {
-    processRightJoystickChangeEventFor(pedestalHandlers[i], nJoyX, nJoyY);
-  }
-}
-
-void processRightJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
-  if (pedestalHandler == NULL) return;
-  // do something here
+  pedestalGroup->processRightJoystickChangeEvent(nJoyX, nJoyY);
 }

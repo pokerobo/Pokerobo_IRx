@@ -8,7 +8,12 @@
 HCPCA9685 hcpca9685(I2C_ADDR);
 #endif
 
+static bool PedestalHandler::initialized = false;
+
 static void PedestalHandler::init() {
+  if (initialized) return;
+  initialized = true;
+
 #if __HCPCA9685_ENABLED__
   /* Initialise the library and set it to 'servo mode' */ 
   hcpca9685.Init(SERVO_MODE);
