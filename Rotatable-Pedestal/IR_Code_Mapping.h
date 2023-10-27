@@ -15,9 +15,9 @@ class IRCodeMapping {
     bool hasCode(uint16_t code);
   private:
     IRCodeMapping();
-    uint8_t protocol;
-    uint16_t codes[CODE_NUMBER] = {};
-    uint8_t length = 0;
+    uint8_t _protocol;
+    uint16_t _codes[CODE_NUMBER] = {};
+    uint8_t _length = 0;
 };
 
 class IRCodeMapper {

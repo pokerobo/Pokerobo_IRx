@@ -193,6 +193,7 @@ void processDPadLeftButtonPressedEvent() {
 void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
   pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
 }
+
 void processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
   pedestalGroup->processRightJoystickChangeEvent(nJoyX, nJoyY);
 }

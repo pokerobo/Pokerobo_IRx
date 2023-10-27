@@ -3,19 +3,19 @@
 IRCodeMapping::IRCodeMapping() {}
 
 IRCodeMapping::IRCodeMapping(uint8_t type, uint16_t map[], uint8_t len) {
-  protocol = type;
+  _protocol = type;
   for (uint8_t i=0; i<len; i++) {
-    codes[i] = map[i];
+    _codes[i] = map[i];
   }
-  length = len;
+  _length = len;
 }
 
 uint8_t IRCodeMapping::getType() {
-  return protocol;
+  return _protocol;
 }
 
 uint8_t IRCodeMapping::getLength() {
-  return length;
+  return _length;
 }
 
 bool IRCodeMapping::hasCode(uint16_t code) {
@@ -24,7 +24,7 @@ bool IRCodeMapping::hasCode(uint16_t code) {
 
 uint8_t IRCodeMapping::getPosition(uint16_t code) {
   for (uint8_t i=0; i<CODE_NUMBER; i++) {
-    if (codes[i] == code) {
+    if (_codes[i] == code) {
       return i;
     }
   }
