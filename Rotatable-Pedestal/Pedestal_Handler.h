@@ -21,6 +21,22 @@
 #define VERTICAL_SERVO_PIN    5
 #endif
 
+#ifndef HORIZONTAL_MIN_ANGLE
+#define HORIZONTAL_MIN_ANGLE  30
+#endif
+
+#ifndef HORIZONTAL_MAX_ANGLE
+#define HORIZONTAL_MAX_ANGLE  120
+#endif
+
+#ifndef VERTICAL_MIN_ANGLE
+#define VERTICAL_MIN_ANGLE    30
+#endif
+
+#ifndef VERTICAL_MAX_ANGLE
+#define VERTICAL_MAX_ANGLE    90
+#endif
+
 #ifndef MOVING_AMOUNT
 #define MOVING_AMOUNT         5
 #endif

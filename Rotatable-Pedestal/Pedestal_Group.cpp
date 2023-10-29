@@ -7,23 +7,49 @@ PedestalGroup::PedestalGroup(PedestalHandler* pedestalHandlers[]) {
       _pedestalsTotal += 1;
     }
   }
+
 #if __LOADING_LOG_ENABLED__
   char _pedestalsTotal_[7];
   debugLog("PedestalGroup", "()", " - ", "total", ": ", itoa(_pedestalsTotal, _pedestalsTotal_, 10));
+
 #endif
+  _sceneDirection = true;
+  _sceneStep = -1;
 }
 
 void PedestalGroup::begin() {
   PedestalHandler::init();
   for (int i=0; i<_pedestalsTotal; i++) {
     if (_pedestalHandlers[i] == NULL) continue;
-    _pedestalHandlers[i]->begin(30, 120, 30, 90);
+    _pedestalHandlers[i]->begin(
+        HORIZONTAL_MIN_ANGLE,
+        HORIZONTAL_MAX_ANGLE,
+        VERTICAL_MIN_ANGLE,
+        VERTICAL_MAX_ANGLE);
   }
 }
 
 bool PedestalGroup::change(int hDelta, int vDelta) {
   for (int i=0; i<_pedestalsTotal; i++) {
     _pedestalHandlers[i]->change(hDelta, vDelta);
+  }
+}
+
+void PedestalGroup::setHorizontalPosition(int hPos) {
+  for (int i=0; i<_pedestalsTotal; i++) {
+    _pedestalHandlers[i]->setHorizontalPosition(hPos);
+  }
+}
+
+void PedestalGroup::setVerticalPosition(int vPos) {
+  for (int i=0; i<_pedestalsTotal; i++) {
+    _pedestalHandlers[i]->setVerticalPosition(vPos);
+  }
+}
+
+void PedestalGroup::reset() {
+  for (int i=0; i<_pedestalsTotal; i++) {
+    _pedestalHandlers[i]->reset();
   }
 }
 
@@ -130,4 +156,32 @@ void PedestalGroup::processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
 void PedestalGroup::processRightJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
   if (pedestalHandler == NULL) return;
   // do something here
+}
+
+void PedestalGroup::autoDance() {
+  if (_sceneStep < 0) {
+    _sceneStep = 0;
+    reset();
+#if __RUNNING_LOG_ENABLED__
+    debugLog("PedestalGroup", "::", "autoDance", "()", " - ", "Starting");
+#endif
+    return;
+  }
+  if (_sceneStep == 0) {
+    _sceneDirection = true;
+  }
+  if (_sceneStep == _sceneStepsTotal - 1) {
+    _sceneDirection = false;
+  }
+  if (_sceneDirection) {
+    _sceneStep += 1;
+  } else {
+    _sceneStep -= 1;
+  }
+#if __RUNNING_LOG_ENABLED__
+  char _step_[7];
+  debugLog("PedestalGroup", "::", "autoDance", "()", " - ", "step", ": ", itoa(_sceneStep, _step_, 10));
+#endif
+  setHorizontalPosition(_sceneHPos[_sceneStep]);
+  setVerticalPosition(_sceneVPos[_sceneStep]);
 }

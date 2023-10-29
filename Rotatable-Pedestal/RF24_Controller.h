@@ -4,7 +4,7 @@
 #include "Commons.h"
 
 #ifndef __RF24_BINARY_ENCODING__
-#define __RF24_BINARY_ENCODING__ 1
+#define __RF24_BINARY_ENCODING__  1
 #endif
 
 #ifndef __RF24_MESSAGE_LENGTH__
@@ -16,18 +16,18 @@
 #endif
 
 #ifndef __RF24_CE_PIN__
-#define __RF24_CE_PIN__         9
+#define __RF24_CE_PIN__           9
 #endif
 
 #ifndef __RF24_CSN_PIN__
-#define __RF24_CSN_PIN__        10
+#define __RF24_CSN_PIN__          10
 #endif
 
-#define MIN_BOUND_X      32
-#define MIN_BOUND_Y      32
+#define MIN_BOUND_X               32
+#define MIN_BOUND_Y               32
 
-#define NUM_RANGE_X      128
-#define NUM_RANGE_Y      128
+#define NUM_RANGE_X               128
+#define NUM_RANGE_Y               128
 
 class RF24Controller {
   public:
