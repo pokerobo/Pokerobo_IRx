@@ -3,20 +3,26 @@
 
 #include <Arduino.h>
 
-#define __HCPCA9685_ENABLED__   1
+#define __HCPCA9685_ENABLED__           1
 
-#define __LOADING_LOG_ENABLED__ 1
-#define __RUNNING_LOG_ENABLED__ 1
+#define __LOADING_LOG_ENABLED__         1
+#define __RUNNING_LOG_ENABLED__         0
 
-#define __PS2_LOGGING_ENABLED__ 1
+#define __RF24_RUNNING_LOG__            1
+#define __CARBOT_RUNNING_LOG__          1
+#define __PEDESTAL_RUNNING_LOG__        0
+
+#define __PS2_LOGGING_ENABLED__         1
+
+#define CONTROLLER_CARBOT               1
 
 #define CONTROLLER_IR                   0
 #define CONTROLLER_IR_DEVICE_PANASONIC  0
 #define CONTROLLER_IR_DEVICE_SONY       0
 
-#define CONTROLLER_PS2    2
-#define CONTROLLER_RF24   24
-#define CONTROLLER CONTROLLER_RF24
+#define CONTROLLER_PS2                  2
+#define CONTROLLER_RF24                 24
+#define CONTROLLER                      CONTROLLER_RF24
 
 class FlagChecker {
   public:

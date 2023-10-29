@@ -3,6 +3,14 @@
 
 #include "Commons.h"
 
+#ifndef __PEDESTAL_LOADING_LOG__
+#define __PEDESTAL_LOADING_LOG__  __LOADING_LOG_ENABLED__
+#endif//__PEDESTAL_LOADING_LOG__
+
+#ifndef __PEDESTAL_RUNNING_LOG__
+#define __PEDESTAL_RUNNING_LOG__  __RUNNING_LOG_ENABLED__
+#endif//__PEDESTAL_RUNNING_LOG__
+
 #ifndef __HCPCA9685_ENABLED__
 #define __HCPCA9685_ENABLED__   1
 #endif

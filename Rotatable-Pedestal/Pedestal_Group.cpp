@@ -8,7 +8,7 @@ PedestalGroup::PedestalGroup(PedestalHandler* pedestalHandlers[]) {
     }
   }
 
-#if __LOADING_LOG_ENABLED__
+#if __PEDESTAL_LOADING_LOG__
   char _pedestalsTotal_[7];
   debugLog("PedestalGroup", "()", " - ", "total", ": ", itoa(_pedestalsTotal, _pedestalsTotal_, 10));
 
@@ -79,7 +79,7 @@ void PedestalGroup::processDPadUpButtonPressedEvent() {
   for (int i=0; i<_pedestalsTotal; i++) {
     processDPadUpButtonPressedEventFor(_pedestalHandlers[i]);
   }
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   debugLog("main", "()", " - ", "UP", " is pushed");
 #endif
 }
@@ -93,7 +93,7 @@ void PedestalGroup::processDPadRightButtonPressedEvent() {
   for (int i=0; i<_pedestalsTotal; i++) {
     processDPadRightButtonPressedEventFor(_pedestalHandlers[i]);
   }
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   debugLog("main", "()", " - ", "RIGHT", " is pushed");
 #endif
 }
@@ -107,7 +107,7 @@ void PedestalGroup::processDPadDownButtonPressedEvent() {
   for (int i=0; i<_pedestalsTotal; i++) {
     processDPadDownButtonPressedEventFor(_pedestalHandlers[i]);
   }
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   debugLog("main", "()", " - ", "DOWN", " is pushed");
 #endif
 }
@@ -121,7 +121,7 @@ void PedestalGroup::processDPadLeftButtonPressedEvent() {
   for (int i=0; i<_pedestalsTotal; i++) {
     processDPadLeftButtonPressedEventFor(_pedestalHandlers[i]);
   }
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   debugLog("main", "()", " - ", "LEFT", " is pushed");
 #endif
 }
@@ -141,7 +141,7 @@ void PedestalGroup::processLeftJoystickChangeEventFor(PedestalHandler *pedestalH
   if (pedestalHandler == NULL) return;
   bool changed = pedestalHandler->change(nJoyX, nJoyY);
   if (changed) {
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
     debugLog("main", "()", " - ", "process", "Left", "JoystickChange", "Event", "()", " is called");
 #endif
   }
@@ -162,7 +162,7 @@ void PedestalGroup::autoDance() {
   if (_sceneStep < 0) {
     _sceneStep = 0;
     reset();
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
     debugLog("PedestalGroup", "::", "autoDance", "()", " - ", "Starting");
 #endif
     return;
@@ -178,7 +178,7 @@ void PedestalGroup::autoDance() {
   } else {
     _sceneStep -= 1;
   }
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   char _step_[7];
   debugLog("PedestalGroup", "::", "autoDance", "()", " - ", "step", ": ", itoa(_sceneStep, _step_, 10));
 #endif

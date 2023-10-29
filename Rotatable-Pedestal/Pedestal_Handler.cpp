@@ -30,7 +30,7 @@ PedestalHandler::PedestalHandler(byte hPin, byte vPin, bool _debugEnabled) {
   verticalServoPin = (vPin >= 0) ? vPin : VERTICAL_SERVO_PIN;
   verticalServoPos = 0;
   debugEnabled = _debugEnabled;
-#if __LOADING_LOG_ENABLED__
+#if __PEDESTAL_LOADING_LOG__
   if (debugEnabled) {
     char p_[5], sp_[5];
     debugLog("PedestalHandler", "::", "PedestalHandler", "()", " - ",
@@ -42,7 +42,7 @@ PedestalHandler::PedestalHandler(byte hPin, byte vPin, bool _debugEnabled) {
 }
 
 void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMaxAngle) {
-#if __LOADING_LOG_ENABLED__
+#if __PEDESTAL_LOADING_LOG__
   if (debugEnabled) {
     char num_[7];
     debugLog("PedestalHandler", "::", "begin", "()", ": ");
@@ -77,7 +77,7 @@ int PedestalHandler::getHorizontalPosition() {
 #if !__HCPCA9685_ENABLED__
   return horizontalServo.read();
 #else
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   char num_[7];
   debugLog("old ", "Horizontal", "Servo", "Pos", ": ", itoa(horizontalServoPos, num_, 10));
 #endif
@@ -91,7 +91,7 @@ void PedestalHandler::setHorizontalPosition(int hPos) {
 #else
   horizontalServoPos = hPos;
   int horizontalHcpcaPos = map(horizontalServoPos, 0, 180, 10, 450);
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   char n1_[7], n2_[7];
   debugLog("new ", "Horizontal", "Servo", "Pos", ": ", itoa(horizontalServoPos, n1_, 10),
       "; ", "Horizontal", "Hcpca", "Pos", ": ", itoa(horizontalHcpcaPos, n2_, 10));
@@ -201,7 +201,7 @@ bool PedestalHandler::horizontalServoRight() {
 
 int PedestalHandler::changeHorizontalServo(int hDelta) {
   if (hDelta == 0) {
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
     if (debugEnabled) {
       debugLog("PedestalHandler", "::", "change", "Horizontal", "Servo", "()", " - ",
           "h", "Delta", ": ", "0, do nothing");
@@ -212,7 +212,7 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
   int hCurrentPos = getHorizontalPosition();
   int hPos = hCurrentPos;
   //
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   if (debugEnabled) {
     char hDelta_[7], hPos_[7];
     debugLog("PedestalHandler", "::", "change", "Horizontal", "Servo", "()", " - ",
@@ -234,7 +234,7 @@ int PedestalHandler::changeHorizontalServo(int hDelta) {
 
 int PedestalHandler::changeVerticalServo(int vDelta) {
   if (vDelta == 0) {
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
     if (debugEnabled) {
       debugLog("PedestalHandler", "::", "change", "Vertical", "Servo", "()", " - ",
           "v", "Delta", ": ", "0, do nothing");
@@ -245,7 +245,7 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
   int vCurrentPos = getVerticalPosition();
   int vPos = vCurrentPos;
   //
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   if (debugEnabled) {
     char vDelta_[7], vPos_[7];
     debugLog("PedestalHandler", "::", "change", "Vertical", "Servo", "()", " - ",
@@ -266,7 +266,7 @@ int PedestalHandler::changeVerticalServo(int vDelta) {
 }
 
 bool PedestalHandler::change(int hDelta, int vDelta) {
-#if __RUNNING_LOG_ENABLED__
+#if __PEDESTAL_RUNNING_LOG__
   if (debugEnabled) {
     char h_[7], v_[7];
     debugLog("PedestalHandler", "::", "change", "()", " - ",
