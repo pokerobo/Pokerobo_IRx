@@ -46,10 +46,10 @@ void PedestalHandler::begin(int hMinAngle, int hMaxAngle, int vMinAngle, int vMa
   if (debugEnabled) {
     char num_[7];
     debugLog("PedestalHandler", "::", "begin", "()", ": ");
-    debugLog(" - ", "h", "MinAngle", ": ", itoa(hMinAngle, num_, 10));
-    debugLog(" - ", "h", "MaxAngle", ": ", itoa(hMaxAngle, num_, 10));
-    debugLog(" - ", "v", "MinAngle", ": ", itoa(vMinAngle, num_, 10));
-    debugLog(" - ", "v", "MaxAngle", ": ", itoa(vMaxAngle, num_, 10));
+    debugLog(" - ", "h", "Min", "Angle", ": ", itoa(hMinAngle, num_, 10));
+    debugLog(" - ", "h", "Max", "Angle", ": ", itoa(hMaxAngle, num_, 10));
+    debugLog(" - ", "v", "Min", "Angle", ": ", itoa(vMinAngle, num_, 10));
+    debugLog(" - ", "v", "Max", "Angle", ": ", itoa(vMaxAngle, num_, 10));
   }
 #endif
   //

@@ -21,8 +21,10 @@ void PedestalGroup::begin() {
   }
 }
 
-bool PedestalGroup::change(int hAmount, int vAmount) {
-  return false;
+bool PedestalGroup::change(int hDelta, int vDelta) {
+  for (int i=0; i<_pedestalsTotal; i++) {
+    _pedestalHandlers[i]->change(hDelta, vDelta);
+  }
 }
 
 void PedestalGroup::processStartButtonPressedEvent() {
