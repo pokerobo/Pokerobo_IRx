@@ -52,11 +52,13 @@ class RF24Controller {
     void setOnnLeftJoystickChanged(void (*function)(int, int));
   protected:
     bool available();
+    bool checkButtonPress(uint16_t pressed, uint16_t mask);
     uint16_t processButtonPress(uint16_t buttons);
     int processJoystickChange(int, int, void (*function)(int, int), const char label);
   private:
     uint64_t _address = __RF24_DEFAULT_ADDRESS__;
     bool _debugEnabled;
+    uint16_t _pressFlag;
     void (*_onStartButtonPressed)();
     void (*_onSelectButtonPressed)();
     void (*_onAnalogButtonPressed)();
