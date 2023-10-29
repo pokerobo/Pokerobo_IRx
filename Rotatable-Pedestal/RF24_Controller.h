@@ -3,6 +3,14 @@
 
 #include "Commons.h"
 
+#ifndef __RF24_LOADING_LOG__
+#define __RF24_LOADING_LOG__  __LOADING_LOG_ENABLED__
+#endif//__RF24_LOADING_LOG__
+
+#ifndef __RF24_RUNNING_LOG__
+#define __RF24_RUNNING_LOG__  __RUNNING_LOG_ENABLED__
+#endif//__RF24_RUNNING_LOG__
+
 #ifndef __RF24_BINARY_ENCODING__
 #define __RF24_BINARY_ENCODING__  1
 #endif
@@ -43,6 +51,7 @@ class RF24Controller {
     void setOnDPadLeftButtonPressed(void (*function)());
     void setOnnLeftJoystickChanged(void (*function)(int, int));
   protected:
+    bool available();
     uint16_t processButtonPress(uint16_t buttons);
     int processJoystickChange(int, int, void (*function)(int, int), const char label);
   private:

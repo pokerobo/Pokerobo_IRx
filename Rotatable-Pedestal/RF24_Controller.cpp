@@ -4,13 +4,13 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-#define BIT_UP_BUTTON     1U << 0
-#define BIT_RIGHT_BUTTON  1U << 1
-#define BIT_DOWN_BUTTON   1U << 2
-#define BIT_LEFT_BUTTON   1U << 3
-#define BIT_START_BUTTON  1U << 4
-#define BIT_SELECT_BUTTON 1U << 5
-#define BIT_ANALOG_BUTTON 1U << 6
+#define MASK_UP_BUTTON     1U << 0
+#define MASK_RIGHT_BUTTON  1U << 1
+#define MASK_DOWN_BUTTON   1U << 2
+#define MASK_LEFT_BUTTON   1U << 3
+#define MASK_START_BUTTON  1U << 4
+#define MASK_SELECT_BUTTON 1U << 5
+#define MASK_ANALOG_BUTTON 1U << 6
 
 RF24 radio(__RF24_CE_PIN__, __RF24_CSN_PIN__);  // CE, CSN
 
@@ -25,8 +25,14 @@ void RF24Controller::begin() {
   radio.startListening();
 }
 
+bool RF24Controller::available() {
+  bool tx_ds, tx_df, rx_dr;
+  radio.whatHappened(tx_ds, tx_df, rx_dr);
+  return radio.available();
+}
+
 int RF24Controller::loop() {
-  if (radio.available()) {
+  if (available()) {
     uint8_t msg[__RF24_MESSAGE_LENGTH__] = {0};
     radio.read(&msg, sizeof(msg));
 
@@ -75,74 +81,74 @@ int RF24Controller::loop() {
 uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   uint16_t checked = 0;
 
-  if(pressed & BIT_START_BUTTON && _onStartButtonPressed) {
+  if(pressed & MASK_START_BUTTON && _onStartButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("JOY", "_", "START", " is pushed");
     }
 #endif
     _onStartButtonPressed();
-    checked |= BIT_START_BUTTON;
+    checked |= MASK_START_BUTTON;
   }
 
-  if(pressed & BIT_SELECT_BUTTON && _onSelectButtonPressed) {
+  if(pressed & MASK_SELECT_BUTTON && _onSelectButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("JOY", "_", "SELECT", " is pushed");
     }
 #endif
     _onSelectButtonPressed();
-    checked |= BIT_SELECT_BUTTON;
+    checked |= MASK_SELECT_BUTTON;
   }
 
-  if(pressed & BIT_ANALOG_BUTTON && _onAnalogButtonPressed) {
+  if(pressed & MASK_ANALOG_BUTTON && _onAnalogButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("JOY", "_", "ANALOG", " is pushed");
     }
 #endif
     _onAnalogButtonPressed();
-    checked |= BIT_ANALOG_BUTTON;
+    checked |= MASK_ANALOG_BUTTON;
   }
 
-  if(pressed & BIT_UP_BUTTON && _onDPadUpButtonPressed) {
+  if(pressed & MASK_UP_BUTTON && _onDPadUpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "UP", " is pushed");
     }
 #endif
     _onDPadUpButtonPressed();
-    checked |= BIT_UP_BUTTON;
+    checked |= MASK_UP_BUTTON;
   }
 
-  if(pressed & BIT_RIGHT_BUTTON && _onDPadRightButtonPressed) {
+  if(pressed & MASK_RIGHT_BUTTON && _onDPadRightButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "RIGHT", " is pushed");
     }
 #endif
     _onDPadRightButtonPressed();
-    checked |= BIT_RIGHT_BUTTON;
+    checked |= MASK_RIGHT_BUTTON;
   }
 
-  if(pressed & BIT_DOWN_BUTTON && _onDPadDownButtonPressed) {
+  if(pressed & MASK_DOWN_BUTTON && _onDPadDownButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "DOWN", " is pushed");
     }
 #endif
     _onDPadDownButtonPressed();
-    checked |= BIT_DOWN_BUTTON;
+    checked |= MASK_DOWN_BUTTON;
   }
 
-  if(pressed & BIT_LEFT_BUTTON && _onDPadLeftButtonPressed) {
+  if(pressed & MASK_LEFT_BUTTON && _onDPadLeftButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "LEFT", " is pushed");
     }
 #endif
     _onDPadLeftButtonPressed();
-    checked |= BIT_LEFT_BUTTON;
+    checked |= MASK_LEFT_BUTTON;
   }
 
   return checked;
@@ -150,7 +156,7 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 
 int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, void (*onChange)(int, int), const char label) {
 
-  nJoyX = map(nJoyX, 0, 1024, NUM_RANGE_X, -NUM_RANGE_X);
+  nJoyX = map(nJoyX, 0, 1024, -NUM_RANGE_X, NUM_RANGE_X);
   nJoyY = map(nJoyY, 0, 1024, -NUM_RANGE_Y, NUM_RANGE_Y);
 
   if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
