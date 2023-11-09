@@ -6,8 +6,7 @@
 
 class IRController {
   public:
-    IRController();
-    IRController(IRCodeMapper* irCodeMapper);
+    IRController(IRCodeMapper* irCodeMapper=NULL);
     void begin();
     void setCodeMapper(IRCodeMapper* irCodeMapper);
     void setOnOkButtonPressed(void (*function)());

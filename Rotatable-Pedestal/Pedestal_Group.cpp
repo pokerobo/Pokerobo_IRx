@@ -51,6 +51,7 @@ void PedestalGroup::reset() {
   for (int i=0; i<_pedestalsTotal; i++) {
     _pedestalHandlers[i]->reset();
   }
+  _waitingCount = 0;
 }
 
 void PedestalGroup::processStartButtonPressedEvent() {
@@ -159,6 +160,7 @@ void PedestalGroup::processRightJoystickChangeEventFor(PedestalHandler *pedestal
 }
 
 void PedestalGroup::autoDance() {
+  // special case: start the autoDance() procedure
   if (_sceneStep < 0) {
     _sceneStep = 0;
     reset();
@@ -167,6 +169,12 @@ void PedestalGroup::autoDance() {
 #endif
     return;
   }
+  // check the waitingCount reach the limit
+  if (++_waitingCount > _waitingLimit) {
+    _waitingCount = 0;
+    return;
+  }
+  // move the next step
   if (_sceneStep == 0) {
     _sceneDirection = true;
   }

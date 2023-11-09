@@ -12,6 +12,10 @@
 #include "RF24_Controller.h"
 #endif
 
+#if (CONTROLLER_CARBOT)
+#include "Carbot_Handler.h"
+#endif
+
 #include "Pedestal_Group.h"
 
 #if (CONTROLLER_IR)
@@ -56,6 +60,10 @@ RF24Controller rf24ControllerInstance;
 RF24Controller* rf24Controller = &rf24ControllerInstance;
 #endif
 
+#if (CONTROLLER_CARBOT)
+CarbotHandler carbotHandler;
+#endif
+
 PedestalHandler pedestalHandler1(4, 5);
 PedestalHandler pedestalHandler3(8, 9);
 
@@ -67,6 +75,8 @@ PedestalHandler* pedestalHandlers[PEDESTALS_MAX] = {
 PedestalGroup pedestalGroupInstance(pedestalHandlers);
 PedestalGroup* pedestalGroup = &pedestalGroupInstance;
 
+int program = 0;
+
 void setup() {
   while (!Serial) {
     delay(100); // Wait for the serial connection to be establised.
@@ -75,6 +85,10 @@ void setup() {
 
 #if __LOADING_LOG_ENABLED__
   debugLog("main", "()", " - ", "Starting");
+#endif
+
+#if (CONTROLLER_CARBOT)
+  carbotHandler.begin();
 #endif
 
   pedestalGroup->begin();
@@ -147,22 +161,44 @@ void setup() {
 }
 
 void loop() {
+  uint32_t begin = millis();
+  if (program == 1) {
+    pedestalGroup->autoDance();
+  }
 #if (CONTROLLER == CONTROLLER_PS2)
-  delay(getDelayAmount(ps2Controller->loop()));
+  getDelayAmount(ps2Controller->loop());
 #endif
 #if (CONTROLLER == CONTROLLER_RF24)
-  delay(getDelayAmount(rf24Controller->loop()));
+  getDelayAmount(rf24Controller->loop());
 #endif
 #if (CONTROLLER_IR)
-  delay(getDelayAmount(irController->loop()));
+  getDelayAmount(irController->loop());
 #endif
+  uint32_t exectime = millis() - begin;
+  // Serial.print("EXECTIME"), Serial.print(": "), Serial.print(exectime), Serial.println();
+  delay(max(100 - exectime, 0));
 }
 
 uint32_t getDelayAmount(int status) {
   if (status >= 1) {
     return 5;
   } else {
-    return 10;
+    return 100;
+  }
+}
+
+int switchProgram() {
+  program = 1 - program;
+  if (program == 0) {
+    pedestalGroup->reset();
+#if (CONTROLLER_CARBOT)
+    carbotHandler.turnOff();
+#endif
+  }
+  if (program == 1) {
+#if (CONTROLLER_CARBOT)
+    carbotHandler.turnOn();
+#endif
   }
 }
 
@@ -171,6 +207,7 @@ void processStartButtonPressedEvent() {
 }
 
 void processAnalogButtonPressedEvent() {
+  switchProgram();
   pedestalGroup->processAnalogButtonPressedEvent();
 }
 
@@ -191,7 +228,13 @@ void processDPadLeftButtonPressedEvent() {
 }
 
 void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
-  pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
+  if (program == 1) {
+#if (CONTROLLER_CARBOT)
+  carbotHandler.move(nJoyX, nJoyY);
+#endif
+  } else {
+    pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
+  }
 }
 
 void processRightJoystickChangeEvent(int nJoyX, int nJoyY) {

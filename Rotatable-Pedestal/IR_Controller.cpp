@@ -37,11 +37,6 @@
 
 uint32_t detectButtonPress(IRData, IRCodeMapper*);
 
-IRController::IRController() {
-  _debugEnabled = true;
-  _irCodeMapper = NULL;
-}
-
 IRController::IRController(IRCodeMapper* irCodeMapper) {
   _debugEnabled = true;
   _irCodeMapper = irCodeMapper;
