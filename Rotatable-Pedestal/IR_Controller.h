@@ -2,7 +2,7 @@
 #define __IR_CONTROLLER_H__
 
 #include "Commons.h"
-#include "IR_Code_Mapping.h"
+#include "IR_Mapping_Code.h"
 
 class IRController {
   public:

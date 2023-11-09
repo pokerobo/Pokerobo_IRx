@@ -1,5 +1,5 @@
 #include "IR_Controller.h"
-#include "IR_Code_Mapping.h"
+#include "IR_Mapping_Code.h"
 #include <IRremote.hpp>
 
 #ifndef RECV_PIN
