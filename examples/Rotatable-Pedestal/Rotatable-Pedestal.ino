@@ -21,25 +21,20 @@ IRCodeMapping mappingSony(23u, (uint16_t[]) { // SONY (23)
     0x07,  // BIT_DIGIT8_BUTTON
     0x08,  // BIT_DIGIT9_BUTTON
   }, 17u);
-IRCodeMapper irCodeMapperInstance((IRCodeMapping* []) { &mappingSony }, 1);
+IRCodeMapper irCodeMapper((IRCodeMapping* []) { &mappingSony }, 1);
 #else
-IRCodeMapper irCodeMapperInstance;
+IRCodeMapper irCodeMapper;
 #endif
 
-IRCodeMapper* irCodeMapper = &irCodeMapperInstance;
-
-IRController irControllerInstance(irCodeMapper);
-IRController* irController = &irControllerInstance;
+IRController irController(&irCodeMapper);
 #endif
 
 #if (CONTROLLER == CONTROLLER_PS2)
-PS2Controller ps2ControllerInstance;
-PS2Controller* ps2Controller = &ps2ControllerInstance;
+PS2Controller ps2Controller;
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
-RF24Controller rf24ControllerInstance;
-RF24Controller* rf24Controller = &rf24ControllerInstance;
+RF24Controller rf24Controller;
 #endif
 
 #if (CONTROLLER_CARBOT)
@@ -54,8 +49,7 @@ PedestalHandler* pedestalHandlers[PEDESTALS_MAX] = {
   &pedestalHandler3,
 };
 
-PedestalGroup pedestalGroupInstance(pedestalHandlers);
-PedestalGroup* pedestalGroup = &pedestalGroupInstance;
+PedestalGroup pedestalGroup(pedestalHandlers);
 
 int program = 0;
 
@@ -73,34 +67,34 @@ void setup() {
   carbotHandler.begin();
 #endif
 
-  pedestalGroup->begin();
+  pedestalGroup.begin();
 
 #if (CONTROLLER == CONTROLLER_PS2)
-  ps2Controller->begin();
+  ps2Controller.begin();
 
-  ps2Controller->setOnStartButtonPressed(processStartButtonPressedEvent);
+  ps2Controller.setOnStartButtonPressed(processStartButtonPressedEvent);
 
-  ps2Controller->setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  ps2Controller->setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  ps2Controller->setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  ps2Controller->setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+  ps2Controller.setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
+  ps2Controller.setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
+  ps2Controller.setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
+  ps2Controller.setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
 
-  ps2Controller->setOnnLeftJoystickChanged(processLeftJoystickChangeEvent);
-  ps2Controller->setOnRightJoystickChanged(processRightJoystickChangeEvent);
+  ps2Controller.setOnnLeftJoystickChanged(processLeftJoystickChangeEvent);
+  ps2Controller.setOnRightJoystickChanged(processRightJoystickChangeEvent);
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
-  rf24Controller->begin();
+  rf24Controller.begin();
 
-  rf24Controller->setOnStartButtonPressed(processStartButtonPressedEvent);
-  rf24Controller->setOnAnalogButtonPressed(processAnalogButtonPressedEvent);
+  rf24Controller.setOnStartButtonPressed(processStartButtonPressedEvent);
+  rf24Controller.setOnAnalogButtonPressed(processAnalogButtonPressedEvent);
 
-  rf24Controller->setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  rf24Controller->setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  rf24Controller->setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  rf24Controller->setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+  rf24Controller.setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
+  rf24Controller.setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
+  rf24Controller.setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
+  rf24Controller.setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
 
-  rf24Controller->setOnnLeftJoystickChanged(processLeftJoystickChangeEvent);
+  rf24Controller.setOnnLeftJoystickChanged(processLeftJoystickChangeEvent);
 #endif
 
 #if (CONTROLLER_IR)
@@ -124,17 +118,17 @@ void setup() {
     0x17,  // BIT_DIGIT8_BUTTON
     0x18,  // BIT_DIGIT9_BUTTON
   };
-  irCodeMapper->addMapping(11u, mappingPanasonic, 17u);
+  irCodeMapper.addMapping(11u, mappingPanasonic, 17u);
 #endif // CONTROLLER_IR_DEVICE_PANASONIC
 #endif // CONTROLLER_IR
 
 #if (CONTROLLER_IR)
-  irController->begin();
+  irController.begin();
 
-  irController->setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  irController->setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  irController->setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  irController->setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+  irController.setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
+  irController.setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
+  irController.setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
+  irController.setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
 #endif
 
 #if __LOADING_LOG_ENABLED__
@@ -145,16 +139,16 @@ void setup() {
 void loop() {
   uint32_t begin = millis();
   if (program == 1) {
-    pedestalGroup->autoDance();
+    pedestalGroup.autoDance();
   }
 #if (CONTROLLER == CONTROLLER_PS2)
-  getDelayAmount(ps2Controller->loop());
+  getDelayAmount(ps2Controller.loop());
 #endif
 #if (CONTROLLER == CONTROLLER_RF24)
-  getDelayAmount(rf24Controller->loop());
+  getDelayAmount(rf24Controller.loop());
 #endif
 #if (CONTROLLER_IR)
-  getDelayAmount(irController->loop());
+  getDelayAmount(irController.loop());
 #endif
   uint32_t exectime = millis() - begin;
   // Serial.print("EXECTIME"), Serial.print(": "), Serial.print(exectime), Serial.println();
@@ -172,7 +166,7 @@ uint32_t getDelayAmount(int status) {
 int switchProgram() {
   program = 1 - program;
   if (program == 0) {
-    pedestalGroup->reset();
+    pedestalGroup.reset();
 #if (CONTROLLER_CARBOT)
     carbotHandler.turnOff();
 #endif
@@ -186,27 +180,27 @@ int switchProgram() {
 
 void processStartButtonPressedEvent() {
   switchProgram();
-  pedestalGroup->processStartButtonPressedEvent();
+  pedestalGroup.processStartButtonPressedEvent();
 }
 
 void processAnalogButtonPressedEvent() {
-  pedestalGroup->processAnalogButtonPressedEvent();
+  pedestalGroup.processAnalogButtonPressedEvent();
 }
 
 void processDPadUpButtonPressedEvent() {
-  pedestalGroup->processDPadUpButtonPressedEvent();
+  pedestalGroup.processDPadUpButtonPressedEvent();
 }
 
 void processDPadRightButtonPressedEvent() {
-  pedestalGroup->processDPadRightButtonPressedEvent();
+  pedestalGroup.processDPadRightButtonPressedEvent();
 }
 
 void processDPadDownButtonPressedEvent() {
-  pedestalGroup->processDPadDownButtonPressedEvent();
+  pedestalGroup.processDPadDownButtonPressedEvent();
 }
 
 void processDPadLeftButtonPressedEvent() {
-  pedestalGroup->processDPadLeftButtonPressedEvent();
+  pedestalGroup.processDPadLeftButtonPressedEvent();
 }
 
 void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
@@ -215,10 +209,10 @@ void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
   carbotHandler.move(nJoyX, nJoyY);
 #endif
   } else {
-    pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
+    pedestalGroup.processLeftJoystickChangeEvent(nJoyX, nJoyY);
   }
 }
 
 void processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
-  pedestalGroup->processRightJoystickChangeEvent(nJoyX, nJoyY);
+  pedestalGroup.processRightJoystickChangeEvent(nJoyX, nJoyY);
 }
