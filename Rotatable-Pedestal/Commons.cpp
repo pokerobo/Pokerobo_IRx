@@ -4,6 +4,35 @@
 #define __DEBUG_LOG_SIMPLE__ 1
 #endif
 
+WaitingCounter::WaitingCounter(uint16_t limit) {
+  begin(limit);
+}
+
+void WaitingCounter::begin(uint16_t limit) {
+  if (limit > 0) {
+    _limit = limit;
+  }
+  reset();
+}
+
+void WaitingCounter::reset() {
+  _delta = 0;
+  _milestone = millis();
+}
+
+bool WaitingCounter::check() {
+  uint32_t current = millis();
+  if (current > _milestone) {
+    _delta += (current - _milestone);
+    _milestone = current;
+    if (_delta >= _limit) {
+      _delta = 0;
+      return true;
+    }
+  }
+  return false;
+}
+
 #if __DEBUG_LOG_SIMPLE__
 void debugLog(char* s0) {
   debugLog(s0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);

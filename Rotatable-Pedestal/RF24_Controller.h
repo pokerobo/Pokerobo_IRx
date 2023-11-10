@@ -37,6 +37,8 @@
 #define NUM_RANGE_X               128
 #define NUM_RANGE_Y               128
 
+#define CLICKING_FLAGS            0
+
 class RF24Controller {
   public:
     RF24Controller(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);

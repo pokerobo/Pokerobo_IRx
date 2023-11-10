@@ -203,11 +203,11 @@ int switchProgram() {
 }
 
 void processStartButtonPressedEvent() {
+  switchProgram();
   pedestalGroup->processStartButtonPressedEvent();
 }
 
 void processAnalogButtonPressedEvent() {
-  switchProgram();
   pedestalGroup->processAnalogButtonPressedEvent();
 }
 

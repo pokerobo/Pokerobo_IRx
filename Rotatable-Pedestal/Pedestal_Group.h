@@ -38,8 +38,7 @@ class PedestalGroup {
     void processDPadLeftButtonPressedEventFor(PedestalHandler *pedestalHandler);
     void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY);
     void processRightJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY);
-    uint8_t _waitingLimit = PEDESTAL_WAITING_MAX;
-    uint8_t _waitingCount = 0;
+    WaitingCounter _waitingCounter;
     bool _sceneDirection = true;
     int _sceneStep = -1;
     int _sceneStepsTotal = 19;

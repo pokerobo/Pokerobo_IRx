@@ -79,6 +79,7 @@ int RF24Controller::loop() {
 }
 
 bool RF24Controller::checkButtonPress(uint16_t pressed, uint16_t mask) {
+#if CLICKING_FLAGS
   if (pressed & mask) {
     _pressFlag |= mask;
   } else {
@@ -88,6 +89,9 @@ bool RF24Controller::checkButtonPress(uint16_t pressed, uint16_t mask) {
     }
   }
   return false;
+#else
+  return pressed & mask;
+#endif
 }
 
 uint16_t RF24Controller::processButtonPress(uint16_t pressed) {

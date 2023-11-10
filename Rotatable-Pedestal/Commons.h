@@ -33,6 +33,18 @@ class FlagChecker {
     uint32_t limit;
 };
 
+class WaitingCounter {
+  public:
+    WaitingCounter(uint16_t limit = 10);
+    void begin(uint16_t limit);
+    void reset();
+    bool check();
+  private:
+    uint16_t _delta = 0;
+    uint16_t _limit = 0;
+    uint32_t _milestone = 0;
+};
+
 void debugLog(char* s0);
 void debugLog(char* s0, char* s1);
 void debugLog(char* s0, char* s1, char* s2);
