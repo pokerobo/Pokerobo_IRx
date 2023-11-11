@@ -225,12 +225,15 @@ bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
 
 int RF24Controller::processJoystickChange(int nJoyX, int nJoyY) {
 
-  nJoyX = map(nJoyX, 0, 1024, -NUM_RANGE_X, NUM_RANGE_X);
-  nJoyY = map(nJoyY, 0, 1024, -NUM_RANGE_Y, NUM_RANGE_Y);
+  nJoyX = map(nJoyX, 0, 1024, -RF24_JOYSTICK_RANGE_X, RF24_JOYSTICK_RANGE_X);
+  nJoyY = map(nJoyY, 0, 1024, -RF24_JOYSTICK_RANGE_Y, RF24_JOYSTICK_RANGE_Y);
 
+#if defined(RF24_JOYSTICK_CHECKING_CHANGE)
   if (!isJoystickChanged(nJoyX, nJoyY)) {
     return 0;
   }
+#endif
+
 #if __RF24_RUNNING_LOG__
   if (_debugEnabled) {
     char l_[2] = { 'L', '\0' };

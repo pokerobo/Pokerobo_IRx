@@ -106,9 +106,6 @@ void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
   enaVal = max(enaVal, 0);
   enbVal = max(enbVal, 0);
 
-  enaVal = map(enaVal, 0, 128, 128, 256);
-  enbVal = map(enbVal, 0, 128, 128, 256);
-
 #if __CARBOT_RUNNING_LOG__
   char num_[7];
   debugLog(" - ", "active", ": ", _active ? "On" : "Off");

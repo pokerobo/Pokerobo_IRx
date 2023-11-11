@@ -35,8 +35,8 @@
 #define MIN_BOUND_X               32
 #define MIN_BOUND_Y               32
 
-#define NUM_RANGE_X               128
-#define NUM_RANGE_Y               128
+#define RF24_JOYSTICK_RANGE_X     255
+#define RF24_JOYSTICK_RANGE_Y     255
 
 #define CLICKING_FLAGS            0
 
