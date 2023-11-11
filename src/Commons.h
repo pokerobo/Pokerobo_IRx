@@ -6,7 +6,7 @@
 #define __HCPCA9685_ENABLED__           1
 
 #define __LOADING_LOG_ENABLED__         1
-#define __RUNNING_LOG_ENABLED__         0
+#define __RUNNING_LOG_ENABLED__         1
 
 #define __RF24_RUNNING_LOG__            1
 #define __CARBOT_RUNNING_LOG__          1

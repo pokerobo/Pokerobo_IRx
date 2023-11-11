@@ -36,9 +36,15 @@ bool CarbotHandler::isActive() {
 
 void CarbotHandler::turnOn() {
   _active = true;
+#if __CARBOT_RUNNING_LOG__
+  debugLog("CarbotHandler", "::", "turnOn", "()");
+#endif
 }
 
 void CarbotHandler::turnOff() {
+#if __CARBOT_RUNNING_LOG__
+  debugLog("CarbotHandler", "::", "turnOff", "()");
+#endif
   stop();
   _active = false;
 }

@@ -2,6 +2,7 @@
 #define __RF24_CONTROLLER_H__
 
 #include "Commons.h"
+#include "Event_Trigger.h"
 
 #ifndef __RF24_LOADING_LOG__
 #define __RF24_LOADING_LOG__  __LOADING_LOG_ENABLED__
@@ -20,7 +21,7 @@
 #endif
 
 #ifndef __RF24_DEFAULT_ADDRESS__
-#define __RF24_DEFAULT_ADDRESS__  0xE8E8F0F0E1LL
+#define __RF24_DEFAULT_ADDRESS__  0x123456789ABCDEF0LL
 #endif
 
 #ifndef __RF24_CE_PIN__
@@ -44,6 +45,7 @@ class RF24Controller {
     RF24Controller(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
     void begin();
     int loop();
+    void set(EventTrigger* eventTrigger);
     void setOnStartButtonPressed(void (*function)());
     void setOnSelectButtonPressed(void (*function)());
     void setOnAnalogButtonPressed(void (*function)());
@@ -56,11 +58,12 @@ class RF24Controller {
     bool available();
     bool checkButtonPress(uint16_t pressed, uint16_t mask);
     uint16_t processButtonPress(uint16_t buttons);
-    int processJoystickChange(int, int, void (*function)(int, int), const char label);
+    int processJoystickChange(int, int);
   private:
     uint64_t _address = __RF24_DEFAULT_ADDRESS__;
     bool _debugEnabled;
     uint16_t _pressFlag;
+    EventTrigger* _eventTrigger = NULL;
     void (*_onStartButtonPressed)();
     void (*_onSelectButtonPressed)();
     void (*_onAnalogButtonPressed)();

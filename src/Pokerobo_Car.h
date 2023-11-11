@@ -12,8 +12,4 @@
 #include "RF24_Controller.h"
 #endif
 
-#if (CONTROLLER_CARBOT)
-#include "Carbot_Handler.h"
-#endif
-
-#include "Pedestal_Group.h"
+#include "Event_Trigger.h"
