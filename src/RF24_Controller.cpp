@@ -219,36 +219,41 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
   return checked;
 }
 
+bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
+  return nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y;
+}
+
 int RF24Controller::processJoystickChange(int nJoyX, int nJoyY) {
 
   nJoyX = map(nJoyX, 0, 1024, -NUM_RANGE_X, NUM_RANGE_X);
   nJoyY = map(nJoyY, 0, 1024, -NUM_RANGE_Y, NUM_RANGE_Y);
 
-  if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
+  if (!isJoystickChanged(nJoyX, nJoyY)) {
+    return 0;
+  }
+#if __RF24_RUNNING_LOG__
+  if (_debugEnabled) {
+    char l_[2] = { 'L', '\0' };
+    debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
+    char x_[7], y_[7];
+    debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
+    debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
+  }
+#endif
+  if (_onLeftJoystickChanged) {
+    _onLeftJoystickChanged(nJoyX, nJoyY);
+    return 1;
+  } else if (_eventTrigger != NULL) {
+    _eventTrigger->processLeftJoystickChangeEvent(nJoyX, nJoyY);
+    return 1;
+  } else {
 #if __RF24_RUNNING_LOG__
     if (_debugEnabled) {
       char l_[2] = { 'L', '\0' };
-      debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
-      char x_[7], y_[7];
-      debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
-      debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
+      debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
     }
 #endif
-    if (_eventTrigger != NULL) {
-      _eventTrigger->processLeftJoystickChangeEvent(nJoyX, nJoyY);
-      return 1;
-    } else if (_onLeftJoystickChanged) {
-      _onLeftJoystickChanged(nJoyX, nJoyY);
-      return 1;
-    } else {
-#if __RF24_RUNNING_LOG__
-      if (_debugEnabled) {
-        char l_[2] = { 'L', '\0' };
-        debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
-      }
-#endif
-      return -1;
-    }
+    return -1;
   }
   return 0;
 }

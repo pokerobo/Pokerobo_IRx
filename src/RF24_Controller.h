@@ -58,6 +58,7 @@ class RF24Controller {
     bool available();
     bool checkButtonPress(uint16_t pressed, uint16_t mask);
     uint16_t processButtonPress(uint16_t buttons);
+    bool isJoystickChanged(int, int);
     int processJoystickChange(int, int);
   private:
     uint64_t _address = __RF24_DEFAULT_ADDRESS__;
