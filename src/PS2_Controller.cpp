@@ -78,6 +78,10 @@ void PS2Controller::reload() {
   begin();
 };
 
+void PS2Controller::set(EventTrigger* eventTrigger) {
+  _eventTrigger = eventTrigger;
+};
+
 void PS2Controller::setOnStartButtonPressed(void (*function)()) {
   _onStartButtonPressed = function;
 };
@@ -155,142 +159,183 @@ int PS2Controller::check() {
     return buttonPressed;
   }
   //
-  int lstatus = processJoystickChange(PSS_LX, PSS_LY, _onLeftJoystickChanged, 'L');
+  int lstatus = processJoystickChange(PSS_LX, PSS_LY, 'L');
   //
-  int rstatus = processJoystickChange(PSS_RX, PSS_RY, _onRightJoystickChanged, 'R');
+  int rstatus = processJoystickChange(PSS_RX, PSS_RY, 'R');
 };
 
 int PS2Controller::processStartButtonPress() {
-  uint16_t button = PSB_START;
-  if (!_onStartButtonPressed) {
+  if (!_onStartButtonPressed && !_eventTrigger) {
     return 0;
   }
-  if(ps2x.Button(button)) {
+  if(ps2x.Button(PSB_START)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("PSB", "_", "START", " is pushed");
     }
 #endif
-    _onStartButtonPressed();
-    return button;
+    if (_onStartButtonPressed) {
+      _onStartButtonPressed();
+    } else {
+      _eventTrigger->processStartButtonPressedEvent();
+    }
+    return PSB_START;
   }
   return 0;
 }
 
 int PS2Controller::processSelectButtonPress() {
-  uint16_t button = PSB_SELECT;
-  if (!_onSelectButtonPressed) {
+  if (!_onSelectButtonPressed && !_eventTrigger) {
     return 0;
   }
-  if(ps2x.Button(button)) {
+  if(ps2x.Button(PSB_SELECT)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("PSB", "_", "SELECT", " is pushed");
     }
 #endif
-    _onSelectButtonPressed();
-    return button;
+    if (_onSelectButtonPressed) {
+      _onSelectButtonPressed();
+    } else {
+      _eventTrigger->processSelectButtonPressedEvent();
+    }
+    return PSB_SELECT;
   }
   return 0;
 }
 
 int PS2Controller::processDPadUpButtonPress() {
-  uint16_t button = PSB_PAD_UP;
-  if (!_onDPadUpButtonPressed) {
+  if (!_onDPadUpButtonPressed && !_eventTrigger) {
     return 0;
   }
-  if(ps2x.Button(button)) {
+  if(ps2x.Button(PSB_PAD_UP)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("PSB", "_", "PAD", "_", "UP", " is pushed");
     }
 #endif
-    _onDPadUpButtonPressed();
-    return button;
+    if (_onDPadUpButtonPressed) {
+      _onDPadUpButtonPressed();
+    } else {
+      _eventTrigger->processDPadUpButtonPressedEvent();
+    }
+    return PSB_PAD_UP;
   }
   return 0;
 }
 
 int PS2Controller::processDPadRightButtonPress() {
-  uint16_t button = PSB_PAD_RIGHT;
-  if (!_onDPadRightButtonPressed) {
+  if (!_onDPadRightButtonPressed && !_eventTrigger) {
     return 0;
   }
-  if(ps2x.Button(button)) {
+  if(ps2x.Button(PSB_PAD_RIGHT)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("PSB", "_", "PAD", "_", "RIGHT", " is pushed");
     }
 #endif
-    _onDPadRightButtonPressed();
-    return button;
+    if (_onDPadRightButtonPressed) {
+      _onDPadRightButtonPressed();
+    } else {
+      _eventTrigger->processDPadRightButtonPressedEvent();
+    }
+    return PSB_PAD_RIGHT;
   }
   return 0;
 }
 
 int PS2Controller::processDPadDownButtonPress() {
-  uint16_t button = PSB_PAD_DOWN;
-  if (!_onDPadDownButtonPressed) {
+  if (!_onDPadDownButtonPressed && !_eventTrigger) {
     return 0;
   }
-  if(ps2x.Button(button)) {
+  if(ps2x.Button(PSB_PAD_DOWN)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("PSB", "_", "PAD", "_", "DOWN", " is pushed");
     }
 #endif
-    _onDPadDownButtonPressed();
-    return button;
+    if (_onDPadDownButtonPressed) {
+      _onDPadDownButtonPressed();
+    } else {
+      _eventTrigger->processDPadDownButtonPressedEvent();
+    }
+    return PSB_PAD_DOWN;
   }
   return 0;
 }
 
 int PS2Controller::processDPadLeftButtonPress() {
-  uint16_t button = PSB_PAD_LEFT;
   if (!_onDPadLeftButtonPressed) {
     return 0;
   }
-  if(ps2x.Button(button)) {
+  if(ps2x.Button(PSB_PAD_LEFT)) {
 #if __RUNNING_LOG_ENABLED__
     if (debugEnabled) {
       debugLog("PSB", "_", "PAD", "_", "LEFT", " is pushed");
     }
 #endif
-    _onDPadLeftButtonPressed();
-    return button;
+    if (_onDPadLeftButtonPressed) {
+      _onDPadLeftButtonPressed();
+    } else {
+      _eventTrigger->processDPadLeftButtonPressedEvent();
+    }
+    return PSB_PAD_LEFT;
   }
   return 0;
 }
 
-int PS2Controller::processJoystickChange(byte xKey, byte yKey, void (*onChange)(int, int), const char label) {
+bool PS2Controller::isJoystickChanged(int nJoyX, int nJoyY) {
+  return nJoyX >= PS2_JOYSTICK_DEADZONE_X || nJoyX <= -PS2_JOYSTICK_DEADZONE_X ||
+      nJoyY >= PS2_JOYSTICK_DEADZONE_Y || nJoyY <= -PS2_JOYSTICK_DEADZONE_Y;
+}
+
+int PS2Controller::processJoystickChange(byte xKey, byte yKey, const char label) {
   int nJoyX = ps2x.Analog(xKey); // read x-joystick
   int nJoyY = ps2x.Analog(yKey); // read y-joystick
   //
-  nJoyX = map(nJoyX, 0, 255, NUM_RANGE_X, -NUM_RANGE_X);
-  nJoyY = map(nJoyY, 0, 255, NUM_RANGE_Y, -NUM_RANGE_Y);
+  nJoyX = map(nJoyX, 0, 255, PS2_JOYSTICK_RANGE_X, -PS2_JOYSTICK_RANGE_X);
+  nJoyY = map(nJoyY, 0, 255, PS2_JOYSTICK_RANGE_Y, -PS2_JOYSTICK_RANGE_Y);
   //
-  if (nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y) {
+  if (!isJoystickChanged(nJoyX, nJoyY)) {
+    return 0;
+  }
+
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
-      char l_[2] = { label, '\0' };
-      debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
-      char x_[7], y_[7];
-      debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
-      debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
-    }
+  if (debugEnabled) {
+    char l_[2] = { label, '\0' };
+    debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
+    char x_[7], y_[7];
+    debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
+    debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
+  }
 #endif
-    if (onChange) {
-      onChange(nJoyX, nJoyY);
+
+  if (label == 'L') {
+    if (_onLeftJoystickChanged) {
+      _onLeftJoystickChanged(nJoyX, nJoyY);
       return 1;
-    } else {
-#if __RUNNING_LOG_ENABLED__
-      if (debugEnabled) {
-        char l_[2] = { label, '\0' };
-        debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
-      }
-#endif
-      return -1;
+    } else if (_eventTrigger != NULL) {
+      _eventTrigger->processLeftJoystickChangeEvent(nJoyX, nJoyY);
+      return 1;
     }
   }
-  return 0;
+
+  if (label == 'R') {
+    if (_onRightJoystickChanged) {
+      _onRightJoystickChanged(nJoyX, nJoyY);
+      return 1;
+    } else if (_eventTrigger != NULL) {
+      _eventTrigger->processRightJoystickChangeEvent(nJoyX, nJoyY);
+      return 1;
+    }
+  }
+
+#if __RUNNING_LOG_ENABLED__
+  if (debugEnabled) {
+    char l_[2] = { label, '\0' };
+    debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
+  }
+#endif
+
+  return -1;
 };

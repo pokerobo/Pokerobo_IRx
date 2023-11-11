@@ -8,17 +8,18 @@
 #define __PS2_CONTROLLER_H__
 
 #include "Commons.h"
+#include "Event_Trigger.h"
 #include <PS2X_lib.h>
 
 #ifndef __PS2INIT_LOG_ENABLED__
 #define __PS2INIT_LOG_ENABLED__ (__LOADING_LOG_ENABLED__ || 0)
 #endif
 
-#define MIN_BOUND_X      3
-#define MIN_BOUND_Y      3
+#define PS2_JOYSTICK_DEADZONE_X   64
+#define PS2_JOYSTICK_DEADZONE_Y   64
 
-#define NUM_RANGE_X      6
-#define NUM_RANGE_Y      6
+#define PS2_JOYSTICK_RANGE_X      255
+#define PS2_JOYSTICK_RANGE_Y      255
 
 #define DEBUG_DEFAULT       true
 
@@ -35,6 +36,7 @@ class PS2Controller {
     bool hasError();
     void showError();
     void reload();
+    void set(EventTrigger* eventTrigger);
     void setOnStartButtonPressed(void (*function)());
     void setOnSelectButtonPressed(void (*function)());
     void setOnDPadUpButtonPressed(void (*function)());
@@ -45,13 +47,14 @@ class PS2Controller {
     void setOnRightJoystickChanged(void (*function)(int, int));
     int check();
   protected:
+    bool isJoystickChanged(int, int);
     int processStartButtonPress();
     int processSelectButtonPress();
     int processDPadUpButtonPress();
     int processDPadRightButtonPress();
     int processDPadDownButtonPress();
     int processDPadLeftButtonPress();
-    int processJoystickChange(byte, byte, void (*function)(int, int), const char label);
+    int processJoystickChange(byte, byte, const char label);
   private:
     PS2X ps2x;
     bool debugEnabled;
@@ -59,6 +62,7 @@ class PS2Controller {
     bool errorDisplayed;
     byte ps2Type;
     byte vibrate;
+    EventTrigger* _eventTrigger = NULL;
     void (*_onStartButtonPressed)();
     void (*_onSelectButtonPressed)();
     void (*_onDPadUpButtonPressed)();
