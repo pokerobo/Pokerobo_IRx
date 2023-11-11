@@ -43,7 +43,7 @@ class PS2Controller {
     void setOnDPadRightButtonPressed(void (*function)());
     void setOnDPadDownButtonPressed(void (*function)());
     void setOnDPadLeftButtonPressed(void (*function)());
-    void setOnnLeftJoystickChanged(void (*function)(int, int));
+    void setOnLeftJoystickChanged(void (*function)(int, int));
     void setOnRightJoystickChanged(void (*function)(int, int));
     int check();
   protected:

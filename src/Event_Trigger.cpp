@@ -1,8 +1,5 @@
 #include "Event_Trigger.h"
 
-#define PS2_JOYSTICK_DEADZONE_X   3
-#define PS2_JOYSTICK_DEADZONE_Y   3
-
 #define PEDESTAL_RANGE_X          6
 #define PEDESTAL_RANGE_Y          6
 
@@ -86,8 +83,8 @@ void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
       _carbotHandler->move(nJoyX, nJoyY);
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
-      nJoyX = map(nJoyX, 0, 255, PEDESTAL_RANGE_X, -PEDESTAL_RANGE_X);
-      nJoyY = map(nJoyY, 0, 255, PEDESTAL_RANGE_Y, -PEDESTAL_RANGE_Y);
+      nJoyX = map(nJoyX, -255, 255, PEDESTAL_RANGE_X, -PEDESTAL_RANGE_X);
+      nJoyY = map(nJoyY, -255, 255, PEDESTAL_RANGE_Y, -PEDESTAL_RANGE_Y);
       _pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
       break;
   }

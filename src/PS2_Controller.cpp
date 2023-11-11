@@ -106,7 +106,7 @@ void PS2Controller::setOnDPadLeftButtonPressed(void (*function)()) {
   _onDPadLeftButtonPressed = function;
 };
 
-void PS2Controller::setOnnLeftJoystickChanged(void (*function)(int, int)) {
+void PS2Controller::setOnLeftJoystickChanged(void (*function)(int, int)) {
   _onLeftJoystickChanged = function;
 };
 

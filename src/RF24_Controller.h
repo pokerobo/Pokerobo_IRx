@@ -32,8 +32,8 @@
 #define __RF24_CSN_PIN__          10
 #endif
 
-#define MIN_BOUND_X               32
-#define MIN_BOUND_Y               32
+#define RF24_JOYSTICK_DEADZONE_X  32
+#define RF24_JOYSTICK_DEADZONE_Y  32
 
 #define RF24_JOYSTICK_RANGE_X     255
 #define RF24_JOYSTICK_RANGE_Y     255
@@ -53,7 +53,8 @@ class RF24Controller {
     void setOnDPadRightButtonPressed(void (*function)());
     void setOnDPadDownButtonPressed(void (*function)());
     void setOnDPadLeftButtonPressed(void (*function)());
-    void setOnnLeftJoystickChanged(void (*function)(int, int));
+    void setOnLeftJoystickChanged(void (*function)(int, int));
+    void setOnRightJoystickChanged(void (*function)(int, int));
   protected:
     bool available();
     bool checkButtonPress(uint16_t pressed, uint16_t mask);
@@ -73,6 +74,7 @@ class RF24Controller {
     void (*_onDPadDownButtonPressed)();
     void (*_onDPadLeftButtonPressed)();
     void (*_onLeftJoystickChanged)(int, int);
+    void (*_onRightJoystickChanged)(int, int);
 };
 
 uint32_t decodeInteger(uint8_t* arr, int length);

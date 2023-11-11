@@ -220,7 +220,8 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
 }
 
 bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
-  return nJoyX >= MIN_BOUND_X || nJoyX <= -MIN_BOUND_X || nJoyY >= MIN_BOUND_Y || nJoyY <= -MIN_BOUND_Y;
+  return nJoyX >= RF24_JOYSTICK_DEADZONE_X || nJoyX <= -RF24_JOYSTICK_DEADZONE_X ||
+      nJoyY >= RF24_JOYSTICK_DEADZONE_Y || nJoyY <= -RF24_JOYSTICK_DEADZONE_Y;
 }
 
 int RF24Controller::processJoystickChange(int nJoyX, int nJoyY) {
@@ -243,22 +244,23 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY) {
     debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
   }
 #endif
+
   if (_onLeftJoystickChanged) {
     _onLeftJoystickChanged(nJoyX, nJoyY);
     return 1;
   } else if (_eventTrigger != NULL) {
     _eventTrigger->processLeftJoystickChangeEvent(nJoyX, nJoyY);
     return 1;
-  } else {
-#if __RF24_RUNNING_LOG__
-    if (_debugEnabled) {
-      char l_[2] = { 'L', '\0' };
-      debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
-    }
-#endif
-    return -1;
   }
-  return 0;
+
+#if __RF24_RUNNING_LOG__
+  if (_debugEnabled) {
+    char l_[2] = { 'L', '\0' };
+    debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
+  }
+#endif
+
+  return -1;
 }
 
 void RF24Controller::set(EventTrigger* eventTrigger) {
@@ -293,9 +295,13 @@ void RF24Controller::setOnDPadLeftButtonPressed(void (*function)()) {
   _onDPadLeftButtonPressed = function;
 };
 
-void RF24Controller::setOnnLeftJoystickChanged(void (*function)(int, int)) {
+void RF24Controller::setOnLeftJoystickChanged(void (*function)(int, int)) {
   _onLeftJoystickChanged = function;
 }
+
+void RF24Controller::setOnRightJoystickChanged(void (*function)(int, int)) {
+  _onRightJoystickChanged = function;
+};
 
 uint32_t decodeInteger(uint8_t* arr, int length) {
   uint32_t a0 = arr[0];

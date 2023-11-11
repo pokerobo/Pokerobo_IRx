@@ -34,7 +34,8 @@ PS2Controller ps2Controller;
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
-RF24Controller rf24Controller;
+const uint64_t address = 0x18580901LL;
+RF24Controller rf24Controller(address);
 #endif
 
 #if (CONTROLLER_CARBOT)
@@ -51,12 +52,10 @@ PedestalHandler* pedestalHandlers[PEDESTALS_MAX] = {
 
 PedestalGroup pedestalGroup(pedestalHandlers);
 
-int program = 0;
+EventTrigger eventTrigger;
 
 void setup() {
-  while (!Serial) {
-    delay(100); // Wait for the serial connection to be establised.
-  }
+  while (!Serial) delay(100); // Wait for the serial connection to be establised.
   Serial.begin(57600);
 
 #if __LOADING_LOG_ENABLED__
@@ -65,36 +64,20 @@ void setup() {
 
 #if (CONTROLLER_CARBOT)
   carbotHandler.begin();
+  eventTrigger.set(&carbotHandler);
 #endif
 
   pedestalGroup.begin();
+  eventTrigger.set(&pedestalGroup);
 
 #if (CONTROLLER == CONTROLLER_PS2)
   ps2Controller.begin();
-
-  ps2Controller.setOnStartButtonPressed(processStartButtonPressedEvent);
-
-  ps2Controller.setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  ps2Controller.setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  ps2Controller.setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  ps2Controller.setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
-
-  ps2Controller.setOnnLeftJoystickChanged(processLeftJoystickChangeEvent);
-  ps2Controller.setOnRightJoystickChanged(processRightJoystickChangeEvent);
+  ps2Controller.set(&eventTrigger);
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
   rf24Controller.begin();
-
-  rf24Controller.setOnStartButtonPressed(processStartButtonPressedEvent);
-  rf24Controller.setOnAnalogButtonPressed(processAnalogButtonPressedEvent);
-
-  rf24Controller.setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  rf24Controller.setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  rf24Controller.setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  rf24Controller.setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
-
-  rf24Controller.setOnnLeftJoystickChanged(processLeftJoystickChangeEvent);
+  rf24Controller.set(&eventTrigger);
 #endif
 
 #if (CONTROLLER_IR)
@@ -138,9 +121,9 @@ void setup() {
 
 void loop() {
   uint32_t begin = millis();
-  if (program == 1) {
-    pedestalGroup.autoDance();
-  }
+
+  eventTrigger.check();
+
 #if (CONTROLLER == CONTROLLER_PS2)
   getDelayAmount(ps2Controller.loop());
 #endif
@@ -159,60 +142,6 @@ uint32_t getDelayAmount(int status) {
   if (status >= 1) {
     return 5;
   } else {
-    return 100;
+    return 10;
   }
-}
-
-int switchProgram() {
-  program = 1 - program;
-  if (program == 0) {
-    pedestalGroup.reset();
-#if (CONTROLLER_CARBOT)
-    carbotHandler.turnOff();
-#endif
-  }
-  if (program == 1) {
-#if (CONTROLLER_CARBOT)
-    carbotHandler.turnOn();
-#endif
-  }
-}
-
-void processStartButtonPressedEvent() {
-  switchProgram();
-  pedestalGroup.processStartButtonPressedEvent();
-}
-
-void processAnalogButtonPressedEvent() {
-  pedestalGroup.processAnalogButtonPressedEvent();
-}
-
-void processDPadUpButtonPressedEvent() {
-  pedestalGroup.processDPadUpButtonPressedEvent();
-}
-
-void processDPadRightButtonPressedEvent() {
-  pedestalGroup.processDPadRightButtonPressedEvent();
-}
-
-void processDPadDownButtonPressedEvent() {
-  pedestalGroup.processDPadDownButtonPressedEvent();
-}
-
-void processDPadLeftButtonPressedEvent() {
-  pedestalGroup.processDPadLeftButtonPressedEvent();
-}
-
-void processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
-  if (program == 1) {
-#if (CONTROLLER_CARBOT)
-  carbotHandler.move(nJoyX, nJoyY);
-#endif
-  } else {
-    pedestalGroup.processLeftJoystickChangeEvent(nJoyX, nJoyY);
-  }
-}
-
-void processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
-  pedestalGroup.processRightJoystickChangeEvent(nJoyX, nJoyY);
 }
