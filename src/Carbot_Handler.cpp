@@ -11,8 +11,8 @@
 #define IN_4    4
 #define EN_B    3
 
-#define BOUND_X    40
-#define BOUND_Y    40
+#define CARBOT_DEADZONE_BOUND_X    52
+#define CARBOT_DEADZONE_BOUND_Y    52
 
 int CarbotHandler::begin() {
   // Set all the motor control pins to outputs
@@ -69,14 +69,14 @@ void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
     x = y = 0;
   }
 
-  if (y > BOUND_Y) {
+  if (y > CARBOT_DEADZONE_BOUND_Y) {
     in1Val = in3Val = HIGH;
-    if (x < -BOUND_X) {
+    if (x < -CARBOT_DEADZONE_BOUND_X) {
       int r = min(abs(x), abs(y));
       int dx = r * coeff / 10;
       enaVal = abs(y) - (r - dx);
       enbVal = abs(y) - dx;
-    } else if (x >= -BOUND_X && x <= BOUND_X) {
+    } else if (x >= -CARBOT_DEADZONE_BOUND_X && x <= CARBOT_DEADZONE_BOUND_X) {
       enaVal = enbVal = abs(y);
     } else {
       int r = min(abs(x), abs(y));
@@ -84,16 +84,16 @@ void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
       enaVal = abs(y) - dx;
       enbVal = abs(y) - (r - dx);
     }
-  } else if (y <= BOUND_Y && y >= -BOUND_Y) {
+  } else if (y <= CARBOT_DEADZONE_BOUND_Y && y >= -CARBOT_DEADZONE_BOUND_Y) {
     stop();
   } else {
     in2Val = in4Val = HIGH;
-    if (x < -BOUND_X) {
+    if (x < -CARBOT_DEADZONE_BOUND_X) {
       int r = min(abs(x), abs(y));
       int dx = r * coeff / 10;
       enaVal = abs(y) - (r - dx);
       enbVal = abs(y) - dx;
-    } else if (x >= -BOUND_X && x <= BOUND_X) {
+    } else if (x >= -CARBOT_DEADZONE_BOUND_X && x <= CARBOT_DEADZONE_BOUND_X) {
       enaVal = enbVal = abs(y);
     } else {
       int r = min(abs(x), abs(y));
@@ -106,6 +106,9 @@ void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
   enaVal = max(enaVal, 0);
   enbVal = max(enbVal, 0);
 
+  enaVal = map(enaVal, 0, 128, 128, 256);
+  enbVal = map(enbVal, 0, 128, 128, 256);
+
 #if __CARBOT_RUNNING_LOG__
   char num_[7];
   debugLog(" - ", "active", ": ", _active ? "On" : "Off");
@@ -117,9 +120,6 @@ void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
   debugLog(" - ", "EN_A", ": ", itoa(enaVal, num_, 10));
   debugLog(" - ", "EN_B", ": ", itoa(enbVal, num_, 10));
 #endif
-
-  enaVal = map(enaVal, 0, 128, 128, 256);
-  enbVal = map(enbVal, 0, 128, 128, 256);
 
   digitalWrite(IN_1, in1Val);
   digitalWrite(IN_2, in2Val);
