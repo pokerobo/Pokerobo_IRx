@@ -56,7 +56,6 @@ void EventTrigger::processSelectButtonPressedEvent() {
 }
 
 void EventTrigger::processAnalogButtonPressedEvent() {
-  _pedestalGroup->processAnalogButtonPressedEvent();
 }
 
 void EventTrigger::processDPadUpButtonPressedEvent() {

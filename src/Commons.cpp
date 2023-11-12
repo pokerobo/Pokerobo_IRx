@@ -45,10 +45,6 @@ void HangingDetector::begin(void (*trigger)(), uint16_t limit) {
   reset();
 }
 
-void HangingDetector::reset() {
-  check(true);
-}
-
 bool HangingDetector::check(bool ok) {
   if (ok) {
     _count = 0;
@@ -63,6 +59,10 @@ bool HangingDetector::check(bool ok) {
       _count++;
     }
   }
+}
+
+void HangingDetector::reset() {
+  check(true);
 }
 
 #if __DEBUG_LOG_SIMPLE__

@@ -27,6 +27,7 @@ void PedestalGroup::begin() {
         VERTICAL_MIN_ANGLE,
         VERTICAL_MAX_ANGLE);
   }
+  _waitingCounter.begin(PEDESTAL_WAITING_MAX);
 }
 
 bool PedestalGroup::change(int hDelta, int vDelta) {
@@ -63,17 +64,6 @@ void PedestalGroup::processStartButtonPressedEvent() {
 void PedestalGroup::processStartButtonPressedEventFor(PedestalHandler *pedestalHandler) {
   if (pedestalHandler == NULL) return;
   pedestalHandler->reset();
-}
-
-void PedestalGroup::processAnalogButtonPressedEvent() {
-  for (int i=0; i<_pedestalsTotal; i++) {
-    processAnalogButtonPressedEventFor(_pedestalHandlers[i]);
-  }
-}
-
-void PedestalGroup::processAnalogButtonPressedEventFor(PedestalHandler *pedestalHandler) {
-  if (pedestalHandler == NULL) return;
-  // do something here
 }
 
 void PedestalGroup::processDPadUpButtonPressedEvent() {

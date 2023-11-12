@@ -7,7 +7,7 @@
 #define PEDESTAL_DANCING_STEPS_MAX    32
 
 #ifndef PEDESTAL_WAITING_MAX
-#define PEDESTAL_WAITING_MAX          1
+#define PEDESTAL_WAITING_MAX          100
 #endif//PEDESTAL_WAITING_MAX
 
 class PedestalGroup {
@@ -31,7 +31,6 @@ class PedestalGroup {
     uint8_t _pedestalsTotal = 0;
     PedestalHandler* _pedestalHandlers[PEDESTALS_MAX] = {};
     void processStartButtonPressedEventFor(PedestalHandler *pedestalHandler);
-    void processAnalogButtonPressedEventFor(PedestalHandler *pedestalHandler);
     void processDPadUpButtonPressedEventFor(PedestalHandler *pedestalHandler);
     void processDPadRightButtonPressedEventFor(PedestalHandler *pedestalHandler);
     void processDPadDownButtonPressedEventFor(PedestalHandler *pedestalHandler);

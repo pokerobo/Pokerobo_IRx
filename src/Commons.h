@@ -9,7 +9,7 @@
 #define __RUNNING_LOG_ENABLED__         1
 
 #define __RF24_RUNNING_LOG__            1
-#define __CARBOT_RUNNING_LOG__          1
+#define __CARBOT_RUNNING_LOG__          0
 #define __PEDESTAL_RUNNING_LOG__        0
 
 #define __PS2_LOGGING_ENABLED__         1
@@ -35,7 +35,7 @@ class FlagChecker {
 
 class WaitingCounter {
   public:
-    WaitingCounter(uint16_t limit = 10);
+    WaitingCounter(uint16_t limit = 100); // 100ms
     void begin(uint16_t limit);
     void reset();
     bool check();
@@ -47,10 +47,10 @@ class WaitingCounter {
 
 class HangingDetector {
   public:
-    HangingDetector(void (*trigger)() = NULL, uint16_t limit = 10);
-    void begin(void (*trigger)() = NULL, uint16_t limit = 10);
-    void reset();
+    HangingDetector(void (*trigger)() = NULL, uint16_t limit = 100);
+    void begin(void (*trigger)() = NULL, uint16_t limit = 100);
     bool check(bool ok);
+    void reset();
   private:
     uint16_t _count = 0;
     uint16_t _limit = 10;
