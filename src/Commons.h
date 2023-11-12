@@ -45,6 +45,19 @@ class WaitingCounter {
     uint32_t _milestone = 0;
 };
 
+class HangingDetector {
+  public:
+    HangingDetector(void (*trigger)() = NULL, uint16_t limit = 10);
+    void begin(void (*trigger)() = NULL, uint16_t limit = 10);
+    void reset();
+    bool check(bool ok);
+  private:
+    uint16_t _count = 0;
+    uint16_t _limit = 10;
+    bool _triggered = false;
+    void (*_trigger)();
+};
+
 void debugLog(char* s0);
 void debugLog(char* s0, char* s1);
 void debugLog(char* s0, char* s1, char* s2);

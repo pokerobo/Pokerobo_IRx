@@ -33,6 +33,38 @@ bool WaitingCounter::check() {
   return false;
 }
 
+HangingDetector::HangingDetector(void (*trigger)(), uint16_t limit) {
+  begin(trigger, limit);
+}
+
+void HangingDetector::begin(void (*trigger)(), uint16_t limit) {
+  _trigger = trigger;
+  if (limit > 0) {
+    _limit = limit;
+  }
+  reset();
+}
+
+void HangingDetector::reset() {
+  check(true);
+}
+
+bool HangingDetector::check(bool ok) {
+  if (ok) {
+    _count = 0;
+    _triggered = false;
+  } else {
+    if (_count >= _limit) {
+      if (_trigger && !_triggered) {
+        _triggered = true;
+        _trigger();
+      }
+    } else {
+      _count++;
+    }
+  }
+}
+
 #if __DEBUG_LOG_SIMPLE__
 void debugLog(char* s0) {
   debugLog(s0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);

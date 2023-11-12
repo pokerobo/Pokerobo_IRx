@@ -295,10 +295,12 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, const char label)
   //
   nJoyX = map(nJoyX, 0, 255, PS2_JOYSTICK_RANGE_X, -PS2_JOYSTICK_RANGE_X);
   nJoyY = map(nJoyY, 0, 255, PS2_JOYSTICK_RANGE_Y, -PS2_JOYSTICK_RANGE_Y);
-  //
+
+#if defined(PS2_JOYSTICK_CHECKING_CHANGE)
   if (!isJoystickChanged(nJoyX, nJoyY)) {
     return 0;
   }
+#endif
 
 #if __RUNNING_LOG_ENABLED__
   if (debugEnabled) {

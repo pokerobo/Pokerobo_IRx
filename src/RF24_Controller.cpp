@@ -35,6 +35,9 @@ bool RF24Controller::available() {
       debugLog("RF24 is not connected");
     }
   }
+  if (_hangingDetector) {
+    _hangingDetector->check(ok);
+  }
   return ok;
 }
 
@@ -80,7 +83,7 @@ int RF24Controller::loop() {
       return pressed;
     }
 
-    return processJoystickChange(jX, jY);
+    return processJoystickChange(jX, jY, 'L');
   }
   return 0;
 }
@@ -88,10 +91,10 @@ int RF24Controller::loop() {
 bool RF24Controller::checkButtonPress(uint16_t pressed, uint16_t mask) {
 #if CLICKING_FLAGS
   if (pressed & mask) {
-    _pressFlag |= mask;
+    _clickingTrail |= mask;
   } else {
-    if (_pressFlag & mask) {
-      _pressFlag &= (~mask);
+    if (_clickingTrail & mask) {
+      _clickingTrail &= (~mask);
       return true;
     }
   }
@@ -224,7 +227,7 @@ bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
       nJoyY >= RF24_JOYSTICK_DEADZONE_Y || nJoyY <= -RF24_JOYSTICK_DEADZONE_Y;
 }
 
-int RF24Controller::processJoystickChange(int nJoyX, int nJoyY) {
+int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, char label) {
 
   nJoyX = map(nJoyX, 0, 1024, -RF24_JOYSTICK_RANGE_X, RF24_JOYSTICK_RANGE_X);
   nJoyY = map(nJoyY, 0, 1024, -RF24_JOYSTICK_RANGE_Y, RF24_JOYSTICK_RANGE_Y);
@@ -245,12 +248,24 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY) {
   }
 #endif
 
-  if (_onLeftJoystickChanged) {
-    _onLeftJoystickChanged(nJoyX, nJoyY);
-    return 1;
-  } else if (_eventTrigger != NULL) {
-    _eventTrigger->processLeftJoystickChangeEvent(nJoyX, nJoyY);
-    return 1;
+  if (label == 'L') {
+    if (_onLeftJoystickChanged) {
+      _onLeftJoystickChanged(nJoyX, nJoyY);
+      return 1;
+    } else if (_eventTrigger != NULL) {
+      _eventTrigger->processLeftJoystickChangeEvent(nJoyX, nJoyY);
+      return 1;
+    }
+  }
+
+  if (label == 'R') {
+    if (_onRightJoystickChanged) {
+      _onRightJoystickChanged(nJoyX, nJoyY);
+      return 1;
+    } else if (_eventTrigger != NULL) {
+      _eventTrigger->processRightJoystickChangeEvent(nJoyX, nJoyY);
+      return 1;
+    }
   }
 
 #if __RF24_RUNNING_LOG__
@@ -262,6 +277,10 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY) {
 
   return -1;
 }
+
+void RF24Controller::set(HangingDetector* hangingDetector) {
+  _hangingDetector = hangingDetector;
+};
 
 void RF24Controller::set(EventTrigger* eventTrigger) {
   _eventTrigger = eventTrigger;

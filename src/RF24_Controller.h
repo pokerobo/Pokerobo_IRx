@@ -45,6 +45,7 @@ class RF24Controller {
     RF24Controller(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
     void begin();
     int loop();
+    void set(HangingDetector* hangingDetector);
     void set(EventTrigger* eventTrigger);
     void setOnStartButtonPressed(void (*function)());
     void setOnSelectButtonPressed(void (*function)());
@@ -60,11 +61,12 @@ class RF24Controller {
     bool checkButtonPress(uint16_t pressed, uint16_t mask);
     uint16_t processButtonPress(uint16_t buttons);
     bool isJoystickChanged(int, int);
-    int processJoystickChange(int, int);
+    int processJoystickChange(int, int, char);
   private:
     uint64_t _address = __RF24_DEFAULT_ADDRESS__;
     bool _debugEnabled;
-    uint16_t _pressFlag;
+    uint16_t _clickingTrail;
+    HangingDetector* _hangingDetector = NULL;
     EventTrigger* _eventTrigger = NULL;
     void (*_onStartButtonPressed)();
     void (*_onSelectButtonPressed)();
