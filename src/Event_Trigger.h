@@ -3,8 +3,8 @@
 
 #include "Commons.h"
 
-#if (CONTROLLER_CARBOT)
-#include "Carbot_Handler.h"
+#if (CONTROLLER_ROBOCAR)
+#include "RoboCar_Handler.h"
 #endif
 
 #include "Pedestal_Group.h"
@@ -18,8 +18,8 @@
 class EventTrigger {
   public:
     void begin();
-#if (CONTROLLER_CARBOT)
-    void set(CarbotHandler* carbotHandler);
+#if (CONTROLLER_ROBOCAR)
+    void set(RoboCarHandler* roboCarHandler);
 #endif
     void set(PedestalGroup* pedestalGroup);
     int check();
@@ -35,8 +35,8 @@ class EventTrigger {
   protected:
     int next();
   private:
-#if (CONTROLLER_CARBOT)
-    CarbotHandler* _carbotHandler = NULL;
+#if (CONTROLLER_ROBOCAR)
+    RoboCarHandler* _roboCarHandler = NULL;
 #endif
     PedestalGroup* _pedestalGroup = NULL;
     uint8_t _currentState = PROGRAM_CARDUINO_STATE_IDLE;

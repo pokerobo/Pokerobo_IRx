@@ -1,4 +1,4 @@
-#include "Carbot_Handler.h"
+#include "RoboCar_Handler.h"
 
 // Motor A connections
 
@@ -11,10 +11,10 @@
 #define IN_4    4
 #define EN_B    3
 
-#define CARBOT_DEADZONE_BOUND_X    52
-#define CARBOT_DEADZONE_BOUND_Y    52
+#define ROBOCAR_DEADZONE_BOUND_X    52
+#define ROBOCAR_DEADZONE_BOUND_Y    52
 
-int CarbotHandler::begin() {
+int RoboCarHandler::begin() {
   // Set all the motor control pins to outputs
 	pinMode(EN_A, OUTPUT);
 	pinMode(EN_B, OUTPUT);
@@ -30,26 +30,26 @@ int CarbotHandler::begin() {
 	digitalWrite(IN_4, LOW);
 }
 
-bool CarbotHandler::isActive() {
+bool RoboCarHandler::isActive() {
   return _active;
 }
 
-void CarbotHandler::turnOn() {
+void RoboCarHandler::turnOn() {
   _active = true;
-#if __CARBOT_RUNNING_LOG__
-  debugLog("CarbotHandler", "::", "turnOn", "()");
+#if __ROBOCAR_RUNNING_LOG__
+  debugLog("RoboCarHandler", "::", "turnOn", "()");
 #endif
 }
 
-void CarbotHandler::turnOff() {
-#if __CARBOT_RUNNING_LOG__
-  debugLog("CarbotHandler", "::", "turnOff", "()");
+void RoboCarHandler::turnOff() {
+#if __ROBOCAR_RUNNING_LOG__
+  debugLog("RoboCarHandler", "::", "turnOff", "()");
 #endif
   stop();
   _active = false;
 }
 
-void CarbotHandler::flip() {
+void RoboCarHandler::flip() {
   if (isActive()) {
     turnOff();
   } else {
@@ -57,7 +57,7 @@ void CarbotHandler::flip() {
   }
 }
 
-void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
+void RoboCarHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
   uint8_t in1Val = LOW;
   uint8_t in2Val = LOW;
   uint8_t in3Val = LOW;
@@ -69,14 +69,14 @@ void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
     x = y = 0;
   }
 
-  if (y > CARBOT_DEADZONE_BOUND_Y) {
+  if (y > ROBOCAR_DEADZONE_BOUND_Y) {
     in1Val = in3Val = HIGH;
-    if (x < -CARBOT_DEADZONE_BOUND_X) {
+    if (x < -ROBOCAR_DEADZONE_BOUND_X) {
       int r = min(abs(x), abs(y));
       int dx = r * coeff / 10;
       enaVal = abs(y) - (r - dx);
       enbVal = abs(y) - dx;
-    } else if (x >= -CARBOT_DEADZONE_BOUND_X && x <= CARBOT_DEADZONE_BOUND_X) {
+    } else if (x >= -ROBOCAR_DEADZONE_BOUND_X && x <= ROBOCAR_DEADZONE_BOUND_X) {
       enaVal = enbVal = abs(y);
     } else {
       int r = min(abs(x), abs(y));
@@ -84,16 +84,16 @@ void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
       enaVal = abs(y) - dx;
       enbVal = abs(y) - (r - dx);
     }
-  } else if (y <= CARBOT_DEADZONE_BOUND_Y && y >= -CARBOT_DEADZONE_BOUND_Y) {
+  } else if (y <= ROBOCAR_DEADZONE_BOUND_Y && y >= -ROBOCAR_DEADZONE_BOUND_Y) {
     stop();
   } else {
     in2Val = in4Val = HIGH;
-    if (x < -CARBOT_DEADZONE_BOUND_X) {
+    if (x < -ROBOCAR_DEADZONE_BOUND_X) {
       int r = min(abs(x), abs(y));
       int dx = r * coeff / 10;
       enaVal = abs(y) - (r - dx);
       enbVal = abs(y) - dx;
-    } else if (x >= -CARBOT_DEADZONE_BOUND_X && x <= CARBOT_DEADZONE_BOUND_X) {
+    } else if (x >= -ROBOCAR_DEADZONE_BOUND_X && x <= ROBOCAR_DEADZONE_BOUND_X) {
       enaVal = enbVal = abs(y);
     } else {
       int r = min(abs(x), abs(y));
@@ -106,7 +106,7 @@ void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
   enaVal = max(enaVal, 0);
   enbVal = max(enbVal, 0);
 
-#if __CARBOT_RUNNING_LOG__
+#if __ROBOCAR_RUNNING_LOG__
   char num_[7];
   debugLog(" - ", "active", ": ", _active ? "On" : "Off");
   debugLog(" - ", "IN_1", ": ", itoa(in1Val, num_, 10));
@@ -127,7 +127,7 @@ void CarbotHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
   analogWrite(EN_B, enbVal);
 }
 
-void CarbotHandler::stop() {
+void RoboCarHandler::stop() {
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, LOW);
   analogWrite(EN_A, 0);
@@ -136,12 +136,12 @@ void CarbotHandler::stop() {
   digitalWrite(IN_4, LOW);
   analogWrite(EN_B, 0);
 
-#if __CARBOT_RUNNING_LOG__
-  debugLog("CarbotHandler", "::", "stop", "()");
+#if __ROBOCAR_RUNNING_LOG__
+  debugLog("RoboCarHandler", "::", "stop", "()");
 #endif
 }
 
-void CarbotHandler::moveForward(int speed=DEFAULT_SPEED) {
+void RoboCarHandler::moveForward(int speed=DEFAULT_SPEED) {
   digitalWrite(IN_3, HIGH);
   digitalWrite(IN_4, LOW);
   analogWrite(EN_B, speed);
@@ -156,7 +156,7 @@ void CarbotHandler::moveForward(int speed=DEFAULT_SPEED) {
   #endif
 }
 
-void CarbotHandler::turnLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
+void RoboCarHandler::turnLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
   digitalWrite(IN_1, HIGH);
   digitalWrite(IN_2, LOW);
   analogWrite(EN_A, speed/coeff);
@@ -169,7 +169,7 @@ void CarbotHandler::turnLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
   #endif
 }
 
-void CarbotHandler::turnRight(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
+void RoboCarHandler::turnRight(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
   digitalWrite(IN_1, HIGH);
   digitalWrite(IN_2, LOW);
   analogWrite(EN_A, speed);
@@ -182,7 +182,7 @@ void CarbotHandler::turnRight(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) 
   #endif
 }
 
-void CarbotHandler::moveBack(int speed=DEFAULT_SPEED) {
+void RoboCarHandler::moveBack(int speed=DEFAULT_SPEED) {
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, HIGH);
   analogWrite(EN_A, speed);
@@ -195,7 +195,7 @@ void CarbotHandler::moveBack(int speed=DEFAULT_SPEED) {
   #endif
 }
 
-void CarbotHandler::backLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
+void RoboCarHandler::backLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, HIGH);
   analogWrite(EN_A, speed/coeff);
@@ -208,7 +208,7 @@ void CarbotHandler::backLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
   #endif
 }
 
-void CarbotHandler::backRight(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
+void RoboCarHandler::backRight(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, HIGH);
   analogWrite(EN_A, speed);
@@ -221,7 +221,7 @@ void CarbotHandler::backRight(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) 
   #endif
 }
 
-void CarbotHandler::rotateLeft(int speed=DEFAULT_SPEED) {
+void RoboCarHandler::rotateLeft(int speed=DEFAULT_SPEED) {
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, HIGH);
   analogWrite(EN_A, speed);
@@ -234,7 +234,7 @@ void CarbotHandler::rotateLeft(int speed=DEFAULT_SPEED) {
   #endif
 }
 
-void CarbotHandler::rotateRight(int speed=DEFAULT_SPEED) {
+void RoboCarHandler::rotateRight(int speed=DEFAULT_SPEED) {
   digitalWrite(IN_1, HIGH);
   digitalWrite(IN_2, LOW);
   analogWrite(EN_A, speed);

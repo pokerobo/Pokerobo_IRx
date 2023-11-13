@@ -1,20 +1,20 @@
-#ifndef __CARBOT_2WHEELS_H__
-#define __CARBOT_2WHEELS_H__
+#ifndef __ROBOCAR_2WHEELS_H__
+#define __ROBOCAR_2WHEELS_H__
 
-#ifndef __CARBOT_LOADING_LOG__
-#define __CARBOT_LOADING_LOG__  __LOADING_LOG_ENABLED__
-#endif//__CARBOT_LOADING_LOG__
+#ifndef __ROBOCAR_LOADING_LOG__
+#define __ROBOCAR_LOADING_LOG__  __LOADING_LOG_ENABLED__
+#endif//__ROBOCAR_LOADING_LOG__
 
-#ifndef __CARBOT_RUNNING_LOG__
-#define __CARBOT_RUNNING_LOG__  __RUNNING_LOG_ENABLED__
-#endif//__CARBOT_RUNNING_LOG__
+#ifndef __ROBOCAR_RUNNING_LOG__
+#define __ROBOCAR_RUNNING_LOG__  __RUNNING_LOG_ENABLED__
+#endif//__ROBOCAR_RUNNING_LOG__
 
 #define DEFAULT_SPEED 128
 #define DEFAULT_COEFF 5
 
 #include "Commons.h"
 
-class CarbotHandler {
+class RoboCarHandler {
   public:
     int begin();
     bool isActive();

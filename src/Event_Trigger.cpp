@@ -23,11 +23,11 @@ int EventTrigger::next() {
   int result = 0;
   switch(_currentState) {
     case PROGRAM_CARDUINO_STATE_IDLE:
-      _carbotHandler->turnOn();
+      _roboCarHandler->turnOn();
       _currentState = PROGRAM_CARDUINO_STATE_CARDUINO;
       break;
     case PROGRAM_CARDUINO_STATE_CARDUINO:
-      _carbotHandler->turnOff();
+      _roboCarHandler->turnOff();
       _currentState = PROGRAM_CARDUINO_STATE_PEDESTAL;
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
@@ -38,9 +38,9 @@ int EventTrigger::next() {
   return result;
 }
 
-#if (CONTROLLER_CARBOT)
-void EventTrigger::set(CarbotHandler* carbotHandler) {
-  _carbotHandler = carbotHandler;
+#if (CONTROLLER_ROBOCAR)
+void EventTrigger::set(RoboCarHandler* roboCarHandler) {
+  _roboCarHandler = roboCarHandler;
 }
 #endif
 
@@ -79,7 +79,7 @@ void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
     case PROGRAM_CARDUINO_STATE_IDLE:
       break;
     case PROGRAM_CARDUINO_STATE_CARDUINO:
-      _carbotHandler->move(nJoyX, nJoyY);
+      _roboCarHandler->move(nJoyX, nJoyY);
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
       nJoyX = map(nJoyX, -255, 255, PEDESTAL_RANGE_X, -PEDESTAL_RANGE_X);

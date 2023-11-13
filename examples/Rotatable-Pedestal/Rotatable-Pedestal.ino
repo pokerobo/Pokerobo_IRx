@@ -38,8 +38,8 @@ const uint64_t address = 0x18580901LL;
 RF24Controller rf24Controller(address);
 #endif
 
-#if (CONTROLLER_CARBOT)
-CarbotHandler carbotHandler;
+#if (CONTROLLER_ROBOCAR)
+RoboCarHandler roboCarHandler;
 #endif
 
 PedestalHandler pedestalHandler1(4, 5);
@@ -66,9 +66,9 @@ void setup() {
   debugLog("main", "()", " - ", "Starting");
 #endif
 
-#if (CONTROLLER_CARBOT)
-  carbotHandler.begin();
-  eventTrigger.set(&carbotHandler);
+#if (CONTROLLER_ROBOCAR)
+  roboCarHandler.begin();
+  eventTrigger.set(&roboCarHandler);
 #endif
 
   pedestalGroup.begin();
@@ -81,8 +81,8 @@ void setup() {
 
 #if (CONTROLLER == CONTROLLER_RF24)
   hangingDetector.begin([] (void ()) {
-#if (CONTROLLER_CARBOT)
-    carbotHandler.stop();
+#if (CONTROLLER_ROBOCAR)
+    roboCarHandler.stop();
 #endif
   }, 100);
 #endif
