@@ -54,6 +54,10 @@ PedestalGroup pedestalGroup(pedestalHandlers);
 
 EventTrigger eventTrigger;
 
+#if (CONTROLLER == CONTROLLER_RF24)
+HangingDetector hangingDetector;
+#endif
+
 void setup() {
   while (!Serial) delay(100); // Wait for the serial connection to be establised.
   Serial.begin(57600);
@@ -76,7 +80,16 @@ void setup() {
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
+  hangingDetector.begin([] (void ()) {
+#if (CONTROLLER_CARBOT)
+    carbotHandler.stop();
+#endif
+  }, 100);
+#endif
+
+#if (CONTROLLER == CONTROLLER_RF24)
   rf24Controller.begin();
+  rf24Controller.set(&hangingDetector);
   rf24Controller.set(&eventTrigger);
 #endif
 
@@ -107,11 +120,7 @@ void setup() {
 
 #if (CONTROLLER_IR)
   irController.begin();
-
-  irController.setOnDPadUpButtonPressed(processDPadUpButtonPressedEvent);
-  irController.setOnDPadRightButtonPressed(processDPadRightButtonPressedEvent);
-  irController.setOnDPadDownButtonPressed(processDPadDownButtonPressedEvent);
-  irController.setOnDPadLeftButtonPressed(processDPadLeftButtonPressedEvent);
+  irController.set(&eventTrigger);
 #endif
 
 #if __LOADING_LOG_ENABLED__
@@ -125,13 +134,13 @@ void loop() {
   eventTrigger.check();
 
 #if (CONTROLLER == CONTROLLER_PS2)
-  getDelayAmount(ps2Controller.loop());
+  ps2Controller.loop();
 #endif
 #if (CONTROLLER == CONTROLLER_RF24)
-  getDelayAmount(rf24Controller.loop());
+  rf24Controller.loop();
 #endif
 #if (CONTROLLER_IR)
-  getDelayAmount(irController.loop());
+  irController.loop();
 #endif
   uint32_t exectime = millis() - begin;
   // Serial.print("EXECTIME"), Serial.print(": "), Serial.print(exectime), Serial.println();

@@ -3,12 +3,14 @@
 
 #include "Commons.h"
 #include "IR_Mapping_Code.h"
+#include "Event_Trigger.h"
 
 class IRController {
   public:
     IRController(IRCodeMapper* irCodeMapper=NULL);
     void begin();
     void setCodeMapper(IRCodeMapper* irCodeMapper);
+    void set(EventTrigger* eventTrigger);
     void setOnOkButtonPressed(void (*function)());
     void setOnDPadUpButtonPressed(void (*function)());
     void setOnDPadRightButtonPressed(void (*function)());
@@ -23,7 +25,8 @@ class IRController {
     uint32_t processButtonPress(uint32_t buttons);
   private:
     bool _debugEnabled;
-    IRCodeMapper* _irCodeMapper;
+    IRCodeMapper* _irCodeMapper = NULL;
+    EventTrigger* _eventTrigger = NULL;
     void (*_onOkButtonPressed)();
     void (*_onDPadUpButtonPressed)();
     void (*_onDPadRightButtonPressed)();

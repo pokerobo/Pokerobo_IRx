@@ -6,34 +6,34 @@
 #define RECV_PIN 2
 #endif
 
-#define BIT_UP_BUTTON       1UL << 0
-#define BIT_RIGHT_BUTTON    1UL << 1
-#define BIT_DOWN_BUTTON     1UL << 2
-#define BIT_LEFT_BUTTON     1UL << 3
-#define BIT_OK_BUTTON       1UL << 4
-#define BIT_ASTERISK_BUTTON 1UL << 5
-#define BIT_SHARP_BUTTON    1UL << 6
-#define BIT_DIGIT0_BUTTON   1UL << 7
-#define BIT_DIGIT1_BUTTON   1UL << 8
-#define BIT_DIGIT2_BUTTON   1UL << 9
-#define BIT_DIGIT3_BUTTON   1UL << 10
-#define BIT_DIGIT4_BUTTON   1UL << 11
-#define BIT_DIGIT5_BUTTON   1UL << 12
-#define BIT_DIGIT6_BUTTON   1UL << 13
-#define BIT_DIGIT7_BUTTON   1UL << 14
-#define BIT_DIGIT8_BUTTON   1UL << 15
-#define BIT_DIGIT9_BUTTON   1UL << 16
+#define IR_MASK_UP_BUTTON       1UL << 0
+#define IR_MASK_RIGHT_BUTTON    1UL << 1
+#define IR_MASK_DOWN_BUTTON     1UL << 2
+#define IR_MASK_LEFT_BUTTON     1UL << 3
+#define IR_MASK_OK_BUTTON       1UL << 4
+#define IR_MASK_ASTERISK_BUTTON 1UL << 5
+#define IR_MASK_SHARP_BUTTON    1UL << 6
+#define IR_MASK_DIGIT0_BUTTON   1UL << 7
+#define IR_MASK_DIGIT1_BUTTON   1UL << 8
+#define IR_MASK_DIGIT2_BUTTON   1UL << 9
+#define IR_MASK_DIGIT3_BUTTON   1UL << 10
+#define IR_MASK_DIGIT4_BUTTON   1UL << 11
+#define IR_MASK_DIGIT5_BUTTON   1UL << 12
+#define IR_MASK_DIGIT6_BUTTON   1UL << 13
+#define IR_MASK_DIGIT7_BUTTON   1UL << 14
+#define IR_MASK_DIGIT8_BUTTON   1UL << 15
+#define IR_MASK_DIGIT9_BUTTON   1UL << 16
 
-#define BIT_DIGITS_BUTTON BIT_DIGIT0_BUTTON |\
-                          BIT_DIGIT1_BUTTON |\
-                          BIT_DIGIT2_BUTTON |\
-                          BIT_DIGIT3_BUTTON |\
-                          BIT_DIGIT4_BUTTON |\
-                          BIT_DIGIT5_BUTTON |\
-                          BIT_DIGIT6_BUTTON |\
-                          BIT_DIGIT7_BUTTON |\
-                          BIT_DIGIT8_BUTTON |\
-                          BIT_DIGIT9_BUTTON
+#define IR_MASK_DIGITS_BUTTON IR_MASK_DIGIT0_BUTTON |\
+                          IR_MASK_DIGIT1_BUTTON |\
+                          IR_MASK_DIGIT2_BUTTON |\
+                          IR_MASK_DIGIT3_BUTTON |\
+                          IR_MASK_DIGIT4_BUTTON |\
+                          IR_MASK_DIGIT5_BUTTON |\
+                          IR_MASK_DIGIT6_BUTTON |\
+                          IR_MASK_DIGIT7_BUTTON |\
+                          IR_MASK_DIGIT8_BUTTON |\
+                          IR_MASK_DIGIT9_BUTTON
 
 uint32_t detectButtonPress(IRData, IRCodeMapper*);
 
@@ -72,87 +72,115 @@ void IRController::setCodeMapper(IRCodeMapper* irCodeMapper) {
   _irCodeMapper = irCodeMapper;
 }
 
+void IRController::set(EventTrigger* eventTrigger) {
+  _eventTrigger = eventTrigger;
+};
+
 uint32_t IRController::processButtonPress(uint32_t pressed) {
   uint32_t checked = 0;
 
-  if(pressed & BIT_OK_BUTTON && _onOkButtonPressed) {
+  if(pressed & IR_MASK_OK_BUTTON && _onOkButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("on", "Ok", "ButtonPressed", "()", " is called");
     }
 #endif
     _onOkButtonPressed();
-    checked |= BIT_OK_BUTTON;
+    checked |= IR_MASK_OK_BUTTON;
   }
 
-  if(pressed & BIT_UP_BUTTON && _onDPadUpButtonPressed) {
+  if(pressed & IR_MASK_UP_BUTTON) {
+    if (_eventTrigger || _onDPadUpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (_debugEnabled) {
-      debugLog("on", "DPad", "Up", "ButtonPressed", "()", " is called");
-    }
+      if (_debugEnabled) {
+        debugLog("on", "DPad", "Up", "ButtonPressed", "()", " is called");
+      }
 #endif
-    _onDPadUpButtonPressed();
-    checked |= BIT_UP_BUTTON;
+      if (_onDPadUpButtonPressed) {
+        _onDPadUpButtonPressed();
+      } else {
+        _eventTrigger->processDPadUpButtonPressedEvent();
+      }
+      checked |= IR_MASK_UP_BUTTON;
+    }
   }
 
-  if(pressed & BIT_RIGHT_BUTTON && _onDPadRightButtonPressed) {
+  if(pressed & IR_MASK_RIGHT_BUTTON) {
+    if (_eventTrigger || _onDPadRightButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (_debugEnabled) {
-      debugLog("on", "DPad", "Right", "ButtonPressed", "()", " is called");
-    }
+      if (_debugEnabled) {
+        debugLog("on", "DPad", "Right", "ButtonPressed", "()", " is called");
+      }
 #endif
-    _onDPadRightButtonPressed();
-    checked |= BIT_RIGHT_BUTTON;
+      if (_onDPadRightButtonPressed) {
+        _onDPadRightButtonPressed();
+      } else {
+        _eventTrigger->processDPadRightButtonPressedEvent();
+      }
+      checked |= IR_MASK_RIGHT_BUTTON;
+    }
   }
 
-  if(pressed & BIT_DOWN_BUTTON && _onDPadDownButtonPressed) {
+  if(pressed & IR_MASK_DOWN_BUTTON) {
+    if (_eventTrigger || _onDPadDownButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (_debugEnabled) {
-      debugLog("on", "DPad", "Down", "ButtonPressed", "()", " is called");
-    }
+      if (_debugEnabled) {
+        debugLog("on", "DPad", "Down", "ButtonPressed", "()", " is called");
+      }
 #endif
-    _onDPadDownButtonPressed();
-    checked |= BIT_DOWN_BUTTON;
+      if (_onDPadDownButtonPressed) {
+        _onDPadDownButtonPressed();
+      } else {
+        _eventTrigger->processDPadDownButtonPressedEvent();
+      }
+      checked |= IR_MASK_DOWN_BUTTON;
+    }
   }
 
-  if(pressed & BIT_LEFT_BUTTON && _onDPadLeftButtonPressed) {
+  if(pressed & IR_MASK_LEFT_BUTTON) {
+    if (_eventTrigger || _onDPadLeftButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
-    if (_debugEnabled) {
-      debugLog("on", "DPad", "Left", "ButtonPressed", "()", " is called");
-    }
+      if (_debugEnabled) {
+        debugLog("on", "DPad", "Left", "ButtonPressed", "()", " is called");
+      }
 #endif
-    _onDPadLeftButtonPressed();
-    checked |= BIT_LEFT_BUTTON;
+      if (_onDPadLeftButtonPressed) {
+        _onDPadLeftButtonPressed();
+      } else {
+        _eventTrigger->processDPadLeftButtonPressedEvent();
+      }
+      checked |= IR_MASK_LEFT_BUTTON;
+    }
   }
 
-  if(pressed & BIT_ASTERISK_BUTTON && _onAsteriskButtonPressed) {
+  if(pressed & IR_MASK_ASTERISK_BUTTON && _onAsteriskButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("on", "Asterisk", "ButtonPressed", "()", " is called");
     }
 #endif
     _onAsteriskButtonPressed();
-    checked |= BIT_ASTERISK_BUTTON;
+    checked |= IR_MASK_ASTERISK_BUTTON;
   }
 
-  if(pressed & BIT_SHARP_BUTTON && _onSharpButtonPressed) {
+  if(pressed & IR_MASK_SHARP_BUTTON && _onSharpButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("on", "Sharp", "ButtonPressed", "()", " is called");
     }
 #endif
     _onSharpButtonPressed();
-    checked |= BIT_SHARP_BUTTON;
+    checked |= IR_MASK_SHARP_BUTTON;
   }
 
-  if(pressed & BIT_DIGITS_BUTTON && _onDigitButtonPressed) {
+  if(pressed & IR_MASK_DIGITS_BUTTON && _onDigitButtonPressed) {
 #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("on", "Digit", "ButtonPressed", "()", " is called");
     }
 #endif
-    _onDigitButtonPressed(pressed & BIT_DIGITS_BUTTON);
-    checked |= (pressed & BIT_DIGITS_BUTTON);
+    _onDigitButtonPressed(pressed & IR_MASK_DIGITS_BUTTON);
+    checked |= (pressed & IR_MASK_DIGITS_BUTTON);
   }
 
   if(pressed && _onAnyButtonPressed) {
