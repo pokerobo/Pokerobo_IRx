@@ -23,11 +23,19 @@ int EventTrigger::next() {
   int result = 0;
   switch(_currentState) {
     case PROGRAM_CARDUINO_STATE_IDLE:
-      _roboCarHandler->turnOn();
+#if (CONTROLLER_ROBOCAR)
+      if (_roboCarHandler != NULL) {
+        _roboCarHandler->turnOn();
+      }
+#endif
       _currentState = PROGRAM_CARDUINO_STATE_CARDUINO;
       break;
     case PROGRAM_CARDUINO_STATE_CARDUINO:
-      _roboCarHandler->turnOff();
+#if (CONTROLLER_ROBOCAR)
+      if (_roboCarHandler != NULL) {
+        _roboCarHandler->turnOff();
+      }
+#endif
       _currentState = PROGRAM_CARDUINO_STATE_PEDESTAL;
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
@@ -38,14 +46,24 @@ int EventTrigger::next() {
   return result;
 }
 
+void EventTrigger::set(PedestalGroup* pedestalGroup) {
+  _pedestalGroup = pedestalGroup;
+}
+
 #if (CONTROLLER_ROBOCAR)
 void EventTrigger::set(RoboCarHandler* roboCarHandler) {
   _roboCarHandler = roboCarHandler;
 }
 #endif
 
-void EventTrigger::set(PedestalGroup* pedestalGroup) {
-  _pedestalGroup = pedestalGroup;
+void EventTrigger::processEvents(JoystickAction* action, MovingCommand* command) {
+  if (_currentState == PROGRAM_CARDUINO_STATE_CARDUINO && command != NULL) {
+#if (CONTROLLER_ROBOCAR)
+    if (_roboCarHandler) {
+      _roboCarHandler->move(command);
+    }
+#endif
+  }
 }
 
 void EventTrigger::processStartButtonPressedEvent() {
@@ -79,7 +97,11 @@ void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
     case PROGRAM_CARDUINO_STATE_IDLE:
       break;
     case PROGRAM_CARDUINO_STATE_CARDUINO:
-      _roboCarHandler->move(nJoyX, nJoyY);
+#if (CONTROLLER_ROBOCAR)
+      if (_roboCarHandler != NULL) {
+        _roboCarHandler->move(nJoyX, nJoyY);
+      }
+#endif
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
       nJoyX = map(nJoyX, -255, 255, PEDESTAL_RANGE_X, -PEDESTAL_RANGE_X);

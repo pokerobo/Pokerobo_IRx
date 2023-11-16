@@ -9,12 +9,12 @@
 #define __RUNNING_LOG_ENABLED__         1
 
 #define __RF24_RUNNING_LOG__            1
-#define __ROBOCAR_RUNNING_LOG__          0
+#define __ROBOCAR_RUNNING_LOG__         0
 #define __PEDESTAL_RUNNING_LOG__        0
 
 #define __PS2_LOGGING_ENABLED__         1
 
-#define CONTROLLER_ROBOCAR               1
+#define CONTROLLER_ROBOCAR              1
 
 #define CONTROLLER_IR                   0
 #define CONTROLLER_IR_DEVICE_PANASONIC  0
@@ -23,6 +23,18 @@
 #define CONTROLLER_PS2                  2
 #define CONTROLLER_RF24                 24
 #define CONTROLLER                      CONTROLLER_RF24
+
+#ifndef int_abs
+#define int_abs(x) ((x)>0?(x):-(x))
+#endif
+
+#ifndef int_min
+#define int_min(a,b) ((a)<(b)?(a):(b))
+#endif
+
+#ifndef int_max
+#define int_max(a,b) ((a)>(b)?(a):(b))
+#endif
 
 class FlagChecker {
   public:

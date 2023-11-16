@@ -13,6 +13,8 @@
 #define DEFAULT_COEFF 5
 
 #include "Commons.h"
+#include "Moving_Resolver.h"
+#include "Moving_Command.h"
 
 class RoboCarHandler {
   public:
@@ -22,6 +24,8 @@ class RoboCarHandler {
     void turnOff();
     void flip();
     void stop();
+    void set(MovingResolver* movingResolver);
+    void move(MovingCommand* packet);
     void move(int x, int y, int coeff=1, bool rotatable=false);
     void moveForward(int speed=DEFAULT_SPEED);
     void turnLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED);
@@ -33,6 +37,7 @@ class RoboCarHandler {
     void rotateRight(int speed=DEFAULT_SPEED);
   private:
     bool _active = false;
+    MovingResolver* _movingResolver = NULL;
 };
 
 #endif

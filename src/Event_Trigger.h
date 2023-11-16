@@ -3,6 +3,9 @@
 
 #include "Commons.h"
 
+#include "Joystick_Action.h"
+#include "Moving_Command.h"
+
 #if (CONTROLLER_ROBOCAR)
 #include "RoboCar_Handler.h"
 #endif
@@ -18,11 +21,12 @@
 class EventTrigger {
   public:
     void begin();
+    int check();
+    void set(PedestalGroup* pedestalGroup);
 #if (CONTROLLER_ROBOCAR)
     void set(RoboCarHandler* roboCarHandler);
 #endif
-    void set(PedestalGroup* pedestalGroup);
-    int check();
+    void processEvents(JoystickAction* action, MovingCommand* command);
     void processStartButtonPressedEvent();
     void processSelectButtonPressedEvent();
     void processAnalogButtonPressedEvent();

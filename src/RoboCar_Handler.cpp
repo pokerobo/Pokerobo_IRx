@@ -30,6 +30,10 @@ int RoboCarHandler::begin() {
 	digitalWrite(IN_4, LOW);
 }
 
+void RoboCarHandler::set(MovingResolver* movingResolver) {
+  _movingResolver = movingResolver;
+}
+
 bool RoboCarHandler::isActive() {
   return _active;
 }
@@ -58,55 +62,47 @@ void RoboCarHandler::flip() {
 }
 
 void RoboCarHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
-  uint8_t in1Val = LOW;
-  uint8_t in2Val = LOW;
-  uint8_t in3Val = LOW;
-  uint8_t in4Val = LOW;
-  int enaVal = 0;
-  int enbVal = 0;
+  if (!_movingResolver) {
+    return;
+  }
 
   if (!_active) {
     x = y = 0;
   }
 
-  if (y > ROBOCAR_DEADZONE_BOUND_Y) {
-    in1Val = in3Val = HIGH;
-    if (x < -ROBOCAR_DEADZONE_BOUND_X) {
-      int r = min(abs(x), abs(y));
-      int dx = r * coeff / 10;
-      enaVal = abs(y) - (r - dx);
-      enbVal = abs(y) - dx;
-    } else if (x >= -ROBOCAR_DEADZONE_BOUND_X && x <= ROBOCAR_DEADZONE_BOUND_X) {
-      enaVal = enbVal = abs(y);
-    } else {
-      int r = min(abs(x), abs(y));
-      int dx = r * coeff / 10;
-      enaVal = abs(y) - dx;
-      enbVal = abs(y) - (r - dx);
-    }
-  } else if (y <= ROBOCAR_DEADZONE_BOUND_Y && y >= -ROBOCAR_DEADZONE_BOUND_Y) {
-    stop();
-  } else {
-    in2Val = in4Val = HIGH;
-    if (x < -ROBOCAR_DEADZONE_BOUND_X) {
-      int r = min(abs(x), abs(y));
-      int dx = r * coeff / 10;
-      enaVal = abs(y) - (r - dx);
-      enbVal = abs(y) - dx;
-    } else if (x >= -ROBOCAR_DEADZONE_BOUND_X && x <= ROBOCAR_DEADZONE_BOUND_X) {
-      enaVal = enbVal = abs(y);
-    } else {
-      int r = min(abs(x), abs(y));
-      int dx = r * coeff / 10;
-      enaVal = abs(y) - dx;
-      enbVal = abs(y) - (r - dx);
-    }
+  MovingCommand packet;
+  _movingResolver->resolve(&packet, x, y, coeff, rotatable);
+  move(&packet);
+}
+
+void RoboCarHandler::move(MovingCommand* packet) {
+  uint8_t in1Val = LOW;
+  uint8_t in2Val = LOW;
+  uint8_t in3Val = LOW;
+  uint8_t in4Val = LOW;
+
+  switch (packet->getLeftDirection()) {
+    case 1:
+      in1Val = HIGH;
+      break;
+    case 2:
+      in2Val = HIGH;
+      break;
   }
 
-  enaVal = max(enaVal, 0);
-  enbVal = max(enbVal, 0);
+  switch (packet->getRightDirection()) {
+    case 1:
+      in3Val = HIGH;
+      break;
+    case 2:
+      in4Val = HIGH;
+      break;
+  }
 
-#if __ROBOCAR_RUNNING_LOG__
+  int enaVal = packet->getLeftSpeed();
+  int enbVal = packet->getRightSpeed();
+
+  #if __ROBOCAR_RUNNING_LOG__
   char num_[7];
   debugLog(" - ", "active", ": ", _active ? "On" : "Off");
   debugLog(" - ", "IN_1", ": ", itoa(in1Val, num_, 10));

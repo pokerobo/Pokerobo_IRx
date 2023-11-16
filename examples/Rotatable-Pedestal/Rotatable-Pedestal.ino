@@ -40,6 +40,7 @@ RF24Controller rf24Controller(address);
 
 #if (CONTROLLER_ROBOCAR)
 RoboCarHandler roboCarHandler;
+MovingResolver movingResolver;
 #endif
 
 PedestalHandler pedestalHandler1(4, 5);
@@ -68,6 +69,7 @@ void setup() {
 
 #if (CONTROLLER_ROBOCAR)
   roboCarHandler.begin();
+  roboCarHandler.set(&movingResolver);
   eventTrigger.set(&roboCarHandler);
 #endif
 
@@ -145,12 +147,4 @@ void loop() {
   uint32_t exectime = millis() - begin;
   // Serial.print("EXECTIME"), Serial.print(": "), Serial.print(exectime), Serial.println();
   delay(max(100 - exectime, 0));
-}
-
-uint32_t getDelayAmount(int status) {
-  if (status >= 1) {
-    return 5;
-  } else {
-    return 10;
-  }
 }
