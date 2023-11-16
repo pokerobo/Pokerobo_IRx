@@ -11,7 +11,9 @@ int EventTrigger::check() {
     case PROGRAM_CARDUINO_STATE_IDLE:
       break;
     case PROGRAM_CARDUINO_STATE_CARDUINO:
-      _pedestalGroup->autoDance();
+      if (_pedestalGroup != NULL) {
+        _pedestalGroup->autoDance();
+      }
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
       break;
@@ -39,7 +41,9 @@ int EventTrigger::next() {
       _currentState = PROGRAM_CARDUINO_STATE_PEDESTAL;
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
-      _pedestalGroup->reset();
+      if (_pedestalGroup != NULL) {
+        _pedestalGroup->reset();
+      }
       _currentState = PROGRAM_CARDUINO_STATE_IDLE;
       break;
   }
@@ -104,9 +108,11 @@ void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
 #endif
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
-      nJoyX = map(nJoyX, -255, 255, PEDESTAL_RANGE_X, -PEDESTAL_RANGE_X);
-      nJoyY = map(nJoyY, -255, 255, PEDESTAL_RANGE_Y, -PEDESTAL_RANGE_Y);
-      _pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
+      if (_pedestalGroup != NULL) {
+        nJoyX = map(nJoyX, -255, 255, PEDESTAL_RANGE_X, -PEDESTAL_RANGE_X);
+        nJoyY = map(nJoyY, -255, 255, PEDESTAL_RANGE_Y, -PEDESTAL_RANGE_Y);
+        _pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
+      }
       break;
   }
 }
