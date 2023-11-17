@@ -65,13 +65,6 @@ int RF24Controller::loop() {
         jX = decodeInteger(&msg[4], 2);
         jY = decodeInteger(&msg[6], 2);
         count = decodeInteger(&msg[8], 4);
-      }
-      if (msg[1] == 'E') {
-        ok = true;
-        buttons = decodeInteger(&msg[2], 2);
-        jX = decodeInteger(&msg[4], 2);
-        jY = decodeInteger(&msg[6], 2);
-        count = decodeInteger(&msg[8], 4);
         directionFlags = msg[12];
         leftDirection = directionFlags & 0b0011;
         rightDirection = (directionFlags & 0b1100) >> 2;
@@ -79,7 +72,6 @@ int RF24Controller::loop() {
         rightWeight = msg[14];
       }
     }
-
 #else
     char cmdId;
     sscanf(msg, "%c,%d,%d,%d,%d", &cmdId, &buttons, &jX, &jY, &count);
@@ -97,6 +89,13 @@ int RF24Controller::loop() {
 
     if (!ok) {
       return -1;
+    }
+
+    if (_eventTrigger != NULL) {
+      JoystickAction action(buttons, jX, jY, count);
+      MovingCommand command(leftWeight, leftDirection, rightWeight, rightDirection);
+      _eventTrigger->processEvents(&action, &command);
+      return 0xff;
     }
 
     uint16_t pressed = processButtonPress(buttons);
@@ -134,12 +133,8 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
       debugLog("JOY", "_", "START", " is pushed");
     }
 #endif
-    if (_eventTrigger != NULL || _onStartButtonPressed != NULL) {
-      if (_onStartButtonPressed != NULL) {
-        _onStartButtonPressed();
-      } else {
-        _eventTrigger->processStartButtonPressedEvent();
-      }
+    if (_onStartButtonPressed != NULL) {
+      _onStartButtonPressed();
       checked |= MASK_START_BUTTON;
     }
   }
@@ -150,12 +145,8 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
       debugLog("JOY", "_", "SELECT", " is pushed");
     }
 #endif
-    if (_eventTrigger != NULL || _onSelectButtonPressed != NULL) {
-      if (_onSelectButtonPressed != NULL) {
-        _onSelectButtonPressed();
-      } else {
-        _eventTrigger->processSelectButtonPressedEvent();
-      }
+    if (_onSelectButtonPressed != NULL) {
+      _onSelectButtonPressed();
       checked |= MASK_SELECT_BUTTON;
     }
   }
@@ -166,12 +157,8 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
       debugLog("JOY", "_", "ANALOG", " is pushed");
     }
 #endif
-    if (_eventTrigger != NULL || _onAnalogButtonPressed != NULL) {
-      if (_onAnalogButtonPressed != NULL) {
-        _onAnalogButtonPressed();
-      } else {
-        _eventTrigger->processAnalogButtonPressedEvent();
-      }
+    if (_onAnalogButtonPressed != NULL) {
+      _onAnalogButtonPressed();
       checked |= MASK_ANALOG_BUTTON;
     }
   }
@@ -182,12 +169,8 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
       debugLog("JOY", "_", "PAD", "_", "UP", " is pushed");
     }
 #endif
-    if (_eventTrigger != NULL || _onDPadUpButtonPressed != NULL) {
-      if (_onDPadUpButtonPressed != NULL) {
-        _onDPadUpButtonPressed();
-      } else {
-        _eventTrigger->processDPadUpButtonPressedEvent();
-      }
+    if (_onDPadUpButtonPressed != NULL) {
+      _onDPadUpButtonPressed();
       checked |= MASK_UP_BUTTON;
     }
   }
@@ -198,12 +181,8 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
       debugLog("JOY", "_", "PAD", "_", "RIGHT", " is pushed");
     }
 #endif
-    if (_eventTrigger != NULL || _onDPadRightButtonPressed != NULL) {
-      if (_onDPadRightButtonPressed != NULL) {
-        _onDPadRightButtonPressed();
-      } else {
-        _eventTrigger->processDPadRightButtonPressedEvent();
-      }
+    if (_onDPadRightButtonPressed != NULL) {
+      _onDPadRightButtonPressed();
       checked |= MASK_RIGHT_BUTTON;
     }
   }
@@ -214,12 +193,8 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
       debugLog("JOY", "_", "PAD", "_", "DOWN", " is pushed");
     }
 #endif
-    if (_eventTrigger != NULL || _onDPadDownButtonPressed != NULL) {
-      if (_onDPadDownButtonPressed != NULL) {
-        _onDPadDownButtonPressed();
-      } else {
-        _eventTrigger->processDPadDownButtonPressedEvent();
-      }
+    if (_onDPadDownButtonPressed != NULL) {
+      _onDPadDownButtonPressed();
       checked |= MASK_DOWN_BUTTON;
     }
   }
@@ -230,12 +205,8 @@ uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
       debugLog("JOY", "_", "PAD", "_", "LEFT", " is pushed");
     }
 #endif
-    if (_eventTrigger != NULL || _onDPadLeftButtonPressed != NULL) {
-      if (_onDPadLeftButtonPressed != NULL) {
-        _onDPadLeftButtonPressed();
-      } else {
-        _eventTrigger->processDPadLeftButtonPressedEvent();
-      }
+    if (_onDPadLeftButtonPressed != NULL) {
+      _onDPadLeftButtonPressed();
       checked |= MASK_LEFT_BUTTON;
     }
   }

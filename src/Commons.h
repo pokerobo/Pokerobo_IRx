@@ -9,11 +9,13 @@
 #define __RUNNING_LOG_ENABLED__         1
 
 #define __RF24_RUNNING_LOG__            1
+#define __DISPATCHER_RUNNING_LOG__      0
 #define __ROBOCAR_RUNNING_LOG__         0
 #define __PEDESTAL_RUNNING_LOG__        0
 
 #define __PS2_LOGGING_ENABLED__         1
 
+#define CONTROLLER_PEDESTAL             1
 #define CONTROLLER_ROBOCAR              1
 
 #define CONTROLLER_IR                   0
