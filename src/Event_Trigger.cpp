@@ -113,6 +113,15 @@ int EventTrigger::next() {
 //-------------------------------------------------------------------------------------------------
 
 void EventTrigger::processEvents(JoystickAction* action, MovingCommand* command) {
+  if (action == NULL) {
+    return;
+  }
+
+  uint16_t pressed = processButtonPress(action->getPressingFlags());
+  if (pressed) {
+    return pressed;
+  }
+
   if (_currentState == PROGRAM_CARDUINO_STATE_CARDUINO && command != NULL) {
 #if (CONTROLLER_ROBOCAR)
     if (_roboCarHandler) {
@@ -121,17 +130,7 @@ void EventTrigger::processEvents(JoystickAction* action, MovingCommand* command)
 #endif
   }
 
-  uint16_t buttons = action->getPressingFlags();
-
-  uint16_t pressed = processButtonPress(buttons);
-  if (pressed) {
-    return pressed;
-  }
-
-  uint16_t jX = action->getX();
-  uint16_t jY = action->getY();
-
-  return processJoystickChange(jX, jY, 'L');
+  return processJoystickChange(action->getX(), action->getY(), 'L');
 }
 
 bool EventTrigger::checkButtonPress(uint16_t pressed, uint16_t mask) {

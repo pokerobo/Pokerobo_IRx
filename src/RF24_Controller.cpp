@@ -57,7 +57,6 @@ int RF24Controller::loop() {
     uint8_t leftWeight;
     uint8_t rightWeight;
 
-#if __RF24_BINARY_ENCODING__
     if (msg[0] == 'J') {
       if (msg[1] == 'S') {
         ok = true;
@@ -72,13 +71,6 @@ int RF24Controller::loop() {
         rightWeight = msg[14];
       }
     }
-#else
-    char cmdId;
-    sscanf(msg, "%c,%d,%d,%d,%d", &cmdId, &buttons, &jX, &jY, &count);
-    if (cmdId == 'J') {
-      ok = true;
-    }
-#endif
 
 #if __RF24_RUNNING_LOG__
     char c_[11], b_[7], x_[7], y_[7];
