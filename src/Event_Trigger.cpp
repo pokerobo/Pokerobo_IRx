@@ -67,11 +67,11 @@ int EventTrigger::check() {
     case PROGRAM_CARDUINO_STATE_IDLE:
       break;
     case PROGRAM_CARDUINO_STATE_CARDUINO:
-#if (CONTROLLER_PEDESTAL)
+      #if (CONTROLLER_PEDESTAL)
       if (_pedestalGroup != NULL) {
         _pedestalGroup->autoDance();
       }
-#endif
+      #endif
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
       break;

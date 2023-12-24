@@ -68,13 +68,13 @@ class EventTrigger {
     int processJoystickChange(int, int, char);
   private:
     bool _debugEnabled = true;
-    uint8_t _currentState = PROGRAM_CARDUINO_STATE_IDLE;
-#if (CONTROLLER_PEDESTAL)
+    uint8_t _currentState = PROGRAM_CARDUINO_STATE_CARDUINO;
+    #if (CONTROLLER_PEDESTAL)
     PedestalGroup* _pedestalGroup = NULL;
-#endif
-#if (CONTROLLER_ROBOCAR)
+    #endif
+    #if (CONTROLLER_ROBOCAR)
     RoboCarHandler* _roboCarHandler = NULL;
-#endif
+    #endif
     void (*_onStartButtonPressed)();
     void (*_onSelectButtonPressed)();
     void (*_onAnalogButtonPressed)();
