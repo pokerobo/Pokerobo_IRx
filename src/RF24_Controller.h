@@ -44,6 +44,7 @@ class RF24Controller {
   public:
     RF24Controller(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
     void begin();
+    int read(JoystickAction* action, MovingCommand* command);
     int loop();
     void set(HangingDetector* hangingDetector);
     void set(EventTrigger* eventTrigger);

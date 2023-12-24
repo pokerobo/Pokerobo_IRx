@@ -41,63 +41,77 @@ bool RF24Controller::available() {
   return ok;
 }
 
-int RF24Controller::loop() {
-  if (available()) {
-    uint8_t msg[__RF24_MESSAGE_LENGTH__] = {0};
-    radio.read(&msg, sizeof(msg));
+int RF24Controller::read(JoystickAction* action, MovingCommand* command) {
+  if (!available()) {
+    return 0;
+  }
+  uint8_t msg[__RF24_MESSAGE_LENGTH__] = {0};
+  radio.read(&msg, sizeof(msg));
 
-    bool ok = false;
-    uint16_t buttons;
-    uint16_t jX, jY;
-    uint32_t count;
+  bool ok = false;
+  uint16_t buttons;
+  uint16_t jX, jY;
+  uint32_t count;
 
-    uint8_t directionFlags;
-    uint8_t leftDirection;
-    uint8_t rightDirection;
-    uint8_t leftWeight;
-    uint8_t rightWeight;
+  uint8_t directionFlags;
+  uint8_t leftDirection;
+  uint8_t rightDirection;
+  uint8_t leftWeight;
+  uint8_t rightWeight;
 
-    if (msg[0] == 'J') {
-      if (msg[1] == 'S') {
-        ok = true;
-        buttons = decodeInteger(&msg[2], 2);
-        jX = decodeInteger(&msg[4], 2);
-        jY = decodeInteger(&msg[6], 2);
-        count = decodeInteger(&msg[8], 4);
-        directionFlags = msg[12];
-        leftDirection = directionFlags & 0b0011;
-        rightDirection = (directionFlags & 0b1100) >> 2;
-        leftWeight = msg[13];
-        rightWeight = msg[14];
-      }
+  if (msg[0] == 'J') {
+    if (msg[1] == 'S') {
+      ok = true;
+      buttons = decodeInteger(&msg[2], 2);
+      jX = decodeInteger(&msg[4], 2);
+      jY = decodeInteger(&msg[6], 2);
+      count = decodeInteger(&msg[8], 4);
+      directionFlags = msg[12];
+      leftDirection = directionFlags & 0b0011;
+      rightDirection = (directionFlags & 0b1100) >> 2;
+      leftWeight = msg[13];
+      rightWeight = msg[14];
     }
+  }
 
 #if __RF24_RUNNING_LOG__
-    char c_[11], b_[7], x_[7], y_[7];
-    debugLog("#", ltoa(count, c_, 10), " - ", "Buttons", ": ", itoa(buttons, b_, 10),
-        "; ", "X", ": ", itoa(jX, x_, 10),
-        "; ", "Y", ": ", itoa(jY, y_, 10));
+  char c_[11], b_[7], x_[7], y_[7];
+  debugLog("#", ltoa(count, c_, 10), " - ", "Buttons", ": ", itoa(buttons, b_, 10),
+      "; ", "X", ": ", itoa(jX, x_, 10),
+      "; ", "Y", ": ", itoa(jY, y_, 10));
 #endif
 
-    if (!ok) {
-      return -1;
-    }
+  if (!ok) {
+    return -1;
+  }
 
+  action->update(buttons, jX, jY, count);
+  command->update(leftWeight, leftDirection, rightWeight, rightDirection);
+
+  return 1;
+}
+
+int RF24Controller::loop() {
+  JoystickAction action;
+  MovingCommand command;
+
+  int ok = read(&action, &command);
+
+  if (ok == 1) {
     if (_eventTrigger != NULL) {
-      JoystickAction action(buttons, jX, jY, count);
-      MovingCommand command(leftWeight, leftDirection, rightWeight, rightDirection);
       _eventTrigger->processEvents(&action, &command);
       return 0xff;
     }
 
-    uint16_t pressed = processButtonPress(buttons);
+    uint16_t pressed = processButtonPress(action.getPressingFlags());
     if (pressed) {
       return pressed;
     }
 
-    return processJoystickChange(jX, jY, 'L');
+    return processJoystickChange(action.getX(), action.getY(), 'L');
   }
-  return 0;
+
+  return ok;
 }
 
 bool RF24Controller::checkButtonPress(uint16_t pressed, uint16_t mask) {
