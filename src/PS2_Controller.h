@@ -28,15 +28,14 @@
 #define GAMEPAD_DATA        12
 #define GAMEPAD_CLOCK       13
 
-class PS2Controller {
+class PS2Controller_ {
   public:
-    PS2Controller();
+    PS2Controller_();
     void begin();
     int loop();
     bool hasError();
     void showError();
     void reload();
-    void set(EventTrigger* eventTrigger);
     void setOnStartButtonPressed(void (*function)());
     void setOnSelectButtonPressed(void (*function)());
     void setOnDPadUpButtonPressed(void (*function)());
@@ -45,24 +44,14 @@ class PS2Controller {
     void setOnDPadLeftButtonPressed(void (*function)());
     void setOnLeftJoystickChanged(void (*function)(int, int));
     void setOnRightJoystickChanged(void (*function)(int, int));
-    int check();
+    virtual int check();
   protected:
-    bool isJoystickChanged(int, int);
-    int processStartButtonPress();
-    int processSelectButtonPress();
-    int processDPadUpButtonPress();
-    int processDPadRightButtonPress();
-    int processDPadDownButtonPress();
-    int processDPadLeftButtonPress();
-    int processJoystickChange(byte, byte, const char label);
-  private:
     PS2X ps2x;
     bool debugEnabled;
     int errorCode;
     bool errorDisplayed;
     byte ps2Type;
     byte vibrate;
-    EventTrigger* _eventTrigger = NULL;
     void (*_onStartButtonPressed)();
     void (*_onSelectButtonPressed)();
     void (*_onDPadUpButtonPressed)();
@@ -72,6 +61,23 @@ class PS2Controller {
     void (*_onDPadButtonPressed)(uint16_t);
     void (*_onLeftJoystickChanged)(int, int);
     void (*_onRightJoystickChanged)(int, int);
+};
+
+class PS2Controller: PS2Controller_ {
+  public:
+    PS2Controller(): PS2Controller_() {};
+    void set(EventTrigger* eventTrigger);
+    int check();
+  private:
+    EventTrigger* _eventTrigger = NULL;
+    bool isJoystickChanged(int, int);
+    int processStartButtonPress();
+    int processSelectButtonPress();
+    int processDPadUpButtonPress();
+    int processDPadRightButtonPress();
+    int processDPadDownButtonPress();
+    int processDPadLeftButtonPress();
+    int processJoystickChange(byte, byte, const char label);
 };
 
 #endif

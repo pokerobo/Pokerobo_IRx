@@ -1,6 +1,6 @@
 #include "PS2_Controller.h"
 
-PS2Controller::PS2Controller() {
+PS2Controller_::PS2Controller_() {
   debugEnabled = true;
   errorCode = 0;
   errorDisplayed = false;
@@ -8,7 +8,7 @@ PS2Controller::PS2Controller() {
   vibrate = 0;
 }
 
-void PS2Controller::begin() {
+void PS2Controller_::begin() {
   //
   // setup pins and settings: 
   // GamePad(clock, command, attention, data, Pressures?, Rumble?) check for error
@@ -63,58 +63,54 @@ void PS2Controller::begin() {
   }
 };
 
-bool PS2Controller::hasError() {
+bool PS2Controller_::hasError() {
   return errorCode != 0;
 };
 
-void PS2Controller::showError() {
+void PS2Controller_::showError() {
   if (!errorDisplayed) {
     debugLog("Error, terminated!");
     errorDisplayed = true;
   }
 };
 
-void PS2Controller::reload() {
+void PS2Controller_::reload() {
   begin();
 };
 
-void PS2Controller::set(EventTrigger* eventTrigger) {
-  _eventTrigger = eventTrigger;
-};
-
-void PS2Controller::setOnStartButtonPressed(void (*function)()) {
+void PS2Controller_::setOnStartButtonPressed(void (*function)()) {
   _onStartButtonPressed = function;
 };
 
-void PS2Controller::setOnSelectButtonPressed(void (*function)()) {
+void PS2Controller_::setOnSelectButtonPressed(void (*function)()) {
   _onSelectButtonPressed = function;
 };
 
-void PS2Controller::setOnDPadUpButtonPressed(void (*function)()) {
+void PS2Controller_::setOnDPadUpButtonPressed(void (*function)()) {
   _onDPadUpButtonPressed = function;
 };
 
-void PS2Controller::setOnDPadRightButtonPressed(void (*function)()) {
+void PS2Controller_::setOnDPadRightButtonPressed(void (*function)()) {
   _onDPadRightButtonPressed = function;
 };
 
-void PS2Controller::setOnDPadDownButtonPressed(void (*function)()) {
+void PS2Controller_::setOnDPadDownButtonPressed(void (*function)()) {
   _onDPadDownButtonPressed = function;
 };
 
-void PS2Controller::setOnDPadLeftButtonPressed(void (*function)()) {
+void PS2Controller_::setOnDPadLeftButtonPressed(void (*function)()) {
   _onDPadLeftButtonPressed = function;
 };
 
-void PS2Controller::setOnLeftJoystickChanged(void (*function)(int, int)) {
+void PS2Controller_::setOnLeftJoystickChanged(void (*function)(int, int)) {
   _onLeftJoystickChanged = function;
 };
 
-void PS2Controller::setOnRightJoystickChanged(void (*function)(int, int)) {
+void PS2Controller_::setOnRightJoystickChanged(void (*function)(int, int)) {
   _onRightJoystickChanged = function;
 };
 
-int PS2Controller::loop() {
+int PS2Controller_::loop() {
   if(hasError()) { //skip loop if no controller found
     showError();
     debugLog("Reload ...");
@@ -125,6 +121,12 @@ int PS2Controller::loop() {
     return check();
   }
 }
+
+//-------------------------------------------------------------------------------------------------
+
+void PS2Controller::set(EventTrigger* eventTrigger) {
+  _eventTrigger = eventTrigger;
+};
 
 int PS2Controller::check() {
   ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
@@ -341,3 +343,5 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, const char label)
 
   return -1;
 };
+
+//-------------------------------------------------------------------------------------------------
