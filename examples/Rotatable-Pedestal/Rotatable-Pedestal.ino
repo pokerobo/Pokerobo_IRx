@@ -63,40 +63,40 @@ void setup() {
   while (!Serial) delay(100); // Wait for the serial connection to be establised.
   Serial.begin(57600);
 
-#if __LOADING_LOG_ENABLED__
+  #if __LOADING_LOG_ENABLED__
   debugLog("main", "()", " - ", "Starting");
-#endif
+  #endif
 
-#if (CONTROLLER_ROBOCAR)
+  #if (CONTROLLER_ROBOCAR)
   roboCarHandler.begin();
   roboCarHandler.set(&movingResolver);
   eventTrigger.set(&roboCarHandler);
-#endif
+  #endif
 
   pedestalGroup.begin();
   eventTrigger.set(&pedestalGroup);
 
-#if (CONTROLLER == CONTROLLER_PS2)
+  #if (CONTROLLER == CONTROLLER_PS2)
   ps2Controller.begin();
   ps2Controller.set(&eventTrigger);
-#endif
+  #endif
 
-#if (CONTROLLER == CONTROLLER_RF24)
+  #if (CONTROLLER == CONTROLLER_RF24)
   hangingDetector.begin([] (void ()) {
-#if (CONTROLLER_ROBOCAR)
+    #if (CONTROLLER_ROBOCAR)
     roboCarHandler.stop();
-#endif
+    #endif
   }, 100);
-#endif
+  #endif
 
-#if (CONTROLLER == CONTROLLER_RF24)
+  #if (CONTROLLER == CONTROLLER_RF24)
   rf24Controller.begin();
   rf24Controller.set(&hangingDetector);
   rf24Controller.set(&eventTrigger);
-#endif
+  #endif
 
-#if (CONTROLLER_IR)
-#if (CONTROLLER_IR_DEVICE_PANASONIC)
+  #if (CONTROLLER_IR)
+  #if (CONTROLLER_IR_DEVICE_PANASONIC)
   uint16_t mappingPanasonic[] = { // PANASONIC - 11
     0x34,  // BIT_UP_BUTTON
     0x20,  // BIT_RIGHT_BUTTON
@@ -117,33 +117,36 @@ void setup() {
     0x18,  // BIT_DIGIT9_BUTTON
   };
   irCodeMapper.addMapping(11u, mappingPanasonic, 17u);
-#endif // CONTROLLER_IR_DEVICE_PANASONIC
-#endif // CONTROLLER_IR
+  #endif // CONTROLLER_IR_DEVICE_PANASONIC
+  #endif // CONTROLLER_IR
 
-#if (CONTROLLER_IR)
+  #if (CONTROLLER_IR)
   irController.begin();
   irController.set(&eventTrigger);
-#endif
+  #endif
 
-#if __LOADING_LOG_ENABLED__
+  #if __LOADING_LOG_ENABLED__
   debugLog("main", "()", " - ", "Done!");
-#endif
+  #endif
 }
 
 void loop() {
   uint32_t begin = millis();
 
-  eventTrigger.check();
+  eventTrigger.loop();
 
-#if (CONTROLLER == CONTROLLER_PS2)
+  #if (CONTROLLER == CONTROLLER_PS2)
   ps2Controller.loop();
-#endif
-#if (CONTROLLER == CONTROLLER_RF24)
+  #endif
+
+  #if (CONTROLLER == CONTROLLER_RF24)
   rf24Controller.loop();
-#endif
-#if (CONTROLLER_IR)
+  #endif
+
+  #if (CONTROLLER_IR)
   irController.loop();
-#endif
+  #endif
+
   uint32_t exectime = millis() - begin;
   // Serial.print("EXECTIME"), Serial.print(": "), Serial.print(exectime), Serial.println();
   delay(max(100 - exectime, 0));

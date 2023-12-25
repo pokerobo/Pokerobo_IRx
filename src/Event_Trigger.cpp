@@ -1,18 +1,9 @@
 #include "Event_Trigger.h"
 
-#define MASK_UP_BUTTON     1U << 0
-#define MASK_RIGHT_BUTTON  1U << 1
-#define MASK_DOWN_BUTTON   1U << 2
-#define MASK_LEFT_BUTTON   1U << 3
-#define MASK_START_BUTTON  1U << 4
-#define MASK_SELECT_BUTTON 1U << 5
-#define MASK_ANALOG_BUTTON 1U << 6
-
 #define PEDESTAL_RANGE_X          6
 #define PEDESTAL_RANGE_Y          6
 
-void EventTrigger::begin() {
-}
+//-------------------------------------------------------------------------------------------------
 
 #if (CONTROLLER_PEDESTAL)
 void EventTrigger::set(PedestalGroup* pedestalGroup) {
@@ -62,7 +53,16 @@ void EventTrigger::setOnRightJoystickChanged(void (*function)(int, int)) {
   _onRightJoystickChanged = function;
 };
 
-int EventTrigger::check() {
+//-------------------------------------------------------------------------------------------------
+
+void EventTrigger::begin() {
+}
+
+int EventTrigger::loop() {
+  return autoplay();
+}
+
+int EventTrigger::autoplay() {
   switch(_currentState) {
     case PROGRAM_CARDUINO_STATE_IDLE:
       break;
@@ -83,27 +83,27 @@ int EventTrigger::next() {
   int result = 0;
   switch(_currentState) {
     case PROGRAM_CARDUINO_STATE_IDLE:
-#if (CONTROLLER_ROBOCAR)
+      #if (CONTROLLER_ROBOCAR)
       if (_roboCarHandler != NULL) {
         _roboCarHandler->turnOn();
       }
-#endif
+      #endif
       _currentState = PROGRAM_CARDUINO_STATE_CARDUINO;
       break;
     case PROGRAM_CARDUINO_STATE_CARDUINO:
-#if (CONTROLLER_ROBOCAR)
+      #if (CONTROLLER_ROBOCAR)
       if (_roboCarHandler != NULL) {
         _roboCarHandler->turnOff();
       }
-#endif
+      #endif
       _currentState = PROGRAM_CARDUINO_STATE_PEDESTAL;
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
-#if (CONTROLLER_PEDESTAL)
+      #if (CONTROLLER_PEDESTAL)
       if (_pedestalGroup != NULL) {
         _pedestalGroup->reset();
       }
-#endif
+      #endif
       _currentState = PROGRAM_CARDUINO_STATE_IDLE;
       break;
   }
@@ -123,18 +123,18 @@ void EventTrigger::processEvents(JoystickAction* action, MovingCommand* command)
   }
 
   if (_currentState == PROGRAM_CARDUINO_STATE_CARDUINO && command != NULL) {
-#if (CONTROLLER_ROBOCAR)
+    #if (CONTROLLER_ROBOCAR)
     if (_roboCarHandler) {
       _roboCarHandler->move(command);
     }
-#endif
+    #endif
   }
 
   return processJoystickChange(action->getX(), action->getY(), 'L');
 }
 
 bool EventTrigger::checkButtonPress(uint16_t pressed, uint16_t mask) {
-#if CLICKING_FLAGS
+  #if CLICKING_FLAGS
   if (pressed & mask) {
     _clickingTrail |= mask;
   } else {
@@ -144,20 +144,20 @@ bool EventTrigger::checkButtonPress(uint16_t pressed, uint16_t mask) {
     }
   }
   return false;
-#else
+  #else
   return pressed & mask;
-#endif
+  #endif
 }
 
 uint16_t EventTrigger::processButtonPress(uint16_t pressed) {
   uint16_t checked = 0;
 
   if(checkButtonPress(pressed, MASK_START_BUTTON)) {
-#if __DISPATCHER_RUNNING_LOG__
+    #if __DISPATCHER_RUNNING_LOG__
     if (_debugEnabled) {
       debugLog("JOY", "_", "START", " is pushed");
     }
-#endif
+    #endif
     if (_onStartButtonPressed != NULL) {
       _onStartButtonPressed();
     } else {
@@ -167,11 +167,11 @@ uint16_t EventTrigger::processButtonPress(uint16_t pressed) {
   }
 
   if(checkButtonPress(pressed, MASK_SELECT_BUTTON)) {
-#if __DISPATCHER_RUNNING_LOG__
+    #if __DISPATCHER_RUNNING_LOG__
     if (_debugEnabled) {
       debugLog("JOY", "_", "SELECT", " is pushed");
     }
-#endif
+    #endif
     if (_onSelectButtonPressed != NULL) {
       _onSelectButtonPressed();
     } else {
@@ -181,11 +181,11 @@ uint16_t EventTrigger::processButtonPress(uint16_t pressed) {
   }
 
   if(checkButtonPress(pressed, MASK_ANALOG_BUTTON)) {
-#if __DISPATCHER_RUNNING_LOG__
+    #if __DISPATCHER_RUNNING_LOG__
     if (_debugEnabled) {
       debugLog("JOY", "_", "ANALOG", " is pushed");
     }
-#endif
+    #endif
     if (_onAnalogButtonPressed != NULL) {
       _onAnalogButtonPressed();
     } else {
@@ -195,11 +195,11 @@ uint16_t EventTrigger::processButtonPress(uint16_t pressed) {
   }
 
   if(checkButtonPress(pressed, MASK_UP_BUTTON)) {
-#if __DISPATCHER_RUNNING_LOG__
+    #if __DISPATCHER_RUNNING_LOG__
     if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "UP", " is pushed");
     }
-#endif
+    #endif
     if (_onDPadUpButtonPressed != NULL) {
       _onDPadUpButtonPressed();
     } else {
@@ -209,11 +209,11 @@ uint16_t EventTrigger::processButtonPress(uint16_t pressed) {
   }
 
   if(checkButtonPress(pressed, MASK_RIGHT_BUTTON)) {
-#if __DISPATCHER_RUNNING_LOG__
+    #if __DISPATCHER_RUNNING_LOG__
     if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "RIGHT", " is pushed");
     }
-#endif
+    #endif
     if (_onDPadRightButtonPressed != NULL) {
       _onDPadRightButtonPressed();
     } else {
@@ -223,11 +223,11 @@ uint16_t EventTrigger::processButtonPress(uint16_t pressed) {
   }
 
   if(checkButtonPress(pressed, MASK_DOWN_BUTTON)) {
-#if __DISPATCHER_RUNNING_LOG__
+    #if __DISPATCHER_RUNNING_LOG__
     if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "DOWN", " is pushed");
     }
-#endif
+    #endif
     if (_onDPadDownButtonPressed != NULL) {
       _onDPadDownButtonPressed();
     } else {
@@ -237,11 +237,11 @@ uint16_t EventTrigger::processButtonPress(uint16_t pressed) {
   }
 
   if(checkButtonPress(pressed, MASK_LEFT_BUTTON)) {
-#if __DISPATCHER_RUNNING_LOG__
+    #if __DISPATCHER_RUNNING_LOG__
     if (_debugEnabled) {
       debugLog("JOY", "_", "PAD", "_", "LEFT", " is pushed");
     }
-#endif
+    #endif
     if (_onDPadLeftButtonPressed != NULL) {
       _onDPadLeftButtonPressed();
     } else {
@@ -263,13 +263,13 @@ int EventTrigger::processJoystickChange(int nJoyX, int nJoyY, char label) {
   nJoyX = map(nJoyX, 0, 1024, -RF24_JOYSTICK_RANGE_X, RF24_JOYSTICK_RANGE_X);
   nJoyY = map(nJoyY, 0, 1024, -RF24_JOYSTICK_RANGE_Y, RF24_JOYSTICK_RANGE_Y);
 
-#if defined(RF24_JOYSTICK_CHECKING_CHANGE)
+  #if defined(RF24_JOYSTICK_CHECKING_CHANGE)
   if (!isJoystickChanged(nJoyX, nJoyY)) {
     return 0;
   }
-#endif
+  #endif
 
-#if __DISPATCHER_RUNNING_LOG__
+  #if __DISPATCHER_RUNNING_LOG__
   if (_debugEnabled) {
     char l_[2] = { 'L', '\0' };
     debugLog("Event", "Trigger", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
@@ -277,7 +277,7 @@ int EventTrigger::processJoystickChange(int nJoyX, int nJoyY, char label) {
     debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
     debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
   }
-#endif
+  #endif
 
   if (label == 'L') {
     if (_onLeftJoystickChanged) {
@@ -299,12 +299,12 @@ int EventTrigger::processJoystickChange(int nJoyX, int nJoyY, char label) {
     }
   }
 
-#if __DISPATCHER_RUNNING_LOG__
+  #if __DISPATCHER_RUNNING_LOG__
   if (_debugEnabled) {
     char l_[2] = { 'L', '\0' };
     debugLog("Event", "Trigger", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
   }
-#endif
+  #endif
 
   return -1;
 }
@@ -322,35 +322,35 @@ void EventTrigger::processAnalogButtonPressedEvent() {
 }
 
 void EventTrigger::processDPadUpButtonPressedEvent() {
-#if (CONTROLLER_PEDESTAL)
+  #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
     _pedestalGroup->processDPadUpButtonPressedEvent();
   }
-#endif
+  #endif
 }
 
 void EventTrigger::processDPadRightButtonPressedEvent() {
-#if (CONTROLLER_PEDESTAL)
+  #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
     _pedestalGroup->processDPadRightButtonPressedEvent();
   }
-#endif
+  #endif
 }
 
 void EventTrigger::processDPadDownButtonPressedEvent() {
-#if (CONTROLLER_PEDESTAL)
+  #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
     _pedestalGroup->processDPadDownButtonPressedEvent();
   }
-#endif
+  #endif
 }
 
 void EventTrigger::processDPadLeftButtonPressedEvent() {
-#if (CONTROLLER_PEDESTAL)
+  #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
     _pedestalGroup->processDPadLeftButtonPressedEvent();
   }
-#endif
+  #endif
 }
 
 void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
@@ -358,20 +358,20 @@ void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
     case PROGRAM_CARDUINO_STATE_IDLE:
       break;
     case PROGRAM_CARDUINO_STATE_CARDUINO:
-#if (CONTROLLER_ROBOCAR)
+      #if (CONTROLLER_ROBOCAR)
       if (_roboCarHandler != NULL) {
         _roboCarHandler->move(nJoyX, nJoyY);
       }
-#endif
+      #endif
       break;
     case PROGRAM_CARDUINO_STATE_PEDESTAL:
-#if (CONTROLLER_PEDESTAL)
+      #if (CONTROLLER_PEDESTAL)
       if (_pedestalGroup != NULL) {
         nJoyX = map(nJoyX, -255, 255, PEDESTAL_RANGE_X, -PEDESTAL_RANGE_X);
         nJoyY = map(nJoyY, -255, 255, PEDESTAL_RANGE_Y, -PEDESTAL_RANGE_Y);
         _pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
       }
-#endif
+      #endif
       break;
   }
 }

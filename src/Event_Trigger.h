@@ -18,6 +18,14 @@
 #define PROGRAM_CARDUINO_STATE_CARDUINO     2
 #define PROGRAM_CARDUINO_STATE_PEDESTAL     4
 
+#define MASK_UP_BUTTON     1U << 0
+#define MASK_RIGHT_BUTTON  1U << 1
+#define MASK_DOWN_BUTTON   1U << 2
+#define MASK_LEFT_BUTTON   1U << 3
+#define MASK_START_BUTTON  1U << 4
+#define MASK_SELECT_BUTTON 1U << 5
+#define MASK_ANALOG_BUTTON 1U << 6
+
 #define PROGRAM_MENU_TOGGLE_BUTTON          MASK_ANALOG_BUTTON
 
 #define RF24_JOYSTICK_DEADZONE_X  32
@@ -31,13 +39,15 @@
 class EventTrigger {
   public:
     void begin();
-    int check();
-#if (CONTROLLER_PEDESTAL)
+    int loop();
+    int autoplay();
+    int next();
+    #if (CONTROLLER_PEDESTAL)
     void set(PedestalGroup* pedestalGroup);
-#endif
-#if (CONTROLLER_ROBOCAR)
+    #endif
+    #if (CONTROLLER_ROBOCAR)
     void set(RoboCarHandler* roboCarHandler);
-#endif
+    #endif
     void setOnStartButtonPressed(void (*function)());
     void setOnSelectButtonPressed(void (*function)());
     void setOnAnalogButtonPressed(void (*function)());
@@ -57,12 +67,11 @@ class EventTrigger {
     void processDPadLeftButtonPressedEvent();
     void processLeftJoystickChangeEvent(int nJoyX, int nJoyY);
     void processRightJoystickChangeEvent(int nJoyX, int nJoyY);
-  protected:
-    int next();
-#if CLICKING_FLAGS
-    uint16_t _clickingTrail;
-#endif
     bool checkButtonPress(uint16_t pressed, uint16_t mask);
+  protected:
+    #if CLICKING_FLAGS
+    uint16_t _clickingTrail;
+    #endif
     uint16_t processButtonPress(uint16_t buttons);
     bool isJoystickChanged(int, int);
     int processJoystickChange(int, int, char);
