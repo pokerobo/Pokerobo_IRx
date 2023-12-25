@@ -2,7 +2,7 @@
 #define __RF24_CONTROLLER_H__
 
 #include "Commons.h"
-#include "Event_Trigger.h"
+#include "Event_Processor.h"
 
 #ifndef __RF24_LOADING_LOG__
 #define __RF24_LOADING_LOG__  __LOADING_LOG_ENABLED__
@@ -47,7 +47,7 @@ class RF24Controller {
     int read(JoystickAction* action, MovingCommand* command);
     int loop();
     void set(HangingDetector* hangingDetector);
-    void set(EventTrigger* eventTrigger);
+    void set(EventProcessor* eventProcessor);
     void setOnStartButtonPressed(void (*function)());
     void setOnSelectButtonPressed(void (*function)());
     void setOnAnalogButtonPressed(void (*function)());
@@ -68,7 +68,7 @@ class RF24Controller {
     bool _debugEnabled;
     uint16_t _clickingTrail;
     HangingDetector* _hangingDetector = NULL;
-    EventTrigger* _eventTrigger = NULL;
+    EventProcessor* _eventProcessor = NULL;
     void (*_onStartButtonPressed)();
     void (*_onSelectButtonPressed)();
     void (*_onAnalogButtonPressed)();

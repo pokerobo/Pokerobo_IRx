@@ -3,6 +3,8 @@
 
 #include "Commons.h"
 
+#include "Event_Processor.h"
+
 #include "Joystick_Action.h"
 #include "Moving_Command.h"
 
@@ -36,7 +38,7 @@
 
 #define CLICKING_FLAGS            0
 
-class EventTrigger {
+class EventTrigger: public EventProcessor {
   public:
     void begin();
     int loop();

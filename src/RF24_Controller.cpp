@@ -98,8 +98,8 @@ int RF24Controller::loop() {
   int ok = read(&action, &command);
 
   if (ok == 1) {
-    if (_eventTrigger != NULL) {
-      _eventTrigger->processEvents(&action, &command);
+    if (_eventProcessor != NULL) {
+      _eventProcessor->processEvents(&action, &command);
       return 0xff;
     }
 
@@ -250,18 +250,12 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, char label) {
     if (_onLeftJoystickChanged) {
       _onLeftJoystickChanged(nJoyX, nJoyY);
       return 1;
-    } else if (_eventTrigger != NULL) {
-      _eventTrigger->processLeftJoystickChangeEvent(nJoyX, nJoyY);
-      return 1;
     }
   }
 
   if (label == 'R') {
     if (_onRightJoystickChanged) {
       _onRightJoystickChanged(nJoyX, nJoyY);
-      return 1;
-    } else if (_eventTrigger != NULL) {
-      _eventTrigger->processRightJoystickChangeEvent(nJoyX, nJoyY);
       return 1;
     }
   }
@@ -280,8 +274,8 @@ void RF24Controller::set(HangingDetector* hangingDetector) {
   _hangingDetector = hangingDetector;
 };
 
-void RF24Controller::set(EventTrigger* eventTrigger) {
-  _eventTrigger = eventTrigger;
+void RF24Controller::set(EventProcessor* eventProcessor) {
+  _eventProcessor = eventProcessor;
 };
 
 void RF24Controller::setOnStartButtonPressed(void (*function)()) {
