@@ -78,38 +78,6 @@ void PS2Controller_::reload() {
   begin();
 };
 
-void PS2Controller_::setOnStartButtonPressed(void (*function)()) {
-  _onStartButtonPressed = function;
-};
-
-void PS2Controller_::setOnSelectButtonPressed(void (*function)()) {
-  _onSelectButtonPressed = function;
-};
-
-void PS2Controller_::setOnDPadUpButtonPressed(void (*function)()) {
-  _onDPadUpButtonPressed = function;
-};
-
-void PS2Controller_::setOnDPadRightButtonPressed(void (*function)()) {
-  _onDPadRightButtonPressed = function;
-};
-
-void PS2Controller_::setOnDPadDownButtonPressed(void (*function)()) {
-  _onDPadDownButtonPressed = function;
-};
-
-void PS2Controller_::setOnDPadLeftButtonPressed(void (*function)()) {
-  _onDPadLeftButtonPressed = function;
-};
-
-void PS2Controller_::setOnLeftJoystickChanged(void (*function)(int, int)) {
-  _onLeftJoystickChanged = function;
-};
-
-void PS2Controller_::setOnRightJoystickChanged(void (*function)(int, int)) {
-  _onRightJoystickChanged = function;
-};
-
 int PS2Controller_::loop() {
   if(hasError()) { //skip loop if no controller found
     showError();

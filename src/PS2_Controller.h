@@ -8,6 +8,7 @@
 #define __PS2_CONTROLLER_H__
 
 #include "Commons.h"
+#include "Input_Controller.h"
 #include "Event_Trigger.h"
 #include <PS2X_lib.h>
 
@@ -28,7 +29,7 @@
 #define GAMEPAD_DATA        12
 #define GAMEPAD_CLOCK       13
 
-class PS2Controller_ {
+class PS2Controller_: InputController {
   public:
     PS2Controller_();
     void begin();
@@ -36,14 +37,6 @@ class PS2Controller_ {
     bool hasError();
     void showError();
     void reload();
-    void setOnStartButtonPressed(void (*function)());
-    void setOnSelectButtonPressed(void (*function)());
-    void setOnDPadUpButtonPressed(void (*function)());
-    void setOnDPadRightButtonPressed(void (*function)());
-    void setOnDPadDownButtonPressed(void (*function)());
-    void setOnDPadLeftButtonPressed(void (*function)());
-    void setOnLeftJoystickChanged(void (*function)(int, int));
-    void setOnRightJoystickChanged(void (*function)(int, int));
     virtual int check();
   protected:
     PS2X ps2x;
@@ -52,18 +45,17 @@ class PS2Controller_ {
     bool errorDisplayed;
     byte ps2Type;
     byte vibrate;
-    void (*_onStartButtonPressed)();
-    void (*_onSelectButtonPressed)();
-    void (*_onDPadUpButtonPressed)();
-    void (*_onDPadRightButtonPressed)();
-    void (*_onDPadDownButtonPressed)();
-    void (*_onDPadLeftButtonPressed)();
-    void (*_onDPadButtonPressed)(uint16_t);
-    void (*_onLeftJoystickChanged)(int, int);
-    void (*_onRightJoystickChanged)(int, int);
+    using InputController::_onStartButtonPressed;
+    using InputController::_onSelectButtonPressed;
+    using InputController::_onDPadUpButtonPressed;
+    using InputController::_onDPadRightButtonPressed;
+    using InputController::_onDPadDownButtonPressed;
+    using InputController::_onDPadLeftButtonPressed;
+    using InputController::_onLeftJoystickChanged;
+    using InputController::_onRightJoystickChanged;
 };
 
-class PS2Controller: PS2Controller_ {
+class PS2Controller: public PS2Controller_ {
   public:
     PS2Controller(): PS2Controller_() {};
     void set(EventTrigger* eventTrigger);
