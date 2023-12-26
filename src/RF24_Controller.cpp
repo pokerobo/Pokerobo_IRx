@@ -278,40 +278,8 @@ void RF24Controller::set(EventProcessor* eventProcessor) {
   _eventProcessor = eventProcessor;
 };
 
-void RF24Controller::setOnStartButtonPressed(void (*function)()) {
-  _onStartButtonPressed = function;
-};
-
-void RF24Controller::setOnSelectButtonPressed(void (*function)()) {
-  _onSelectButtonPressed = function;
-};
-
 void RF24Controller::setOnAnalogButtonPressed(void (*function)()) {
   _onAnalogButtonPressed = function;
-};
-
-void RF24Controller::setOnDPadUpButtonPressed(void (*function)()) {
-  _onDPadUpButtonPressed = function;
-};
-
-void RF24Controller::setOnDPadRightButtonPressed(void (*function)()) {
-  _onDPadRightButtonPressed = function;
-};
-
-void RF24Controller::setOnDPadDownButtonPressed(void (*function)()) {
-  _onDPadDownButtonPressed = function;
-};
-
-void RF24Controller::setOnDPadLeftButtonPressed(void (*function)()) {
-  _onDPadLeftButtonPressed = function;
-};
-
-void RF24Controller::setOnLeftJoystickChanged(void (*function)(int, int)) {
-  _onLeftJoystickChanged = function;
-}
-
-void RF24Controller::setOnRightJoystickChanged(void (*function)(int, int)) {
-  _onRightJoystickChanged = function;
 };
 
 uint32_t decodeInteger(uint8_t* arr, int length) {

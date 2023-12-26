@@ -2,6 +2,7 @@
 #define __RF24_CONTROLLER_H__
 
 #include "Commons.h"
+#include "Input_Controller.h"
 #include "Event_Processor.h"
 
 #ifndef __RF24_LOADING_LOG__
@@ -40,7 +41,7 @@
 
 #define CLICKING_FLAGS            0
 
-class RF24Controller {
+class RF24Controller: InputController {
   public:
     RF24Controller(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
     void begin();
@@ -48,15 +49,7 @@ class RF24Controller {
     int loop();
     void set(HangingDetector* hangingDetector);
     void set(EventProcessor* eventProcessor);
-    void setOnStartButtonPressed(void (*function)());
-    void setOnSelectButtonPressed(void (*function)());
     void setOnAnalogButtonPressed(void (*function)());
-    void setOnDPadUpButtonPressed(void (*function)());
-    void setOnDPadRightButtonPressed(void (*function)());
-    void setOnDPadDownButtonPressed(void (*function)());
-    void setOnDPadLeftButtonPressed(void (*function)());
-    void setOnLeftJoystickChanged(void (*function)(int, int));
-    void setOnRightJoystickChanged(void (*function)(int, int));
   protected:
     bool available();
     bool checkButtonPress(uint16_t pressed, uint16_t mask);
@@ -69,15 +62,7 @@ class RF24Controller {
     uint16_t _clickingTrail;
     HangingDetector* _hangingDetector = NULL;
     EventProcessor* _eventProcessor = NULL;
-    void (*_onStartButtonPressed)();
-    void (*_onSelectButtonPressed)();
     void (*_onAnalogButtonPressed)();
-    void (*_onDPadUpButtonPressed)();
-    void (*_onDPadRightButtonPressed)();
-    void (*_onDPadDownButtonPressed)();
-    void (*_onDPadLeftButtonPressed)();
-    void (*_onLeftJoystickChanged)(int, int);
-    void (*_onRightJoystickChanged)(int, int);
 };
 
 uint32_t decodeInteger(uint8_t* arr, int length);
