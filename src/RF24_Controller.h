@@ -13,6 +13,10 @@
 #define __RF24_RUNNING_LOG__  __RUNNING_LOG_ENABLED__
 #endif//__RF24_RUNNING_LOG__
 
+#ifndef __INPUT_RUNNING_LOG__
+#define __INPUT_RUNNING_LOG__  __RF24_RUNNING_LOG__
+#endif//__INPUT_RUNNING_LOG__
+
 #ifndef __RF24_BINARY_ENCODING__
 #define __RF24_BINARY_ENCODING__  1
 #endif
@@ -39,8 +43,6 @@
 #define RF24_JOYSTICK_RANGE_X     255
 #define RF24_JOYSTICK_RANGE_Y     255
 
-#define CLICKING_FLAGS            0
-
 class RF24Controller: InputController {
   public:
     RF24Controller(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
@@ -49,22 +51,16 @@ class RF24Controller: InputController {
     int loop();
     void set(HangingDetector* hangingDetector);
     void set(EventProcessor* eventProcessor);
-    void setOnAnalogButtonPressed(void (*function)());
   protected:
     bool available();
-    bool checkButtonPress(uint16_t pressed, uint16_t mask);
-    uint16_t processButtonPress(uint16_t buttons);
-    int processJoystickChange(int, int, char);
-    virtual bool isJoystickChanged(int, int);
-    virtual int adjustJoystickX(int nJoyX);
-    virtual int adjustJoystickY(int nJoyY);
+    bool isJoystickChanged(int, int);
+    int adjustJoystickX(int nJoyX);
+    int adjustJoystickY(int nJoyY);
   private:
     uint64_t _address = __RF24_DEFAULT_ADDRESS__;
     bool _debugEnabled;
-    uint16_t _clickingTrail;
     HangingDetector* _hangingDetector = NULL;
     EventProcessor* _eventProcessor = NULL;
-    void (*_onAnalogButtonPressed)();
 };
 
 uint32_t decodeInteger(uint8_t* arr, int length);

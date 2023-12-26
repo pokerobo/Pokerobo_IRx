@@ -4,18 +4,6 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-#ifndef __INPUT_RUNNING_LOG__
-#define __INPUT_RUNNING_LOG__  __RF24_RUNNING_LOG__
-#endif//__INPUT_RUNNING_LOG__
-
-#define MASK_UP_BUTTON     1U << 0
-#define MASK_RIGHT_BUTTON  1U << 1
-#define MASK_DOWN_BUTTON   1U << 2
-#define MASK_LEFT_BUTTON   1U << 3
-#define MASK_START_BUTTON  1U << 4
-#define MASK_SELECT_BUTTON 1U << 5
-#define MASK_ANALOG_BUTTON 1U << 6
-
 RF24 radio(__RF24_CE_PIN__, __RF24_CSN_PIN__);  // CE, CSN
 
 RF24Controller::RF24Controller(uint64_t address, bool debugEnabled) {
@@ -118,116 +106,16 @@ int RF24Controller::loop() {
   return ok;
 }
 
-bool RF24Controller::checkButtonPress(uint16_t pressed, uint16_t mask) {
-  #if CLICKING_FLAGS
-  if (pressed & mask) {
-    _clickingTrail |= mask;
-  } else {
-    if (_clickingTrail & mask) {
-      _clickingTrail &= (~mask);
-      return true;
-    }
-  }
-  return false;
-  #else
-  return pressed & mask;
-  #endif
-}
-
-uint16_t RF24Controller::processButtonPress(uint16_t pressed) {
-  uint16_t checked = 0;
-
-  if(checkButtonPress(pressed, MASK_START_BUTTON)) {
-    #if __RF24_RUNNING_LOG__
-    if (_debugEnabled) {
-      debugLog("JOY", "_", "START", " is pushed");
-    }
-    #endif
-    if (_onStartButtonPressed != NULL) {
-      _onStartButtonPressed();
-      checked |= MASK_START_BUTTON;
-    }
-  }
-
-  if(checkButtonPress(pressed, MASK_SELECT_BUTTON)) {
-    #if __RF24_RUNNING_LOG__
-    if (_debugEnabled) {
-      debugLog("JOY", "_", "SELECT", " is pushed");
-    }
-    #endif
-    if (_onSelectButtonPressed != NULL) {
-      _onSelectButtonPressed();
-      checked |= MASK_SELECT_BUTTON;
-    }
-  }
-
-  if(checkButtonPress(pressed, MASK_ANALOG_BUTTON)) {
-    #if __RF24_RUNNING_LOG__
-    if (_debugEnabled) {
-      debugLog("JOY", "_", "ANALOG", " is pushed");
-    }
-    #endif
-    if (_onAnalogButtonPressed != NULL) {
-      _onAnalogButtonPressed();
-      checked |= MASK_ANALOG_BUTTON;
-    }
-  }
-
-  if(checkButtonPress(pressed, MASK_UP_BUTTON)) {
-    #if __RF24_RUNNING_LOG__
-    if (_debugEnabled) {
-      debugLog("JOY", "_", "PAD", "_", "UP", " is pushed");
-    }
-    #endif
-    if (_onDPadUpButtonPressed != NULL) {
-      _onDPadUpButtonPressed();
-      checked |= MASK_UP_BUTTON;
-    }
-  }
-
-  if(checkButtonPress(pressed, MASK_RIGHT_BUTTON)) {
-    #if __RF24_RUNNING_LOG__
-    if (_debugEnabled) {
-      debugLog("JOY", "_", "PAD", "_", "RIGHT", " is pushed");
-    }
-    #endif
-    if (_onDPadRightButtonPressed != NULL) {
-      _onDPadRightButtonPressed();
-      checked |= MASK_RIGHT_BUTTON;
-    }
-  }
-
-  if(checkButtonPress(pressed, MASK_DOWN_BUTTON)) {
-    #if __RF24_RUNNING_LOG__
-    if (_debugEnabled) {
-      debugLog("JOY", "_", "PAD", "_", "DOWN", " is pushed");
-    }
-    #endif
-    if (_onDPadDownButtonPressed != NULL) {
-      _onDPadDownButtonPressed();
-      checked |= MASK_DOWN_BUTTON;
-    }
-  }
-
-  if(checkButtonPress(pressed, MASK_LEFT_BUTTON)) {
-    #if __RF24_RUNNING_LOG__
-    if (_debugEnabled) {
-      debugLog("JOY", "_", "PAD", "_", "LEFT", " is pushed");
-    }
-    #endif
-    if (_onDPadLeftButtonPressed != NULL) {
-      _onDPadLeftButtonPressed();
-      checked |= MASK_LEFT_BUTTON;
-    }
-  }
-
-  return checked;
-}
-
+#if defined(RF24_JOYSTICK_CHECKING_CHANGE)
 bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
   return nJoyX >= RF24_JOYSTICK_DEADZONE_X || nJoyX <= -RF24_JOYSTICK_DEADZONE_X ||
       nJoyY >= RF24_JOYSTICK_DEADZONE_Y || nJoyY <= -RF24_JOYSTICK_DEADZONE_Y;
 }
+#else
+bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
+  return true;
+}
+#endif
 
 int RF24Controller::adjustJoystickX(int nJoyX) {
   return map(nJoyX, 0, 1024, -RF24_JOYSTICK_RANGE_X, RF24_JOYSTICK_RANGE_X);
@@ -237,61 +125,12 @@ int RF24Controller::adjustJoystickY(int nJoyY) {
   return map(nJoyY, 0, 1024, -RF24_JOYSTICK_RANGE_Y, RF24_JOYSTICK_RANGE_Y);
 }
 
-int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, char label) {
-
-  nJoyX = adjustJoystickX(nJoyX);
-  nJoyY = adjustJoystickY(nJoyY);
-
-  #if defined(RF24_JOYSTICK_CHECKING_CHANGE)
-  if (!isJoystickChanged(nJoyX, nJoyY)) {
-    return 0;
-  }
-  #endif
-
-  #if __INPUT_RUNNING_LOG__
-  if (_debugEnabled) {
-    char l_[2] = { 'L', '\0' };
-    debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
-    char x_[7], y_[7];
-    debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
-    debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
-  }
-  #endif
-
-  if (label == 'L') {
-    if (_onLeftJoystickChanged) {
-      _onLeftJoystickChanged(nJoyX, nJoyY);
-      return 1;
-    }
-  }
-
-  if (label == 'R') {
-    if (_onRightJoystickChanged) {
-      _onRightJoystickChanged(nJoyX, nJoyY);
-      return 1;
-    }
-  }
-
-  #if __INPUT_RUNNING_LOG__
-  if (_debugEnabled) {
-    char l_[2] = { 'L', '\0' };
-    debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
-  }
-  #endif
-
-  return -1;
-}
-
 void RF24Controller::set(HangingDetector* hangingDetector) {
   _hangingDetector = hangingDetector;
 };
 
 void RF24Controller::set(EventProcessor* eventProcessor) {
   _eventProcessor = eventProcessor;
-};
-
-void RF24Controller::setOnAnalogButtonPressed(void (*function)()) {
-  _onAnalogButtonPressed = function;
 };
 
 uint32_t decodeInteger(uint8_t* arr, int length) {
