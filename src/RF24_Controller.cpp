@@ -106,16 +106,18 @@ int RF24Controller::loop() {
   return ok;
 }
 
-#if defined(RF24_JOYSTICK_CHECKING_CHANGE)
+bool RF24Controller::isDebugEnabled() {
+  return _debugEnabled;
+}
+
 bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
+  #if defined(RF24_JOYSTICK_CHECKING_CHANGE)
   return nJoyX >= RF24_JOYSTICK_DEADZONE_X || nJoyX <= -RF24_JOYSTICK_DEADZONE_X ||
       nJoyY >= RF24_JOYSTICK_DEADZONE_Y || nJoyY <= -RF24_JOYSTICK_DEADZONE_Y;
-}
-#else
-bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
+  #else
   return true;
+  #endif
 }
-#endif
 
 int RF24Controller::adjustJoystickX(int nJoyX) {
   return map(nJoyX, 0, 1024, -RF24_JOYSTICK_RANGE_X, RF24_JOYSTICK_RANGE_X);

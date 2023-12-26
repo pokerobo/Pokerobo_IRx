@@ -27,6 +27,7 @@ class InputController {
     bool checkButtonPress(uint16_t pressed, uint16_t mask);
     uint16_t processButtonPress(uint16_t buttons);
     int processJoystickChange(int, int, char);
+    virtual bool isDebugEnabled();
     virtual bool isJoystickChanged(int, int);
     virtual int adjustJoystickX(int nJoyX);
     virtual int adjustJoystickY(int nJoyY);

@@ -120,7 +120,7 @@ int PS2Controller::check() {
   //
   if (buttonPressed > 0) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       Serial.print("buttonPressed"), Serial.print(": "), Serial.println(buttonPressed, HEX);
     }
 #endif
@@ -138,7 +138,7 @@ int PS2Controller::processStartButtonPress() {
   }
   if(ps2x.Button(PSB_START)) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "START", " is pushed");
     }
 #endif
@@ -158,7 +158,7 @@ int PS2Controller::processSelectButtonPress() {
   }
   if(ps2x.Button(PSB_SELECT)) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "SELECT", " is pushed");
     }
 #endif
@@ -178,7 +178,7 @@ int PS2Controller::processDPadUpButtonPress() {
   }
   if(ps2x.Button(PSB_PAD_UP)) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "UP", " is pushed");
     }
 #endif
@@ -198,7 +198,7 @@ int PS2Controller::processDPadRightButtonPress() {
   }
   if(ps2x.Button(PSB_PAD_RIGHT)) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "RIGHT", " is pushed");
     }
 #endif
@@ -218,7 +218,7 @@ int PS2Controller::processDPadDownButtonPress() {
   }
   if(ps2x.Button(PSB_PAD_DOWN)) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "DOWN", " is pushed");
     }
 #endif
@@ -238,7 +238,7 @@ int PS2Controller::processDPadLeftButtonPress() {
   }
   if(ps2x.Button(PSB_PAD_LEFT)) {
 #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "LEFT", " is pushed");
     }
 #endif
@@ -250,6 +250,10 @@ int PS2Controller::processDPadLeftButtonPress() {
     return PSB_PAD_LEFT;
   }
   return 0;
+}
+
+bool PS2Controller::isDebugEnabled() {
+  return debugEnabled;
 }
 
 bool PS2Controller::isJoystickChanged(int nJoyX, int nJoyY) {
@@ -269,56 +273,6 @@ int PS2Controller::adjustJoystickY(int nJoyY) {
   return map(nJoyY, 0, 255, PS2_JOYSTICK_RANGE_Y, -PS2_JOYSTICK_RANGE_Y);
 }
 
-int PS2Controller::processJoystickChange(int nJoyX, int nJoyY, const char label) {
-  nJoyX = adjustJoystickX(nJoyX);
-  nJoyY = adjustJoystickY(nJoyY);
-
-#if defined(PS2_JOYSTICK_CHECKING_CHANGE)
-  if (!isJoystickChanged(nJoyX, nJoyY)) {
-    return 0;
-  }
-#endif
-
-#if __RUNNING_LOG_ENABLED__
-  if (debugEnabled) {
-    char l_[2] = { label, '\0' };
-    debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
-    char x_[7], y_[7];
-    debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
-    debugLog(" - ", "Y", ": ", itoa(nJoyY, y_, 10));
-  }
-#endif
-
-  if (label == 'L') {
-    if (_onLeftJoystickChanged) {
-      _onLeftJoystickChanged(nJoyX, nJoyY);
-      return 1;
-    } else if (_eventTrigger != NULL) {
-      _eventTrigger->processLeftJoystickChangeEvent(nJoyX, nJoyY);
-      return 1;
-    }
-  }
-
-  if (label == 'R') {
-    if (_onRightJoystickChanged) {
-      _onRightJoystickChanged(nJoyX, nJoyY);
-      return 1;
-    } else if (_eventTrigger != NULL) {
-      _eventTrigger->processRightJoystickChangeEvent(nJoyX, nJoyY);
-      return 1;
-    }
-  }
-
-#if __RUNNING_LOG_ENABLED__
-  if (debugEnabled) {
-    char l_[2] = { label, '\0' };
-    debugLog("PS2", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
-  }
-#endif
-
-  return -1;
-};
-
 //-------------------------------------------------------------------------------------------------
 
 void PS2Kontroller::set(EventProcessor* eventProcessor) {
@@ -336,7 +290,7 @@ int PS2Kontroller::read(JoystickAction* action, MovingCommand* command) {
 
   if(ps2x.Button(PSB_START)) {
     #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "START", " is pushed");
     }
     #endif
@@ -345,7 +299,7 @@ int PS2Kontroller::read(JoystickAction* action, MovingCommand* command) {
 
   if(ps2x.Button(PSB_SELECT)) {
     #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "SELECT", " is pushed");
     }
     #endif
@@ -354,7 +308,7 @@ int PS2Kontroller::read(JoystickAction* action, MovingCommand* command) {
 
   if(ps2x.Button(PSB_PAD_UP)) {
     #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "UP", " is pushed");
     }
     #endif
@@ -363,7 +317,7 @@ int PS2Kontroller::read(JoystickAction* action, MovingCommand* command) {
 
   if(ps2x.Button(PSB_PAD_RIGHT)) {
     #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "RIGHT", " is pushed");
     }
     #endif
@@ -372,7 +326,7 @@ int PS2Kontroller::read(JoystickAction* action, MovingCommand* command) {
 
   if(ps2x.Button(PSB_PAD_DOWN)) {
     #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "DOWN", " is pushed");
     }
     #endif
@@ -381,7 +335,7 @@ int PS2Kontroller::read(JoystickAction* action, MovingCommand* command) {
 
   if(ps2x.Button(PSB_PAD_LEFT)) {
     #if __RUNNING_LOG_ENABLED__
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "LEFT", " is pushed");
     }
     #endif
@@ -424,6 +378,10 @@ int PS2Kontroller::check() {
   }
 
   return ok;
+}
+
+bool PS2Kontroller::isDebugEnabled() {
+  return debugEnabled;
 }
 
 bool PS2Kontroller::isJoystickChanged(int nJoyX, int nJoyY) {

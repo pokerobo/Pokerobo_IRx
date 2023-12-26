@@ -65,7 +65,7 @@ uint16_t InputController::processButtonPress(uint16_t pressed) {
 
   if(checkButtonPress(pressed, MASK_START_BUTTON)) {
     #if __INPUT_RUNNING_LOG__
-    if (_debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("JOY", "_", "START", " is pushed");
     }
     #endif
@@ -77,7 +77,7 @@ uint16_t InputController::processButtonPress(uint16_t pressed) {
 
   if(checkButtonPress(pressed, MASK_SELECT_BUTTON)) {
     #if __INPUT_RUNNING_LOG__
-    if (_debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("JOY", "_", "SELECT", " is pushed");
     }
     #endif
@@ -89,7 +89,7 @@ uint16_t InputController::processButtonPress(uint16_t pressed) {
 
   if(checkButtonPress(pressed, MASK_ANALOG_BUTTON)) {
     #if __INPUT_RUNNING_LOG__
-    if (_debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("JOY", "_", "ANALOG", " is pushed");
     }
     #endif
@@ -101,7 +101,7 @@ uint16_t InputController::processButtonPress(uint16_t pressed) {
 
   if(checkButtonPress(pressed, MASK_UP_BUTTON)) {
     #if __INPUT_RUNNING_LOG__
-    if (_debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("JOY", "_", "PAD", "_", "UP", " is pushed");
     }
     #endif
@@ -113,7 +113,7 @@ uint16_t InputController::processButtonPress(uint16_t pressed) {
 
   if(checkButtonPress(pressed, MASK_RIGHT_BUTTON)) {
     #if __INPUT_RUNNING_LOG__
-    if (_debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("JOY", "_", "PAD", "_", "RIGHT", " is pushed");
     }
     #endif
@@ -125,7 +125,7 @@ uint16_t InputController::processButtonPress(uint16_t pressed) {
 
   if(checkButtonPress(pressed, MASK_DOWN_BUTTON)) {
     #if __INPUT_RUNNING_LOG__
-    if (_debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("JOY", "_", "PAD", "_", "DOWN", " is pushed");
     }
     #endif
@@ -137,7 +137,7 @@ uint16_t InputController::processButtonPress(uint16_t pressed) {
 
   if(checkButtonPress(pressed, MASK_LEFT_BUTTON)) {
     #if __INPUT_RUNNING_LOG__
-    if (_debugEnabled) {
+    if (isDebugEnabled()) {
       debugLog("JOY", "_", "PAD", "_", "LEFT", " is pushed");
     }
     #endif
@@ -159,7 +159,7 @@ int InputController::processJoystickChange(int nJoyX, int nJoyY, char label) {
   }
 
   #if __INPUT_RUNNING_LOG__
-  if (_debugEnabled) {
+  if (isDebugEnabled()) {
     char l_[2] = { label, '\0' };
     debugLog("Input", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
     char x_[7], y_[7];
@@ -183,7 +183,7 @@ int InputController::processJoystickChange(int nJoyX, int nJoyY, char label) {
   }
 
   #if __INPUT_RUNNING_LOG__
-  if (_debugEnabled) {
+  if (isDebugEnabled()) {
     char l_[2] = { label, '\0' };
     debugLog("Input", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
   }

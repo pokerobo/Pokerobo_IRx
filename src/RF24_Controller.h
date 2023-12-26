@@ -53,6 +53,7 @@ class RF24Controller: InputController {
     void set(EventProcessor* eventProcessor);
   protected:
     bool available();
+    bool isDebugEnabled();
     bool isJoystickChanged(int, int);
     int adjustJoystickX(int nJoyX);
     int adjustJoystickY(int nJoyY);

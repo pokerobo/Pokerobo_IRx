@@ -55,6 +55,7 @@ class PS2Kontroller: PS2Controller_, InputController {
     int read(JoystickAction* action, MovingCommand* command);
     int check();
   protected:
+    bool isDebugEnabled();
     bool isJoystickChanged(int, int);
     int adjustJoystickX(int nJoyX);
     int adjustJoystickY(int nJoyY);
@@ -69,6 +70,7 @@ class PS2Controller: PS2Controller_, InputController {
     void set(EventTrigger* eventTrigger);
     int check();
   protected:
+    bool isDebugEnabled();
     bool isJoystickChanged(int, int);
     int adjustJoystickX(int nJoyX);
     int adjustJoystickY(int nJoyY);
@@ -80,7 +82,6 @@ class PS2Controller: PS2Controller_, InputController {
     int processDPadRightButtonPress();
     int processDPadDownButtonPress();
     int processDPadLeftButtonPress();
-    int processJoystickChange(int, int, const char label);
 };
 
 #endif
