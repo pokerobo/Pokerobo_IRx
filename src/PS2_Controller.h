@@ -29,7 +29,7 @@
 #define GAMEPAD_DATA        12
 #define GAMEPAD_CLOCK       13
 
-class PS2Controller_: InputController {
+class PS2Controller_ {
   public:
     PS2Controller_();
     void begin();
@@ -45,31 +45,42 @@ class PS2Controller_: InputController {
     bool errorDisplayed;
     byte ps2Type;
     byte vibrate;
-    using InputController::_onStartButtonPressed;
-    using InputController::_onSelectButtonPressed;
-    using InputController::_onDPadUpButtonPressed;
-    using InputController::_onDPadRightButtonPressed;
-    using InputController::_onDPadDownButtonPressed;
-    using InputController::_onDPadLeftButtonPressed;
-    using InputController::_onLeftJoystickChanged;
-    using InputController::_onRightJoystickChanged;
 };
 
-class PS2Controller: public PS2Controller_ {
+class PS2Kontroller: PS2Controller_, InputController {
+  public:
+    PS2Kontroller(): PS2Controller_() {};
+    void set(EventProcessor* eventProcessor);
+    void set(MovingResolver* movingResolver);
+    int read(JoystickAction* action, MovingCommand* command);
+    int check();
+  protected:
+    bool isJoystickChanged(int, int);
+    int adjustJoystickX(int nJoyX);
+    int adjustJoystickY(int nJoyY);
+  private:
+    EventProcessor* _eventProcessor = NULL;
+    MovingResolver* _movingResolver = NULL;
+};
+
+class PS2Controller: PS2Controller_, InputController {
   public:
     PS2Controller(): PS2Controller_() {};
     void set(EventTrigger* eventTrigger);
     int check();
+  protected:
+    bool isJoystickChanged(int, int);
+    int adjustJoystickX(int nJoyX);
+    int adjustJoystickY(int nJoyY);
   private:
     EventTrigger* _eventTrigger = NULL;
-    bool isJoystickChanged(int, int);
     int processStartButtonPress();
     int processSelectButtonPress();
     int processDPadUpButtonPress();
     int processDPadRightButtonPress();
     int processDPadDownButtonPress();
     int processDPadLeftButtonPress();
-    int processJoystickChange(byte, byte, const char label);
+    int processJoystickChange(int, int, const char label);
 };
 
 #endif

@@ -99,8 +99,6 @@ void PS2Controller::set(EventTrigger* eventTrigger) {
 int PS2Controller::check() {
   ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
   //
-  //
-  //
   uint16_t startButtonPressed = processStartButtonPress();
   if (startButtonPressed) {
     return startButtonPressed;
@@ -129,9 +127,9 @@ int PS2Controller::check() {
     return buttonPressed;
   }
   //
-  int lstatus = processJoystickChange(PSS_LX, PSS_LY, 'L');
+  int lstatus = processJoystickChange(ps2x.Analog(PSS_LX), ps2x.Analog(PSS_LY), 'L');
   //
-  int rstatus = processJoystickChange(PSS_RX, PSS_RY, 'R');
+  int rstatus = processJoystickChange(ps2x.Analog(PSS_RX), ps2x.Analog(PSS_RY), 'R');
 };
 
 int PS2Controller::processStartButtonPress() {
@@ -255,16 +253,25 @@ int PS2Controller::processDPadLeftButtonPress() {
 }
 
 bool PS2Controller::isJoystickChanged(int nJoyX, int nJoyY) {
+  #if defined(PS2_JOYSTICK_CHECKING_CHANGE)
   return nJoyX >= PS2_JOYSTICK_DEADZONE_X || nJoyX <= -PS2_JOYSTICK_DEADZONE_X ||
       nJoyY >= PS2_JOYSTICK_DEADZONE_Y || nJoyY <= -PS2_JOYSTICK_DEADZONE_Y;
+  #else
+  return true;
+  #endif
 }
 
-int PS2Controller::processJoystickChange(byte xKey, byte yKey, const char label) {
-  int nJoyX = ps2x.Analog(xKey); // read x-joystick
-  int nJoyY = ps2x.Analog(yKey); // read y-joystick
-  //
-  nJoyX = map(nJoyX, 0, 255, PS2_JOYSTICK_RANGE_X, -PS2_JOYSTICK_RANGE_X);
-  nJoyY = map(nJoyY, 0, 255, PS2_JOYSTICK_RANGE_Y, -PS2_JOYSTICK_RANGE_Y);
+int PS2Controller::adjustJoystickX(int nJoyX) {
+  return map(nJoyX, 0, 255, PS2_JOYSTICK_RANGE_X, -PS2_JOYSTICK_RANGE_X);
+}
+
+int PS2Controller::adjustJoystickY(int nJoyY) {
+  return map(nJoyY, 0, 255, PS2_JOYSTICK_RANGE_Y, -PS2_JOYSTICK_RANGE_Y);
+}
+
+int PS2Controller::processJoystickChange(int nJoyX, int nJoyY, const char label) {
+  nJoyX = adjustJoystickX(nJoyX);
+  nJoyY = adjustJoystickY(nJoyY);
 
 #if defined(PS2_JOYSTICK_CHECKING_CHANGE)
   if (!isJoystickChanged(nJoyX, nJoyY)) {
@@ -313,3 +320,125 @@ int PS2Controller::processJoystickChange(byte xKey, byte yKey, const char label)
 };
 
 //-------------------------------------------------------------------------------------------------
+
+void PS2Kontroller::set(EventProcessor* eventProcessor) {
+  _eventProcessor = eventProcessor;
+};
+
+void PS2Kontroller::set(MovingResolver* movingResolver) {
+  _movingResolver = movingResolver;
+};
+
+int PS2Kontroller::read(JoystickAction* action, MovingCommand* command) {
+  ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
+
+  uint16_t buttons = 0;
+
+  if(ps2x.Button(PSB_START)) {
+    #if __RUNNING_LOG_ENABLED__
+    if (debugEnabled) {
+      debugLog("PSB", "_", "START", " is pushed");
+    }
+    #endif
+    buttons |= MASK_START_BUTTON;
+  }
+
+  if(ps2x.Button(PSB_SELECT)) {
+    #if __RUNNING_LOG_ENABLED__
+    if (debugEnabled) {
+      debugLog("PSB", "_", "SELECT", " is pushed");
+    }
+    #endif
+    buttons |= MASK_SELECT_BUTTON;
+  }
+
+  if(ps2x.Button(PSB_PAD_UP)) {
+    #if __RUNNING_LOG_ENABLED__
+    if (debugEnabled) {
+      debugLog("PSB", "_", "PAD", "_", "UP", " is pushed");
+    }
+    #endif
+    buttons |= MASK_UP_BUTTON;
+  }
+
+  if(ps2x.Button(PSB_PAD_RIGHT)) {
+    #if __RUNNING_LOG_ENABLED__
+    if (debugEnabled) {
+      debugLog("PSB", "_", "PAD", "_", "RIGHT", " is pushed");
+    }
+    #endif
+    buttons |= MASK_RIGHT_BUTTON;
+  }
+
+  if(ps2x.Button(PSB_PAD_DOWN)) {
+    #if __RUNNING_LOG_ENABLED__
+    if (debugEnabled) {
+      debugLog("PSB", "_", "PAD", "_", "DOWN", " is pushed");
+    }
+    #endif
+    buttons |= MASK_DOWN_BUTTON;
+  }
+
+  if(ps2x.Button(PSB_PAD_LEFT)) {
+    #if __RUNNING_LOG_ENABLED__
+    if (debugEnabled) {
+      debugLog("PSB", "_", "PAD", "_", "LEFT", " is pushed");
+    }
+    #endif
+    buttons |= MASK_LEFT_BUTTON;
+  }
+
+  int nJoyX = ps2x.Analog(PSS_LX); // read x-joystick
+  int nJoyY = ps2x.Analog(PSS_LY); // read y-joystick
+
+  uint16_t lJoyX = map(nJoyX, 0, 255, 0, 1024);
+  uint16_t lJoyY = map(nJoyY, 0, 255, 0, 1024);
+
+  action->update(buttons, lJoyX, lJoyY, 0);
+
+  if (_movingResolver != NULL && command != NULL) {
+    _movingResolver->resolve(command, lJoyX, lJoyY);
+  }
+
+  return 1;
+}
+
+int PS2Kontroller::check() {
+  JoystickAction action;
+  MovingCommand command;
+
+  int ok = read(&action, &command);
+
+  if (ok == 1) {
+    if (_eventProcessor != NULL) {
+      _eventProcessor->processEvents(&action, &command);
+      return 0xff;
+    }
+
+    uint16_t pressed = processButtonPress(action.getPressingFlags());
+    if (pressed) {
+      return pressed;
+    }
+
+    return processJoystickChange(action.getX(), action.getY(), 'L');
+  }
+
+  return ok;
+}
+
+bool PS2Kontroller::isJoystickChanged(int nJoyX, int nJoyY) {
+  #if defined(PS2_JOYSTICK_CHECKING_CHANGE)
+  return nJoyX >= PS2_JOYSTICK_DEADZONE_X || nJoyX <= -PS2_JOYSTICK_DEADZONE_X ||
+      nJoyY >= PS2_JOYSTICK_DEADZONE_Y || nJoyY <= -PS2_JOYSTICK_DEADZONE_Y;
+  #else
+  return true;
+  #endif
+}
+
+int PS2Kontroller::adjustJoystickX(int nJoyX) {
+  return map(nJoyX, 0, 1024, PS2_JOYSTICK_RANGE_X, -PS2_JOYSTICK_RANGE_X);
+}
+
+int PS2Kontroller::adjustJoystickY(int nJoyY) {
+  return map(nJoyY, 0, 1024, PS2_JOYSTICK_RANGE_Y, -PS2_JOYSTICK_RANGE_Y);
+}

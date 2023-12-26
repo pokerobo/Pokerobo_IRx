@@ -160,7 +160,7 @@ int InputController::processJoystickChange(int nJoyX, int nJoyY, char label) {
 
   #if __INPUT_RUNNING_LOG__
   if (_debugEnabled) {
-    char l_[2] = { 'L', '\0' };
+    char l_[2] = { label, '\0' };
     debugLog("Input", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
     char x_[7], y_[7];
     debugLog(" - ", "X", ": ", itoa(nJoyX, x_, 10));
@@ -184,7 +184,7 @@ int InputController::processJoystickChange(int nJoyX, int nJoyY, char label) {
 
   #if __INPUT_RUNNING_LOG__
   if (_debugEnabled) {
-    char l_[2] = { 'L', '\0' };
+    char l_[2] = { label, '\0' };
     debugLog("Input", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");
   }
   #endif
