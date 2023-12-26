@@ -4,6 +4,10 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
+#ifndef __INPUT_RUNNING_LOG__
+#define __INPUT_RUNNING_LOG__  __RF24_RUNNING_LOG__
+#endif//__INPUT_RUNNING_LOG__
+
 #define MASK_UP_BUTTON     1U << 0
 #define MASK_RIGHT_BUTTON  1U << 1
 #define MASK_DOWN_BUTTON   1U << 2
@@ -225,10 +229,18 @@ bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
       nJoyY >= RF24_JOYSTICK_DEADZONE_Y || nJoyY <= -RF24_JOYSTICK_DEADZONE_Y;
 }
 
+int RF24Controller::adjustJoystickX(int nJoyX) {
+  return map(nJoyX, 0, 1024, -RF24_JOYSTICK_RANGE_X, RF24_JOYSTICK_RANGE_X);
+}
+
+int RF24Controller::adjustJoystickY(int nJoyY) {
+  return map(nJoyY, 0, 1024, -RF24_JOYSTICK_RANGE_Y, RF24_JOYSTICK_RANGE_Y);
+}
+
 int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, char label) {
 
-  nJoyX = map(nJoyX, 0, 1024, -RF24_JOYSTICK_RANGE_X, RF24_JOYSTICK_RANGE_X);
-  nJoyY = map(nJoyY, 0, 1024, -RF24_JOYSTICK_RANGE_Y, RF24_JOYSTICK_RANGE_Y);
+  nJoyX = adjustJoystickX(nJoyX);
+  nJoyY = adjustJoystickY(nJoyY);
 
   #if defined(RF24_JOYSTICK_CHECKING_CHANGE)
   if (!isJoystickChanged(nJoyX, nJoyY)) {
@@ -236,7 +248,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, char label) {
   }
   #endif
 
-  #if __RF24_RUNNING_LOG__
+  #if __INPUT_RUNNING_LOG__
   if (_debugEnabled) {
     char l_[2] = { 'L', '\0' };
     debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ");
@@ -260,7 +272,7 @@ int RF24Controller::processJoystickChange(int nJoyX, int nJoyY, char label) {
     }
   }
 
-  #if __RF24_RUNNING_LOG__
+  #if __INPUT_RUNNING_LOG__
   if (_debugEnabled) {
     char l_[2] = { 'L', '\0' };
     debugLog("RF24", "Controller", "::", "process", "JoystickChange", "()", " - ", l_, ": ", "not registered");

@@ -54,8 +54,10 @@ class RF24Controller: InputController {
     bool available();
     bool checkButtonPress(uint16_t pressed, uint16_t mask);
     uint16_t processButtonPress(uint16_t buttons);
-    bool isJoystickChanged(int, int);
     int processJoystickChange(int, int, char);
+    virtual bool isJoystickChanged(int, int);
+    virtual int adjustJoystickX(int nJoyX);
+    virtual int adjustJoystickY(int nJoyY);
   private:
     uint64_t _address = __RF24_DEFAULT_ADDRESS__;
     bool _debugEnabled;
