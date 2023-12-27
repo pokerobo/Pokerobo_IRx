@@ -1,76 +1,74 @@
 #include "PS2_Controller.h"
 
 PS2Controller_::PS2Controller_() {
-  debugEnabled = true;
-  errorCode = 0;
-  errorDisplayed = false;
-  ps2Type = 0;
-  vibrate = 0;
+  _debugEnabled = true;
+  _errorCode = 0;
+  _errorDisplayed = false;
 }
 
 void PS2Controller_::begin() {
   //
   // setup pins and settings: 
   // GamePad(clock, command, attention, data, Pressures?, Rumble?) check for error
-  errorCode = ps2x.config_gamepad(GAMEPAD_CLOCK, GAMEPAD_COMMAND, GAMEPAD_ATTENTION, GAMEPAD_DATA, false, false);
+  _errorCode = ps2x.config_gamepad(GAMEPAD_CLOCK, GAMEPAD_COMMAND, GAMEPAD_ATTENTION, GAMEPAD_DATA, false, false);
 
   // Check for error
-  if(errorCode == 0) {
-#if __PS2INIT_LOG_ENABLED__
+  if(_errorCode == 0) {
+    #if __PS2INIT_LOG_ENABLED__
     debugLog("Controller", " ", "found, configured successful");
-#endif
+    #endif
   }
-  else if(errorCode == 1) {
-#if __PS2INIT_LOG_ENABLED__
+  else if(_errorCode == 1) {
+    #if __PS2INIT_LOG_ENABLED__
     debugLog("Controller", " ", "not found, check wiring or reset the Arduino");
-#endif
+    #endif
   }
-  else if(errorCode == 2) {
-#if __PS2INIT_LOG_ENABLED__
+  else if(_errorCode == 2) {
+    #if __PS2INIT_LOG_ENABLED__
     debugLog("Controller", " ", "found but not accepting commands");
-#endif
+    #endif
   }
-  else if(errorCode == 3) {
-#if __PS2INIT_LOG_ENABLED__
+  else if(_errorCode == 3) {
+    #if __PS2INIT_LOG_ENABLED__
     debugLog("Controller", " ", "refusing to enter Pressures mode."); // may not support it
-#endif
+    #endif
   }
   //
   // Check for the type of controller
-  ps2Type = ps2x.readType();
+  byte ps2Type = ps2x.readType();
   switch(ps2Type) {
     case 0:
-#if __PS2INIT_LOG_ENABLED__
+      #if __PS2INIT_LOG_ENABLED__
       debugLog("Unknown", " ", "Controller", " ", "type");
-#endif
+      #endif
       break;
     case 1:
-#if __PS2INIT_LOG_ENABLED__
+      #if __PS2INIT_LOG_ENABLED__
       debugLog("DualShock", " ", "Controller", " ", "Found");
-#endif
+      #endif
       break;
     case 2:
-#if __PS2INIT_LOG_ENABLED__
+      #if __PS2INIT_LOG_ENABLED__
       debugLog("GuitarHero", " ", "Controller", " ", "Found");
-#endif
+      #endif
       break;
     default:
-#if __PS2INIT_LOG_ENABLED__
+      #if __PS2INIT_LOG_ENABLED__
       char b_[5];
       debugLog("Invalid", " ", "Controller", " ", "type", ": ", itoa(ps2Type, b_, 10));
-#endif
+      #endif
       NULL;
   }
 };
 
 bool PS2Controller_::hasError() {
-  return errorCode != 0;
+  return _errorCode != 0;
 };
 
 void PS2Controller_::showError() {
-  if (!errorDisplayed) {
+  if (!_errorDisplayed) {
     debugLog("Error, terminated!");
-    errorDisplayed = true;
+    _errorDisplayed = true;
   }
 };
 
@@ -97,6 +95,7 @@ void PS2Controller::set(EventTrigger* eventTrigger) {
 };
 
 int PS2Controller::check() {
+  byte vibrate = 0;
   ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
   //
   uint16_t startButtonPressed = processStartButtonPress();
@@ -119,11 +118,11 @@ int PS2Controller::check() {
 
   //
   if (buttonPressed > 0) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (isDebugEnabled()) {
       Serial.print("buttonPressed"), Serial.print(": "), Serial.println(buttonPressed, HEX);
     }
-#endif
+    #endif
     return buttonPressed;
   }
   //
@@ -137,11 +136,11 @@ int PS2Controller::processStartButtonPress() {
     return 0;
   }
   if(ps2x.Button(PSB_START)) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (isDebugEnabled()) {
       debugLog("PSB", "_", "START", " is pushed");
     }
-#endif
+    #endif
     if (_onStartButtonPressed) {
       _onStartButtonPressed();
     } else {
@@ -157,11 +156,11 @@ int PS2Controller::processSelectButtonPress() {
     return 0;
   }
   if(ps2x.Button(PSB_SELECT)) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (isDebugEnabled()) {
       debugLog("PSB", "_", "SELECT", " is pushed");
     }
-#endif
+    #endif
     if (_onSelectButtonPressed) {
       _onSelectButtonPressed();
     } else {
@@ -177,11 +176,11 @@ int PS2Controller::processDPadUpButtonPress() {
     return 0;
   }
   if(ps2x.Button(PSB_PAD_UP)) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "UP", " is pushed");
     }
-#endif
+    #endif
     if (_onDPadUpButtonPressed) {
       _onDPadUpButtonPressed();
     } else {
@@ -197,11 +196,11 @@ int PS2Controller::processDPadRightButtonPress() {
     return 0;
   }
   if(ps2x.Button(PSB_PAD_RIGHT)) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "RIGHT", " is pushed");
     }
-#endif
+    #endif
     if (_onDPadRightButtonPressed) {
       _onDPadRightButtonPressed();
     } else {
@@ -217,11 +216,11 @@ int PS2Controller::processDPadDownButtonPress() {
     return 0;
   }
   if(ps2x.Button(PSB_PAD_DOWN)) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "DOWN", " is pushed");
     }
-#endif
+    #endif
     if (_onDPadDownButtonPressed) {
       _onDPadDownButtonPressed();
     } else {
@@ -237,11 +236,11 @@ int PS2Controller::processDPadLeftButtonPress() {
     return 0;
   }
   if(ps2x.Button(PSB_PAD_LEFT)) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (isDebugEnabled()) {
       debugLog("PSB", "_", "PAD", "_", "LEFT", " is pushed");
     }
-#endif
+    #endif
     if (_onDPadLeftButtonPressed) {
       _onDPadLeftButtonPressed();
     } else {
@@ -253,7 +252,7 @@ int PS2Controller::processDPadLeftButtonPress() {
 }
 
 bool PS2Controller::isDebugEnabled() {
-  return debugEnabled;
+  return _debugEnabled;
 }
 
 bool PS2Controller::isJoystickChanged(int nJoyX, int nJoyY) {
@@ -284,6 +283,7 @@ void PS2Kontroller::set(MovingResolver* movingResolver) {
 };
 
 int PS2Kontroller::read(JoystickAction* action, MovingCommand* command) {
+  byte vibrate = 0;
   ps2x.read_gamepad(false, vibrate); // disable vibration of the controller
 
   uint16_t buttons = 0;
@@ -381,7 +381,7 @@ int PS2Kontroller::check() {
 }
 
 bool PS2Kontroller::isDebugEnabled() {
-  return debugEnabled;
+  return _debugEnabled;
 }
 
 bool PS2Kontroller::isJoystickChanged(int nJoyX, int nJoyY) {

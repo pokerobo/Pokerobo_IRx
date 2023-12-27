@@ -40,11 +40,9 @@ class PS2Controller_ {
     virtual int check();
   protected:
     PS2X ps2x;
-    bool debugEnabled;
-    int errorCode;
-    bool errorDisplayed;
-    byte ps2Type;
-    byte vibrate;
+    bool _debugEnabled;
+    int _errorCode;
+    bool _errorDisplayed;
 };
 
 class PS2Kontroller: PS2Controller_, InputController {
