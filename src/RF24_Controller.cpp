@@ -134,17 +134,3 @@ void RF24Controller::set(HangingDetector* hangingDetector) {
 void RF24Controller::set(EventProcessor* eventProcessor) {
   _eventProcessor = eventProcessor;
 };
-
-uint32_t decodeInteger(uint8_t* arr, int length) {
-  uint32_t a0 = arr[0];
-  uint32_t a1 = arr[1];
-  uint32_t a2 = arr[2];
-  uint32_t a3 = arr[3];
-  if (length == 2) {
-    return (a1 << 8) | a0;
-  }
-  if (length == 4) {
-    return (a3 << 24) | (a2 << 16) | (a1 << 8) | a0;
-  }
-  return 0;
-}

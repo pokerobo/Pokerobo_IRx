@@ -64,6 +64,4 @@ class RF24Controller: InputController {
     EventProcessor* _eventProcessor = NULL;
 };
 
-uint32_t decodeInteger(uint8_t* arr, int length);
-
 #endif

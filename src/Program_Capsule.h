@@ -7,7 +7,7 @@ class ProgramCapsule {
   public:
     virtual char* getTitle();
     virtual int begin();
-    virtual int check(void* action = NULL);
+    virtual int check(void* action, void* command);
     virtual int close();
 };
 

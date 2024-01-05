@@ -1,6 +1,8 @@
 #ifndef __DISPLAY_ADAPTER_H__
 #define __DISPLAY_ADAPTER_H__
 
+#include "Program_Collection.h"
+
 class DisplayAdapter {
   public:
     DisplayAdapter();

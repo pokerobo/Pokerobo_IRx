@@ -30,7 +30,7 @@ int EventListener::enterDashboard_(JoystickAction* action) {
 }
 
 int EventListener::processDashboard_(JoystickAction* action) {
-  uint8_t toggle = action->getClickingFlags();
+  uint8_t toggle = action->getTogglingFlags();
   if (toggle & (1U >> 12)) { // LEFT -> BACK
     changeFlow_(DASHBOARD_FLOW_EXECUTION);
   } else
@@ -54,15 +54,15 @@ int EventListener::leaveDashboard_(JoystickAction* action) {
   return 0;
 }
 
-int ProgramSelector::enterProgram_(JoystickAction* action) {
+int EventListener::enterProgram_(JoystickAction* action) {
   return 0;
 }
 
-int ProgramSelector::executeProgram_(JoystickAction* action) {
-  return _programCollection->getCurrentItem()->check(action);
+int EventListener::executeProgram_(JoystickAction* action, MovingCommand* command) {
+  return _programCollection->getCurrentItem()->check(action, command);
 }
 
-int ProgramSelector::leaveProgram_(JoystickAction* action) {
+int EventListener::leaveProgram_(JoystickAction* action) {
   return 0;
 }
 
@@ -107,7 +107,7 @@ int EventListener::wait_(int state) {
 
 int EventListener::move_(JoystickAction* action, MovingCommand* command) {
   uint16_t pressingFlags = action->getPressingFlags();
-  uint16_t clickingFlags = action->getClickingFlags();
+  uint16_t clickingFlags = action->getTogglingFlags();
   if ((clickingFlags & PROGRAM_MENU_TOGGLE_BUTTON)) {
     switch(_flow) {
       case DASHBOARD_FLOW_EXECUTION:

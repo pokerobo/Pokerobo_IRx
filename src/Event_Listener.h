@@ -23,9 +23,11 @@ class EventListener {
     int processDashboard_(JoystickAction* action);
     int leaveDashboard_(JoystickAction* action);
     int enterProgram_(JoystickAction* action);
-    int executeProgram_(JoystickAction* action);
+    int executeProgram_(JoystickAction* action, MovingCommand* command);
     int leaveProgram_(JoystickAction* action);
     void changeFlow_(uint8_t flow);
+    int move_(JoystickAction* action, MovingCommand* command);
+    int wait_(int state);
   private:
     DisplayAdapter* _displayAdapter = NULL;
     EventTrigger* _eventTrigger = NULL;
