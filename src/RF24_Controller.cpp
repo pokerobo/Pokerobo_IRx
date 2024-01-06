@@ -66,21 +66,27 @@ int RF24Controller::read(JoystickAction* action, MovingCommand* command) {
     }
   }
 
-  #if __RF24_RUNNING_LOG__
-  char c_[11], b_[7], x_[7], y_[7];
-  debugLog("#", ltoa(count, c_, 10), " - ", "Buttons", ": ", itoa(buttons, b_, 10),
-      "; ", "X", ": ", itoa(jX, x_, 10),
-      "; ", "Y", ": ", itoa(jY, y_, 10));
-  #endif
-
-  if (!ok) {
-    return -1;
+  if (ok) {
+    action->update(buttons, jX, jY, count);
+    command->update(leftWeight, leftDirection, rightWeight, rightDirection);
   }
 
-  action->update(buttons, jX, jY, count);
-  command->update(leftWeight, leftDirection, rightWeight, rightDirection);
+  #if __RF24_RUNNING_LOG__
+  if (isDebugEnabled()) {
+    if (ok) {
+      char c_[11], b_[7], t_[7], x_[7], y_[7];
+      debugLog("#", ltoa(action->getExtras(), c_, 10), " - ",
+          "pressing", "Flags", ": ", itoa(action->getPressingFlags(), b_, 10),
+          "toggling", "Flags", ": ", itoa(action->getTogglingFlags(), t_, 10),
+          "; ", "X", ": ", itoa(action->getX(), x_, 10),
+          "; ", "Y", ": ", itoa(action->getY(), y_, 10));
+    } else {
+      
+    }
+  }
+  #endif
 
-  return 1;
+  return ok ? 1 : -1;
 }
 
 int RF24Controller::loop() {
