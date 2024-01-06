@@ -6,8 +6,8 @@
 #include "RF24_Controller.h"
 #include "Program_Collection.h"
 
-#define DASHBOARD_FLOW_CONFIGURATION        1
-#define DASHBOARD_FLOW_EXECUTION            2
+#define DASHBOARD_FLOW_CONFIGURING            1
+#define DASHBOARD_FLOW_DISPATCHING            2
 
 class EventListener {
   public:
@@ -33,7 +33,7 @@ class EventListener {
     EventTrigger* _eventTrigger = NULL;
     RF24Controller* _rf24Controller = NULL;
     ProgramCollection* _programCollection = NULL;
-    uint8_t _flow = DASHBOARD_FLOW_EXECUTION;
+    uint8_t _flow = DASHBOARD_FLOW_DISPATCHING;
 };
 
 #endif

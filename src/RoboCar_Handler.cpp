@@ -40,15 +40,19 @@ bool RoboCarHandler::isActive() {
 
 void RoboCarHandler::turnOn() {
   _active = true;
-#if __ROBOCAR_RUNNING_LOG__
-  debugLog("RoboCarHandler", "::", "turnOn", "()");
-#endif
+  #if __ROBOCAR_RUNNING_LOG__
+  if (_debugEnabled) {
+    debugLog("RoboCarHandler", "::", "turnOn", "()");
+  }
+  #endif
 }
 
 void RoboCarHandler::turnOff() {
-#if __ROBOCAR_RUNNING_LOG__
-  debugLog("RoboCarHandler", "::", "turnOff", "()");
-#endif
+  #if __ROBOCAR_RUNNING_LOG__
+  if (_debugEnabled) {
+    debugLog("RoboCarHandler", "::", "turnOff", "()");
+  }
+  #endif
   stop();
   _active = false;
 }
@@ -76,6 +80,10 @@ void RoboCarHandler::move(int x, int y) {
 }
 
 void RoboCarHandler::move(MovingCommand* packet) {
+  if (packet == NULL) {
+    return;
+  }
+
   uint8_t in1Val = LOW;
   uint8_t in2Val = LOW;
   uint8_t in3Val = LOW;
@@ -135,110 +143,4 @@ void RoboCarHandler::stop() {
 #if __ROBOCAR_RUNNING_LOG__
   debugLog("RoboCarHandler", "::", "stop", "()");
 #endif
-}
-
-void RoboCarHandler::moveForward(int speed=DEFAULT_SPEED) {
-  digitalWrite(IN_3, HIGH);
-  digitalWrite(IN_4, LOW);
-  analogWrite(EN_B, speed);
-
-  digitalWrite(IN_1, HIGH);
-  digitalWrite(IN_2, LOW);
-  analogWrite(EN_A, speed);
-
-
-  #if __RUNNING_LOG_ENABLED__
-  Serial.println("Move forward");
-  #endif
-}
-
-void RoboCarHandler::turnLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
-  digitalWrite(IN_1, HIGH);
-  digitalWrite(IN_2, LOW);
-  analogWrite(EN_A, speed/coeff);
-
-  digitalWrite(IN_3, HIGH);
-  digitalWrite(IN_4, LOW);
-  analogWrite(EN_B, speed);
-  #if __RUNNING_LOG_ENABLED__
-  Serial.println("Move forward and left");
-  #endif
-}
-
-void RoboCarHandler::turnRight(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
-  digitalWrite(IN_1, HIGH);
-  digitalWrite(IN_2, LOW);
-  analogWrite(EN_A, speed);
-
-  digitalWrite(IN_3, HIGH);
-  digitalWrite(IN_4, LOW);
-  analogWrite(EN_B, speed/coeff);
-  #if __RUNNING_LOG_ENABLED__
-  Serial.println("Move forward and right");
-  #endif
-}
-
-void RoboCarHandler::moveBack(int speed=DEFAULT_SPEED) {
-  digitalWrite(IN_1, LOW);
-  digitalWrite(IN_2, HIGH);
-  analogWrite(EN_A, speed);
-
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, HIGH);
-  analogWrite(EN_B, speed);
-  #if __RUNNING_LOG_ENABLED__
-  Serial.println("Move back");
-  #endif
-}
-
-void RoboCarHandler::backLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
-  digitalWrite(IN_1, LOW);
-  digitalWrite(IN_2, HIGH);
-  analogWrite(EN_A, speed/coeff);
-
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, HIGH);
-  analogWrite(EN_B, speed);
-  #if __RUNNING_LOG_ENABLED__
-  Serial.println("Back to left");
-  #endif
-}
-
-void RoboCarHandler::backRight(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED) {
-  digitalWrite(IN_1, LOW);
-  digitalWrite(IN_2, HIGH);
-  analogWrite(EN_A, speed);
-
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, HIGH);
-  analogWrite(EN_B, speed/coeff);
-  #if __RUNNING_LOG_ENABLED__
-  Serial.println("Move forward and right");
-  #endif
-}
-
-void RoboCarHandler::rotateLeft(int speed=DEFAULT_SPEED) {
-  digitalWrite(IN_1, LOW);
-  digitalWrite(IN_2, HIGH);
-  analogWrite(EN_A, speed);
-
-  digitalWrite(IN_3, HIGH);
-  digitalWrite(IN_4, LOW);
-  analogWrite(EN_B, speed);
-  #if __RUNNING_LOG_ENABLED__
-  Serial.println("Rotate to left");
-  #endif
-}
-
-void RoboCarHandler::rotateRight(int speed=DEFAULT_SPEED) {
-  digitalWrite(IN_1, HIGH);
-  digitalWrite(IN_2, LOW);
-  analogWrite(EN_A, speed);
-
-  digitalWrite(IN_3, LOW);
-  digitalWrite(IN_4, HIGH);
-  analogWrite(EN_B, speed);
-  #if __RUNNING_LOG_ENABLED__
-  Serial.println("Rotate to right");
-  #endif
 }

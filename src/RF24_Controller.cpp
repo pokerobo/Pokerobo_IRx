@@ -42,12 +42,10 @@ int RF24Controller::read(JoystickAction* action, MovingCommand* command) {
 
   bool ok = false;
 
-  if (msg[0] == 'J') {
-    if (msg[1] == 'S') {
-      ok = true;
-      action->deserialize(msg + 2);
-      command->deserialize(msg + 2 + JoystickAction::messageSize);
-    }
+  if (msg[0] == 'J' && msg[1] == 'S') {
+    ok = true;
+    action->deserialize(msg + 2);
+    command->deserialize(msg + 2 + JoystickAction::messageSize);
   }
 
   #if __RF24_RUNNING_LOG__

@@ -15,14 +15,11 @@ class PedestalGroup {
     PedestalGroup(PedestalHandler* pedestalHandlers[]);
     void begin();
     void reset();
-    void processStartButtonPressedEvent();
-    void processAnalogButtonPressedEvent();
-    void processDPadUpButtonPressedEvent();
-    void processDPadRightButtonPressedEvent();
-    void processDPadDownButtonPressedEvent();
-    void processDPadLeftButtonPressedEvent();
-    void processLeftJoystickChangeEvent(int nJoyX, int nJoyY);
-    void processRightJoystickChangeEvent(int nJoyX, int nJoyY);
+    void verticalServoUp();
+    void horizontalServoRight();
+    void verticalServoDown();
+    void horizontalServoLeft();
+    void changeByJoystick(int nJoyX, int nJoyY);
     bool change(int hUnits, int vUnits);
     void setHorizontalPosition(int hPos);
     void setVerticalPosition(int vPos);
@@ -30,13 +27,11 @@ class PedestalGroup {
   private:
     uint8_t _pedestalsTotal = 0;
     PedestalHandler* _pedestalHandlers[PEDESTALS_MAX] = {};
-    void processStartButtonPressedEventFor(PedestalHandler *pedestalHandler);
-    void processDPadUpButtonPressedEventFor(PedestalHandler *pedestalHandler);
-    void processDPadRightButtonPressedEventFor(PedestalHandler *pedestalHandler);
-    void processDPadDownButtonPressedEventFor(PedestalHandler *pedestalHandler);
-    void processDPadLeftButtonPressedEventFor(PedestalHandler *pedestalHandler);
-    void processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY);
-    void processRightJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY);
+    void verticalServoUpFor(PedestalHandler *pedestalHandler);
+    void horizontalServoRightFor(PedestalHandler *pedestalHandler);
+    void verticalServoDownFor(PedestalHandler *pedestalHandler);
+    void horizontalServoLeftFor(PedestalHandler *pedestalHandler);
+    void changeByJoystickFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY);
     WaitingCounter _waitingCounter;
     bool _sceneDirection = true;
     int _sceneStep = -1;

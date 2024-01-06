@@ -50,85 +50,77 @@ void PedestalGroup::setVerticalPosition(int vPos) {
 
 void PedestalGroup::reset() {
   for (int i=0; i<_pedestalsTotal; i++) {
+    if (_pedestalHandlers[i] == NULL) {
+      continue;
+    }
     _pedestalHandlers[i]->reset();
   }
   _waitingCounter.reset();
 }
 
-void PedestalGroup::processStartButtonPressedEvent() {
+void PedestalGroup::verticalServoUp() {
   for (int i=0; i<_pedestalsTotal; i++) {
-    processStartButtonPressedEventFor(_pedestalHandlers[i]);
-  }
-}
-
-void PedestalGroup::processStartButtonPressedEventFor(PedestalHandler *pedestalHandler) {
-  if (pedestalHandler == NULL) return;
-  pedestalHandler->reset();
-}
-
-void PedestalGroup::processDPadUpButtonPressedEvent() {
-  for (int i=0; i<_pedestalsTotal; i++) {
-    processDPadUpButtonPressedEventFor(_pedestalHandlers[i]);
+    verticalServoUpFor(_pedestalHandlers[i]);
   }
 #if __PEDESTAL_RUNNING_LOG__
   debugLog("main", "()", " - ", "UP", " is pushed");
 #endif
 }
 
-void PedestalGroup::processDPadUpButtonPressedEventFor(PedestalHandler *pedestalHandler) {
+void PedestalGroup::verticalServoUpFor(PedestalHandler *pedestalHandler) {
   if (pedestalHandler == NULL) return;
   pedestalHandler->verticalServoUp();
 }
 
-void PedestalGroup::processDPadRightButtonPressedEvent() {
+void PedestalGroup::horizontalServoRight() {
   for (int i=0; i<_pedestalsTotal; i++) {
-    processDPadRightButtonPressedEventFor(_pedestalHandlers[i]);
+    horizontalServoRightFor(_pedestalHandlers[i]);
   }
 #if __PEDESTAL_RUNNING_LOG__
   debugLog("main", "()", " - ", "RIGHT", " is pushed");
 #endif
 }
 
-void PedestalGroup::processDPadRightButtonPressedEventFor(PedestalHandler *pedestalHandler) {
+void PedestalGroup::horizontalServoRightFor(PedestalHandler *pedestalHandler) {
   if (pedestalHandler == NULL) return;
   pedestalHandler->horizontalServoRight();
 }
 
-void PedestalGroup::processDPadDownButtonPressedEvent() {
+void PedestalGroup::verticalServoDown() {
   for (int i=0; i<_pedestalsTotal; i++) {
-    processDPadDownButtonPressedEventFor(_pedestalHandlers[i]);
+    verticalServoDownFor(_pedestalHandlers[i]);
   }
 #if __PEDESTAL_RUNNING_LOG__
   debugLog("main", "()", " - ", "DOWN", " is pushed");
 #endif
 }
 
-void PedestalGroup::processDPadDownButtonPressedEventFor(PedestalHandler *pedestalHandler) {
+void PedestalGroup::verticalServoDownFor(PedestalHandler *pedestalHandler) {
   if (pedestalHandler == NULL) return;
   pedestalHandler->verticalServoDown();
 }
 
-void PedestalGroup::processDPadLeftButtonPressedEvent() {
+void PedestalGroup::horizontalServoLeft() {
   for (int i=0; i<_pedestalsTotal; i++) {
-    processDPadLeftButtonPressedEventFor(_pedestalHandlers[i]);
+    horizontalServoLeftFor(_pedestalHandlers[i]);
   }
 #if __PEDESTAL_RUNNING_LOG__
   debugLog("main", "()", " - ", "LEFT", " is pushed");
 #endif
 }
 
-void PedestalGroup::processDPadLeftButtonPressedEventFor(PedestalHandler *pedestalHandler) {
+void PedestalGroup::horizontalServoLeftFor(PedestalHandler *pedestalHandler) {
   if (pedestalHandler == NULL) return;
   pedestalHandler->horizontalServoLeft();
 }
 
-void PedestalGroup::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
+void PedestalGroup::changeByJoystick(int nJoyX, int nJoyY) {
   for (int i=0; i<_pedestalsTotal; i++) {
-    processLeftJoystickChangeEventFor(_pedestalHandlers[i], nJoyX, nJoyY);
+    changeByJoystickFor(_pedestalHandlers[i], nJoyX, nJoyY);
   }
 }
 
-void PedestalGroup::processLeftJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
+void PedestalGroup::changeByJoystickFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
   if (pedestalHandler == NULL) return;
   bool changed = pedestalHandler->change(nJoyX, nJoyY);
   if (changed) {
@@ -136,17 +128,6 @@ void PedestalGroup::processLeftJoystickChangeEventFor(PedestalHandler *pedestalH
     debugLog("main", "()", " - ", "process", "Left", "JoystickChange", "Event", "()", " is called");
 #endif
   }
-}
-
-void PedestalGroup::processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
-  for (int i=0; i<_pedestalsTotal; i++) {
-    processRightJoystickChangeEventFor(_pedestalHandlers[i], nJoyX, nJoyY);
-  }
-}
-
-void PedestalGroup::processRightJoystickChangeEventFor(PedestalHandler *pedestalHandler, int nJoyX, int nJoyY) {
-  if (pedestalHandler == NULL) return;
-  // do something here
 }
 
 void PedestalGroup::autoDance() {

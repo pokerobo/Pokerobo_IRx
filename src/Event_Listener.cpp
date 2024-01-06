@@ -32,7 +32,7 @@ int EventListener::enterDashboard_(JoystickAction* action) {
 int EventListener::processDashboard_(JoystickAction* action) {
   uint8_t toggle = action->getTogglingFlags();
   if (toggle & (1U >> 12)) { // LEFT -> BACK
-    changeFlow_(DASHBOARD_FLOW_EXECUTION);
+    changeFlow_(DASHBOARD_FLOW_DISPATCHING);
   } else
   if (toggle & (1U >> 13)) { // UP -> PREV
     _programCollection->moveFocusUp();
@@ -85,19 +85,20 @@ int EventListener::check() {
     return ok;
   }
 
-  if (_eventTrigger == NULL) {
-    return -1;
+  // backward compatible
+  if (_eventTrigger != NULL) {
+      if(_eventTrigger->checkButtonPress(action.getPressingFlags(), MASK_START_BUTTON)) {
+      return _eventTrigger->next();
+    }
+
+    _eventTrigger->autoplay();
+
+    _eventTrigger->processEvents(&action, &command);
+
+    return ok;
   }
 
-  if(_eventTrigger->checkButtonPress(action.getPressingFlags(), MASK_START_BUTTON)) {
-    return _eventTrigger->next();
-  }
-
-  _eventTrigger->autoplay();
-
-  _eventTrigger->processEvents(&action, &command);
-
-  return ok;
+  return wait_(move_(&action, &command));
 }
 
 int EventListener::wait_(int state) {
@@ -110,21 +111,21 @@ int EventListener::move_(JoystickAction* action, MovingCommand* command) {
   uint16_t clickingFlags = action->getTogglingFlags();
   if ((clickingFlags & PROGRAM_MENU_TOGGLE_BUTTON)) {
     switch(_flow) {
-      case DASHBOARD_FLOW_EXECUTION:
+      case DASHBOARD_FLOW_DISPATCHING:
         leaveProgram_(action);
-        changeFlow_(DASHBOARD_FLOW_CONFIGURATION);
+        changeFlow_(DASHBOARD_FLOW_CONFIGURING);
         return enterDashboard_(action);
-      case DASHBOARD_FLOW_CONFIGURATION:
+      case DASHBOARD_FLOW_CONFIGURING:
         leaveDashboard_(action);
-        changeFlow_(DASHBOARD_FLOW_EXECUTION);
+        changeFlow_(DASHBOARD_FLOW_DISPATCHING);
         return enterProgram_(action);
     }
   }
 
   switch(_flow) {
-    case DASHBOARD_FLOW_CONFIGURATION:
+    case DASHBOARD_FLOW_CONFIGURING:
       return processDashboard_(action);
-    case DASHBOARD_FLOW_EXECUTION:
+    case DASHBOARD_FLOW_DISPATCHING:
       return executeProgram_(action, command);
   }
 }

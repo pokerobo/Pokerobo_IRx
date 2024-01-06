@@ -324,7 +324,7 @@ void EventTrigger::processAnalogButtonPressedEvent() {
 void EventTrigger::processDPadUpButtonPressedEvent() {
   #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
-    _pedestalGroup->processDPadUpButtonPressedEvent();
+    _pedestalGroup->verticalServoUp();
   }
   #endif
 }
@@ -332,7 +332,7 @@ void EventTrigger::processDPadUpButtonPressedEvent() {
 void EventTrigger::processDPadRightButtonPressedEvent() {
   #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
-    _pedestalGroup->processDPadRightButtonPressedEvent();
+    _pedestalGroup->horizontalServoRight();
   }
   #endif
 }
@@ -340,7 +340,7 @@ void EventTrigger::processDPadRightButtonPressedEvent() {
 void EventTrigger::processDPadDownButtonPressedEvent() {
   #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
-    _pedestalGroup->processDPadDownButtonPressedEvent();
+    _pedestalGroup->verticalServoDown();
   }
   #endif
 }
@@ -348,7 +348,7 @@ void EventTrigger::processDPadDownButtonPressedEvent() {
 void EventTrigger::processDPadLeftButtonPressedEvent() {
   #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
-    _pedestalGroup->processDPadLeftButtonPressedEvent();
+    _pedestalGroup->horizontalServoLeft();
   }
   #endif
 }
@@ -377,5 +377,4 @@ void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
 }
 
 void EventTrigger::processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
-  _pedestalGroup->processRightJoystickChangeEvent(nJoyX, nJoyY);
 }
