@@ -12,13 +12,13 @@ RemoteControlCar::RemoteControlCar(char* title,
   _autoPedestal = autoPedestal;
 }
 
+void RemoteControlCar::set(RoboCarHandler* roboCarHandler) {
+  _roboCarHandler = roboCarHandler;
+}
+
 void RemoteControlCar::set(PedestalGroup* pedestalGroup, bool autoPedestal) {
   _pedestalGroup = pedestalGroup;
   _autoPedestal = autoPedestal;
-}
-
-void RemoteControlCar::set(RoboCarHandler* roboCarHandler) {
-  _roboCarHandler = roboCarHandler;
 }
 
 char* RemoteControlCar::getTitle() {

@@ -34,15 +34,21 @@ int EventListener::processDashboard_(JoystickAction* action) {
   } else
   if (toggle & (1U >> 13)) { // UP -> PREV
     _programCollection->moveFocusUp();
-    _displayAdapter->render(_programCollection);
+    if (_displayAdapter != NULL) {
+      _displayAdapter->render(_programCollection);
+    }
   } else
   if (toggle & (1U >> 14)) { // DOWN -> NEXT
     _programCollection->moveFocusDown();
-    _displayAdapter->render(_programCollection);
+    if (_displayAdapter != NULL) {
+      _displayAdapter->render(_programCollection);
+    }
   } else
   if (toggle & (1U >> 15)) { // RIGHT -> SELECT
     _programCollection->setFocusAsCurrent();
-    _displayAdapter->render(_programCollection);
+    if (_displayAdapter != NULL) {
+      _displayAdapter->render(_programCollection);
+    }
   }
   return 0;
 }
@@ -67,7 +73,9 @@ int EventListener::leaveProgram_(JoystickAction* action) {
 void EventListener::changeFlow_(uint8_t flow) {
   if (flow == _flow) return;
   _flow = flow;
-  _displayAdapter->clear();
+  if (_displayAdapter != NULL) {
+    _displayAdapter->clear();
+  }
 }
 
 void EventListener::begin() {

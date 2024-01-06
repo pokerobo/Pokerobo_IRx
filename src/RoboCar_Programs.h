@@ -12,20 +12,20 @@
 class RemoteControlCar: public ProgramCapsule {
   public:
     RemoteControlCar(char* title,
-    RoboCarHandler* roboCarHandler=NULL,
-    PedestalGroup* pedestalGroup=NULL,
-    bool autoPedestal=false);
-    void set(PedestalGroup* pedestalGroup, bool autoPedestal=false);
+        RoboCarHandler* roboCarHandler=NULL,
+        PedestalGroup* pedestalGroup=NULL,
+        bool autoPedestal=false);
     void set(RoboCarHandler* roboCarHandler);
+    void set(PedestalGroup* pedestalGroup, bool autoPedestal=false);
     char* getTitle();
     int begin();
     int check(void* action, void* command);
     int close();
   private:
     char* _title;
-    bool _autoPedestal = false;
-    PedestalGroup* _pedestalGroup = NULL;
     RoboCarHandler* _roboCarHandler = NULL;
+    PedestalGroup* _pedestalGroup = NULL;
+    bool _autoPedestal = false;
     bool _debugEnabled = true;
 };
 
