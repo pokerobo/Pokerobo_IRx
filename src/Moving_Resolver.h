@@ -6,7 +6,10 @@
 
 class MovingResolver {
   public:
-    MovingCommand* resolve(MovingCommand* packet, int x, int y, int coeff=3, bool rotatable=false);
+    MovingCommand* resolve(MovingCommand* packet, int x, int y);
+  private:
+    int _coeff = 3;
+    bool _rotatable = false;
 };
 
 #endif

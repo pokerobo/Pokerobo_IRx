@@ -61,7 +61,7 @@ void RoboCarHandler::flip() {
   }
 }
 
-void RoboCarHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
+void RoboCarHandler::move(int x, int y) {
   if (!_movingResolver) {
     return;
   }
@@ -71,7 +71,7 @@ void RoboCarHandler::move(int x, int y, int coeff=1, bool rotatable=false) {
   }
 
   MovingCommand packet;
-  _movingResolver->resolve(&packet, x, y, coeff, rotatable);
+  _movingResolver->resolve(&packet, x, y);
   move(&packet);
 }
 

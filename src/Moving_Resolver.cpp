@@ -3,7 +3,7 @@
 #define BOUND_X    40
 #define BOUND_Y    40
 
-MovingCommand* MovingResolver::resolve(MovingCommand* packet, int x, int y, int coeff, bool rotatable) {
+MovingCommand* MovingResolver::resolve(MovingCommand* packet, int x, int y) {
   if (packet == NULL) {
     return packet;
   }
@@ -17,14 +17,14 @@ MovingCommand* MovingResolver::resolve(MovingCommand* packet, int x, int y, int 
     ld = rd = 1;
     if (x < -BOUND_X) {
       int r = int_min(int_abs(x), int_abs(y));
-      int dx = r * coeff / 10;
+      int dx = r * _coeff / 10;
       enaVal = int_abs(y) - (r - dx);
       enbVal = int_abs(y) - dx;
     } else if (x >= -BOUND_X && x <= BOUND_X) {
       enaVal = enbVal = int_abs(y);
     } else {
       int r = int_min(int_abs(x), int_abs(y));
-      int dx = r * coeff / 10;
+      int dx = r * _coeff / 10;
       enaVal = int_abs(y) - dx;
       enbVal = int_abs(y) - (r - dx);
     }
@@ -34,14 +34,14 @@ MovingCommand* MovingResolver::resolve(MovingCommand* packet, int x, int y, int 
     ld = rd = 2;
     if (x < -BOUND_X) {
       int r = int_min(int_abs(x), int_abs(y));
-      int dx = r * coeff / 10;
+      int dx = r * _coeff / 10;
       enaVal = int_abs(y) - (r - dx);
       enbVal = int_abs(y) - dx;
     } else if (x >= -BOUND_X && x <= BOUND_X) {
       enaVal = enbVal = int_abs(y);
     } else {
       int r = int_min(int_abs(x), int_abs(y));
-      int dx = r * coeff / 10;
+      int dx = r * _coeff / 10;
       enaVal = int_abs(y) - dx;
       enbVal = int_abs(y) - (r - dx);
     }

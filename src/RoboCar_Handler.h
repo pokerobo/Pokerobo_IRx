@@ -26,7 +26,7 @@ class RoboCarHandler {
     void stop();
     void set(MovingResolver* movingResolver);
     void move(MovingCommand* packet);
-    void move(int x, int y, int coeff=1, bool rotatable=false);
+    void move(int x, int y);
     void moveForward(int speed=DEFAULT_SPEED);
     void turnLeft(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED);
     void turnRight(int coeff=DEFAULT_COEFF, int speed=DEFAULT_SPEED);
