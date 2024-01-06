@@ -1,5 +1,7 @@
 #include "Event_Listener.h"
 
+#define PROGRAM_MENU_TOGGLE_BUTTON          MASK_ANALOG_BUTTON
+
 ProgramCollection programCollection;
 
 EventListener::EventListener() {
@@ -9,10 +11,6 @@ EventListener::EventListener() {
 void EventListener::set(DisplayAdapter* displayAdapter) {
   _displayAdapter = displayAdapter;
 }
-
-void EventListener::set(EventTrigger* eventTrigger) {
-  _eventTrigger = eventTrigger;
-};
 
 void EventListener::set(RF24Controller* rf24Controller) {
   _rf24Controller = rf24Controller;
@@ -82,19 +80,6 @@ int EventListener::check() {
   int ok = _rf24Controller->read(&action, &command);
 
   if (ok != 1) {
-    return ok;
-  }
-
-  // backward compatible
-  if (_eventTrigger != NULL) {
-    if(_eventTrigger->checkButtonPress(action.getPressingFlags(), MASK_START_BUTTON)) {
-      return _eventTrigger->next();
-    }
-
-    _eventTrigger->autoplay();
-
-    _eventTrigger->processEvents(&action, &command);
-
     return ok;
   }
 

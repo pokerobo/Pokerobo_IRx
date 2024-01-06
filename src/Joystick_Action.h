@@ -11,6 +11,8 @@
 #define __JOYSTICK_MESSAGE_STRUCTURE__    CONTROL_PACKET_V1
 #endif//__JOYSTICK_MESSAGE_STRUCTURE__
 
+#define PROGRAM_MENU_TOGGLE_BUTTON          MASK_ANALOG_BUTTON
+
 class JoystickAction {
   public:
     static const uint8_t messageSize;
