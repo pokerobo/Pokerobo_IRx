@@ -45,10 +45,12 @@ IRController::IRController(IRCodeMapper* irCodeMapper) {
 void IRController::begin() {
   IrReceiver.begin(RECV_PIN, ENABLE_LED_FEEDBACK);
   //
-#if __LOADING_LOG_ENABLED__
-  char buf[7];
-  debugLog("IR is now running on Pin", " ", itoa(RECV_PIN, buf, 10));
-#endif
+  #if __LOADING_LOG_ENABLED__
+  if (_debugEnabled) {
+    char buf[7];
+    debugLog("IR is now running on Pin", " ", itoa(RECV_PIN, buf, 10));
+  }
+  #endif
 }
 
 int IRController::loop() {
@@ -80,22 +82,22 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   uint32_t checked = 0;
 
   if(pressed & IR_MASK_OK_BUTTON && _onOkButtonPressed) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("on", "Ok", "ButtonPressed", "()", " is called");
     }
-#endif
+    #endif
     _onOkButtonPressed();
     checked |= IR_MASK_OK_BUTTON;
   }
 
   if(pressed & IR_MASK_UP_BUTTON) {
     if (_eventTrigger || _onDPadUpButtonPressed) {
-#if __RUNNING_LOG_ENABLED__
+      #if __RUNNING_LOG_ENABLED__
       if (_debugEnabled) {
         debugLog("on", "DPad", "Up", "ButtonPressed", "()", " is called");
       }
-#endif
+      #endif
       if (_onDPadUpButtonPressed) {
         _onDPadUpButtonPressed();
       } else {
@@ -107,11 +109,11 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_RIGHT_BUTTON) {
     if (_eventTrigger || _onDPadRightButtonPressed) {
-#if __RUNNING_LOG_ENABLED__
+      #if __RUNNING_LOG_ENABLED__
       if (_debugEnabled) {
         debugLog("on", "DPad", "Right", "ButtonPressed", "()", " is called");
       }
-#endif
+      #endif
       if (_onDPadRightButtonPressed) {
         _onDPadRightButtonPressed();
       } else {
@@ -123,11 +125,11 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_DOWN_BUTTON) {
     if (_eventTrigger || _onDPadDownButtonPressed) {
-#if __RUNNING_LOG_ENABLED__
+      #if __RUNNING_LOG_ENABLED__
       if (_debugEnabled) {
         debugLog("on", "DPad", "Down", "ButtonPressed", "()", " is called");
       }
-#endif
+      #endif
       if (_onDPadDownButtonPressed) {
         _onDPadDownButtonPressed();
       } else {
@@ -139,11 +141,11 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_LEFT_BUTTON) {
     if (_eventTrigger || _onDPadLeftButtonPressed) {
-#if __RUNNING_LOG_ENABLED__
+      #if __RUNNING_LOG_ENABLED__
       if (_debugEnabled) {
         debugLog("on", "DPad", "Left", "ButtonPressed", "()", " is called");
       }
-#endif
+      #endif
       if (_onDPadLeftButtonPressed) {
         _onDPadLeftButtonPressed();
       } else {
@@ -154,41 +156,41 @@ uint32_t IRController::processButtonPress(uint32_t pressed) {
   }
 
   if(pressed & IR_MASK_ASTERISK_BUTTON && _onAsteriskButtonPressed) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("on", "Asterisk", "ButtonPressed", "()", " is called");
     }
-#endif
+    #endif
     _onAsteriskButtonPressed();
     checked |= IR_MASK_ASTERISK_BUTTON;
   }
 
   if(pressed & IR_MASK_SHARP_BUTTON && _onSharpButtonPressed) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("on", "Sharp", "ButtonPressed", "()", " is called");
     }
-#endif
+    #endif
     _onSharpButtonPressed();
     checked |= IR_MASK_SHARP_BUTTON;
   }
 
   if(pressed & IR_MASK_DIGITS_BUTTON && _onDigitButtonPressed) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("on", "Digit", "ButtonPressed", "()", " is called");
     }
-#endif
+    #endif
     _onDigitButtonPressed(pressed & IR_MASK_DIGITS_BUTTON);
     checked |= (pressed & IR_MASK_DIGITS_BUTTON);
   }
 
   if(pressed && _onAnyButtonPressed) {
-#if __RUNNING_LOG_ENABLED__
+    #if __RUNNING_LOG_ENABLED__
     if (_debugEnabled) {
       debugLog("on", "Any", "ButtonPressed", "()", " is called");
     }
-#endif
+    #endif
     _onAnyButtonPressed(pressed);
     checked |= pressed;
   }
@@ -203,15 +205,15 @@ uint32_t detectButtonPress(IRData decodedIRData, IRCodeMapper* _irCodeMapper) {
     uint8_t pos = _irCodeMapper->getPosition((uint8_t)decodedIRData.protocol, decodedIRData.command);
     if (_irCodeMapper->isValid(pos)) {
       buttons |= (1UL << pos);
-#if __RUNNING_LOG_ENABLED__
+      #if __RUNNING_LOG_ENABLED__
       char pos_[7];
       debugLog("Buttons", ": ", itoa(pos, pos_, 10), " is pushed");
-#endif
+      #endif
       return buttons;
     } else {
-#if __RUNNING_LOG_ENABLED__
+      #if __RUNNING_LOG_ENABLED__
       IrReceiver.printIRResultShort(&Serial);
-#endif
+      #endif
     }
   }
 
