@@ -92,4 +92,7 @@ void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* 
     char* s10, char* s11, char* s12, char* s13, char* s14);
 void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6, char* s7, char* s8, char* s9,
     char* s10, char* s11, char* s12, char* s13, char* s14, char* s15);
+void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6, char* s7, char* s8, char* s9,
+    char* s10, char* s11, char* s12, char* s13, char* s14, char* s15, char* s16, char* s17, char* s18);
+
 #endif

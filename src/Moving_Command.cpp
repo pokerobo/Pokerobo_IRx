@@ -26,3 +26,17 @@ int MovingCommand::getRightSpeed() {
 byte MovingCommand::getRightDirection() {
   return _RightDirection;
 }
+
+void* MovingCommand::deserialize(uint8_t* buf) {
+  if (buf == NULL) {
+    return NULL;
+  }
+
+  uint8_t directionFlags = buf[0];
+  _LeftDirection = directionFlags & 0b0011;
+  _RightDirection = (directionFlags & 0b1100) >> 2;
+  _LeftSpeed = buf[1];
+  _RightSpeed = buf[2];
+
+  return this;
+}

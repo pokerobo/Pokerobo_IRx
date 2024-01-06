@@ -2,6 +2,7 @@
 #define __MOVING_COMMAND_H__
 
 #include "Commons.h"
+#include "Message_Exchange.h"
 
 class MovingCommand {
   public:
@@ -11,6 +12,7 @@ class MovingCommand {
     byte getLeftDirection();
     int getRightSpeed();
     byte getRightDirection();
+    void* deserialize(uint8_t* buf);
   private:
     int _LeftSpeed;
     byte _LeftDirection;

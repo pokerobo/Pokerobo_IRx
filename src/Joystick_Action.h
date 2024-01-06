@@ -4,6 +4,13 @@
 #include "Commons.h"
 #include "Message_Exchange.h"
 
+#define CONTROL_PACKET_V1                 1
+#define CONTROL_PACKET_V2                 2
+
+#ifndef __JOYSTICK_MESSAGE_STRUCTURE__
+#define __JOYSTICK_MESSAGE_STRUCTURE__    CONTROL_PACKET_V1
+#endif//__JOYSTICK_MESSAGE_STRUCTURE__
+
 class JoystickAction {
   public:
     static const uint8_t messageSize;
