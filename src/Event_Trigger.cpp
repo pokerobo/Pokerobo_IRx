@@ -369,7 +369,7 @@ void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
       if (_pedestalGroup != NULL) {
         nJoyX = map(nJoyX, -255, 255, PEDESTAL_RANGE_X, -PEDESTAL_RANGE_X);
         nJoyY = map(nJoyY, -255, 255, PEDESTAL_RANGE_Y, -PEDESTAL_RANGE_Y);
-        _pedestalGroup->processLeftJoystickChangeEvent(nJoyX, nJoyY);
+        _pedestalGroup->changeByJoystick(nJoyX, nJoyY);
       }
       #endif
       break;

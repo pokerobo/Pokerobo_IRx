@@ -87,7 +87,7 @@ int EventListener::check() {
 
   // backward compatible
   if (_eventTrigger != NULL) {
-      if(_eventTrigger->checkButtonPress(action.getPressingFlags(), MASK_START_BUTTON)) {
+    if(_eventTrigger->checkButtonPress(action.getPressingFlags(), MASK_START_BUTTON)) {
       return _eventTrigger->next();
     }
 
