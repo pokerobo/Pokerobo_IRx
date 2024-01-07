@@ -101,8 +101,8 @@ int EventListener::wait_(int state) {
 
 int EventListener::move_(JoystickAction* action, MovingCommand* command) {
   uint16_t pressingFlags = action->getPressingFlags();
-  uint16_t clickingFlags = action->getTogglingFlags();
-  if ((clickingFlags & PROGRAM_MENU_TOGGLE_BUTTON)) {
+  uint16_t togglingFlags = action->getTogglingFlags();
+  if ((togglingFlags & PROGRAM_MENU_TOGGLE_BUTTON)) {
     switch(_flow) {
       case DASHBOARD_FLOW_DISPATCHING:
         leaveProgram_(action);

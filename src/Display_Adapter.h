@@ -8,6 +8,7 @@ class DisplayAdapter {
     DisplayAdapter();
     void begin();
     void render(ProgramCollection* programCollection);
+    void render(int16_t col, int16_t row, char* text);
     void clear();
   protected:
     void* _lcdRef = NULL;

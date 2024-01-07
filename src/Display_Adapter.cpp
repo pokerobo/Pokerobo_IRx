@@ -18,6 +18,13 @@ void DisplayAdapter::render(ProgramCollection* programCollection) {
   
 }
 
+void DisplayAdapter::render(int16_t col, int16_t row, char* text) {
+  if (text != NULL && strlen(text) > 0) {
+    lcd.setCursor(col, row);
+    lcd.print(text);
+  }
+}
+
 void DisplayAdapter::clear() {
   lcd.clear();
 }

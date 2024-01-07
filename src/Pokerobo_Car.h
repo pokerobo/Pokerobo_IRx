@@ -12,6 +12,8 @@
 #include "RF24_Controller.h"
 #endif
 
+#include "Display_Adapter.h"
+
 #include "RoboCar_Programs.h"
 #include "Event_Listener.h"
 #include "Event_Trigger.h"

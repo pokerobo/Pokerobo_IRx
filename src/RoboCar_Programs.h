@@ -2,6 +2,7 @@
 #define __ROBOCAR_PROGRAMS_H__
 
 #include "Commons.h"
+#include "Display_Adapter.h"
 #include "Program_Capsule.h"
 #include "Joystick_Action.h"
 #include "Moving_Command.h"
@@ -12,9 +13,11 @@
 class RemoteControlCar: public ProgramCapsule {
   public:
     RemoteControlCar(char* title,
+        DisplayAdapter* displayAdapter=NULL,
         RoboCarHandler* roboCarHandler=NULL,
         PedestalGroup* pedestalGroup=NULL,
         bool autoPedestal=false);
+    void set(DisplayAdapter* displayAdapter);
     void set(RoboCarHandler* roboCarHandler);
     void set(PedestalGroup* pedestalGroup, bool autoPedestal=false);
     char* getTitle();
@@ -23,6 +26,7 @@ class RemoteControlCar: public ProgramCapsule {
     int close();
   private:
     char* _title;
+    DisplayAdapter* _displayAdapter = NULL;
     RoboCarHandler* _roboCarHandler = NULL;
     PedestalGroup* _pedestalGroup = NULL;
     bool _autoPedestal = false;

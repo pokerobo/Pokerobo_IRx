@@ -1,5 +1,7 @@
 #include "Pokerobo_Car.h"
 
+DisplayAdapter displayAdapter;
+
 const uint64_t address = 0x18580901LL;
 RF24Controller rf24Controller(address);
 HangingDetector hangingDetector;
@@ -42,6 +44,7 @@ void setup() {
   rf24Controller.set(&hangingDetector);
   rf24Controller.begin();
 
+  eventListener.set(&displayAdapter);
   eventListener.set(&rf24Controller);
   eventListener.add(&remoteControlCar);
   eventListener.begin();

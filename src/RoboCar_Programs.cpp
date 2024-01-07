@@ -3,13 +3,19 @@
 //-------------------------------------------------------------------------------------------------
 
 RemoteControlCar::RemoteControlCar(char* title,
+    DisplayAdapter* displayAdapter,
     RoboCarHandler* roboCarHandler,
     PedestalGroup* pedestalGroup,
     bool autoPedestal) {
   _title = title;
+  _displayAdapter = displayAdapter;
   _roboCarHandler = roboCarHandler;
   _pedestalGroup = pedestalGroup;
   _autoPedestal = autoPedestal;
+}
+
+void RemoteControlCar::set(DisplayAdapter* displayAdapter) {
+  _displayAdapter = displayAdapter;
 }
 
 void RemoteControlCar::set(RoboCarHandler* roboCarHandler) {
@@ -32,6 +38,8 @@ int RemoteControlCar::begin() {
   return 0;
 }
 
+char fmt[] = "L:%4d - R:%4d";
+
 int RemoteControlCar::check(void* action_, void* command_) {
   JoystickAction* action = (JoystickAction*) action_;
   MovingCommand* command = (MovingCommand*) command_;
@@ -44,6 +52,13 @@ int RemoteControlCar::check(void* action_, void* command_) {
 
   if (_roboCarHandler) {
     _roboCarHandler->move(command);
+  }
+
+  if (_displayAdapter != NULL) {
+    _displayAdapter->render(0, 0, _title);
+    char text[16] = {};
+    sprintf(text, fmt, command->getLeftSpeed(), command->getRightSpeed());
+    _displayAdapter->render(0, 1, text);
   }
 
   return 0;

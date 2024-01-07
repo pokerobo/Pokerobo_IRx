@@ -111,16 +111,18 @@ void RoboCarHandler::move(MovingCommand* packet) {
   int enbVal = packet->getRightSpeed();
 
   #if __ROBOCAR_RUNNING_LOG__
-  char num_[7];
-  debugLog(" - ", "active", ": ", _active ? "On" : "Off");
-  debugLog(" - ", "IN_1", ": ", itoa(in1Val, num_, 10));
-  debugLog(" - ", "IN_2", ": ", itoa(in2Val, num_, 10));
-  debugLog(" - ", "IN_3", ": ", itoa(in3Val, num_, 10));
-  debugLog(" - ", "IN_4", ": ", itoa(in4Val, num_, 10));
+  if (_debugEnabled) {
+    char num_[7];
+    debugLog(" - ", "active", ": ", _active ? "On" : "Off");
+    debugLog(" - ", "IN_1", ": ", itoa(in1Val, num_, 10));
+    debugLog(" - ", "IN_2", ": ", itoa(in2Val, num_, 10));
+    debugLog(" - ", "IN_3", ": ", itoa(in3Val, num_, 10));
+    debugLog(" - ", "IN_4", ": ", itoa(in4Val, num_, 10));
 
-  debugLog(" - ", "EN_A", ": ", itoa(enaVal, num_, 10));
-  debugLog(" - ", "EN_B", ": ", itoa(enbVal, num_, 10));
-#endif
+    debugLog(" - ", "EN_A", ": ", itoa(enaVal, num_, 10));
+    debugLog(" - ", "EN_B", ": ", itoa(enbVal, num_, 10));
+  }
+  #endif
 
   digitalWrite(IN_1, in1Val);
   digitalWrite(IN_2, in2Val);
@@ -140,7 +142,9 @@ void RoboCarHandler::stop() {
   digitalWrite(IN_4, LOW);
   analogWrite(EN_B, 0);
 
-#if __ROBOCAR_RUNNING_LOG__
-  debugLog("RoboCarHandler", "::", "stop", "()");
-#endif
+  #if __ROBOCAR_RUNNING_LOG__
+  if (_debugEnabled) {
+    debugLog("RoboCarHandler", "::", "stop", "()");
+  }
+  #endif
 }
