@@ -2,6 +2,7 @@
 #define __RF24_CONTROLLER_H__
 
 #include "Commons.h"
+#include "Context_Packet.h"
 #include "Input_Controller.h"
 #include "Event_Processor.h"
 
@@ -47,7 +48,7 @@ class RF24Controller: InputController {
   public:
     RF24Controller(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
     void begin();
-    int read(JoystickAction* action, MovingCommand* command);
+    int read(MasterContext* context, JoystickAction* action, MovingCommand* command);
     int loop();
     void set(HangingDetector* hangingDetector);
     void set(EventProcessor* eventProcessor);

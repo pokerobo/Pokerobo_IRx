@@ -85,7 +85,7 @@ int EventListener::check() {
   JoystickAction action;
   MovingCommand command;
 
-  int ok = _rf24Controller->read(&action, &command);
+  int ok = _rf24Controller->read(NULL, &action, &command);
 
   if (ok != 1) {
     return ok;

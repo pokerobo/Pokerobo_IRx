@@ -33,7 +33,7 @@ bool RF24Controller::available() {
   return ok;
 }
 
-int RF24Controller::read(JoystickAction* action, MovingCommand* command) {
+int RF24Controller::read(MasterContext* context, JoystickAction* action, MovingCommand* command) {
   if (!available()) {
     return 0;
   }
@@ -46,6 +46,22 @@ int RF24Controller::read(JoystickAction* action, MovingCommand* command) {
     ok = true;
     action->deserialize(msg + 2);
     command->deserialize(msg + 2 + JoystickAction::messageSize);
+  } else {
+    uint8_t offset = 0;
+
+    if (context != NULL) {
+      context->deserialize(msg + offset);
+    }
+    offset += MasterContext::messageSize;
+
+    if (action != NULL) {
+      action->deserialize(msg + offset);
+    }
+    offset += JoystickAction::messageSize;
+
+    if (command != NULL) {
+      command->deserialize(msg + offset);
+    }
   }
 
   #if __RF24_RUNNING_LOG__
@@ -67,10 +83,11 @@ int RF24Controller::read(JoystickAction* action, MovingCommand* command) {
 }
 
 int RF24Controller::loop() {
+  MasterContext context;
   JoystickAction action;
   MovingCommand command;
 
-  int ok = read(&action, &command);
+  int ok = read(&context, &action, &command);
 
   if (ok == 1) {
     if (_eventProcessor != NULL) {
