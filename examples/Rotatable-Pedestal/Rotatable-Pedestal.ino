@@ -26,7 +26,7 @@ IRCodeMapper irCodeMapper((IRCodeMapping* []) { &mappingSony }, 1);
 IRCodeMapper irCodeMapper;
 #endif
 
-IRController irController(&irCodeMapper);
+IRListener irListener(&irCodeMapper);
 #endif
 
 #if (CONTROLLER == CONTROLLER_PS2)
@@ -121,8 +121,8 @@ void setup() {
   #endif // CONTROLLER_IR
 
   #if (CONTROLLER_IR)
-  irController.begin();
-  irController.set(&eventTrigger);
+  irListener.begin();
+  irListener.set(&eventTrigger);
   #endif
 
   #if __LOADING_LOG_ENABLED__
@@ -144,7 +144,7 @@ void loop() {
   #endif
 
   #if (CONTROLLER_IR)
-  irController.loop();
+  irListener.loop();
   #endif
 
   uint32_t exectime = millis() - begin;

@@ -1,7 +1,7 @@
 #include "Commons.h"
 
 #if (CONTROLLER_IR)
-#include "IR_Controller.h"
+#include "IR_Listener.h"
 #endif
 
 #if (CONTROLLER == CONTROLLER_PS2)

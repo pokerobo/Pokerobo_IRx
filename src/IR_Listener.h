@@ -1,13 +1,13 @@
-#ifndef __IR_CONTROLLER_H__
-#define __IR_CONTROLLER_H__
+#ifndef __IR_LISTENER_H__
+#define __IR_LISTENER_H__
 
 #include "Commons.h"
 #include "IR_Mapping_Code.h"
 #include "Event_Trigger.h"
 
-class IRController {
+class IRListener {
   public:
-    IRController(IRCodeMapper* irCodeMapper=NULL);
+    IRListener(IRCodeMapper* irCodeMapper=NULL);
     void begin();
     void setCodeMapper(IRCodeMapper* irCodeMapper);
     void set(EventTrigger* eventTrigger);

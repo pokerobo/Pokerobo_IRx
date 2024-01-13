@@ -1,4 +1,4 @@
-#include "IR_Controller.h"
+#include "IR_Listener.h"
 #include "IR_Mapping_Code.h"
 #include <IRremote.hpp>
 
@@ -37,12 +37,12 @@
 
 uint32_t detectButtonPress(IRData, IRCodeMapper*);
 
-IRController::IRController(IRCodeMapper* irCodeMapper) {
+IRListener::IRListener(IRCodeMapper* irCodeMapper) {
   _debugEnabled = true;
   _irCodeMapper = irCodeMapper;
 }
 
-void IRController::begin() {
+void IRListener::begin() {
   IrReceiver.begin(RECV_PIN, ENABLE_LED_FEEDBACK);
   //
   #if __LOADING_LOG_ENABLED__
@@ -53,7 +53,7 @@ void IRController::begin() {
   #endif
 }
 
-int IRController::loop() {
+int IRListener::loop() {
   if (!IrReceiver.decode()) {
     return 0;
   }
@@ -70,15 +70,15 @@ int IRController::loop() {
   return -1;
 }
 
-void IRController::setCodeMapper(IRCodeMapper* irCodeMapper) {
+void IRListener::setCodeMapper(IRCodeMapper* irCodeMapper) {
   _irCodeMapper = irCodeMapper;
 }
 
-void IRController::set(EventTrigger* eventTrigger) {
+void IRListener::set(EventTrigger* eventTrigger) {
   _eventTrigger = eventTrigger;
 };
 
-uint32_t IRController::processButtonPress(uint32_t pressed) {
+uint32_t IRListener::processButtonPress(uint32_t pressed) {
   uint32_t checked = 0;
 
   if(pressed & IR_MASK_OK_BUTTON && _onOkButtonPressed) {
@@ -220,39 +220,39 @@ uint32_t detectButtonPress(IRData decodedIRData, IRCodeMapper* _irCodeMapper) {
   return buttons;
 }
 
-void IRController::setOnOkButtonPressed(void (*function)()) {
+void IRListener::setOnOkButtonPressed(void (*function)()) {
   _onOkButtonPressed = function;
 };
 
-void IRController::setOnDPadUpButtonPressed(void (*function)()) {
+void IRListener::setOnDPadUpButtonPressed(void (*function)()) {
   _onDPadUpButtonPressed = function;
 };
 
-void IRController::setOnDPadRightButtonPressed(void (*function)()) {
+void IRListener::setOnDPadRightButtonPressed(void (*function)()) {
   _onDPadRightButtonPressed = function;
 };
 
-void IRController::setOnDPadDownButtonPressed(void (*function)()) {
+void IRListener::setOnDPadDownButtonPressed(void (*function)()) {
   _onDPadDownButtonPressed = function;
 };
 
-void IRController::setOnDPadLeftButtonPressed(void (*function)()) {
+void IRListener::setOnDPadLeftButtonPressed(void (*function)()) {
   _onDPadLeftButtonPressed = function;
 };
 
-void IRController::setOnAsteriskButtonPressed(void (*function)()) {
+void IRListener::setOnAsteriskButtonPressed(void (*function)()) {
   _onAsteriskButtonPressed = function;
 };
 
-void IRController::setOnSharpButtonPressed(void (*function)()) {
+void IRListener::setOnSharpButtonPressed(void (*function)()) {
   _onSharpButtonPressed = function;
 };
 
-void IRController::setOnDigitButtonPressed(void (*function)(uint32_t)) {
+void IRListener::setOnDigitButtonPressed(void (*function)(uint32_t)) {
   _onDigitButtonPressed = function;
 };
 
-void IRController::setOnAnyButtonPressed(void (*function)(uint32_t)) {
+void IRListener::setOnAnyButtonPressed(void (*function)(uint32_t)) {
   _onAnyButtonPressed = function;
 };
 
