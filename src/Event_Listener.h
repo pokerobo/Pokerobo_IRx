@@ -8,9 +8,9 @@
 #define DASHBOARD_FLOW_CONFIGURING            1
 #define DASHBOARD_FLOW_DISPATCHING            2
 
-class EventListener {
+class ProgramManager {
   public:
-    EventListener();
+    ProgramManager();
     void set(DisplayAdapter* displayAdapter);
     void set(RF24Controller* rf24Controller);
     bool add(ProgramCapsule* programCapsule);

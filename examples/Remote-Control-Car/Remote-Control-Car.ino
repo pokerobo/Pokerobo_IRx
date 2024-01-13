@@ -20,7 +20,7 @@ PedestalGroup pedestalGroup(pedestalHandlers);
 
 RemoteControlCar remoteControlCar(" Remote Control Car");
 
-EventListener eventListener;
+ProgramManager programManager;
 
 void setup() {
   while (!Serial) delay(100); // Wait for the serial connection to be establised.
@@ -49,10 +49,10 @@ void setup() {
   rf24Controller.set(&hangingDetector);
   rf24Controller.begin();
 
-  eventListener.set(&displayAdapter);
-  eventListener.set(&rf24Controller);
-  eventListener.add(&remoteControlCar);
-  eventListener.begin();
+  programManager.set(&displayAdapter);
+  programManager.set(&rf24Controller);
+  programManager.add(&remoteControlCar);
+  programManager.begin();
 
   #if __LOADING_LOG_ENABLED__
   debugLog("main", "()", " - ", "Done!");
@@ -61,6 +61,6 @@ void setup() {
 
 void loop() {
   uint32_t begin = millis();
-  eventListener.check();
+  programManager.check();
   delay(max(100 - (millis() - begin), 0));
 }

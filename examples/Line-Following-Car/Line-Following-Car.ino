@@ -7,7 +7,7 @@ HangingDetector hangingDetector;
 RoboCarHandler roboCarHandler;
 MovingResolver movingResolver;
 
-EventListener eventListener;
+ProgramManager programManager;
 EventTrigger eventTrigger;
 
 void setup() {
@@ -31,9 +31,9 @@ void setup() {
   rf24Controller.set(&hangingDetector);
   rf24Controller.begin();
 
-  eventListener.set(&eventTrigger);
-  eventListener.set(&rf24Controller);
-  eventListener.begin();
+  programManager.set(&eventTrigger);
+  programManager.set(&rf24Controller);
+  programManager.begin();
 
   #if __LOADING_LOG_ENABLED__
   debugLog("main", "()", " - ", "Done!");
@@ -43,7 +43,7 @@ void setup() {
 void loop() {
   uint32_t begin = millis();
 
-  eventListener.check();
+  programManager.check();
 
   uint32_t exectime = millis() - begin;
   // Serial.print("EXECTIME"), Serial.print(": "), Serial.print(exectime), Serial.println();

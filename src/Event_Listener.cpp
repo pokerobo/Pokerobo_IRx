@@ -4,30 +4,30 @@
 
 ProgramCollection programCollection;
 
-EventListener::EventListener() {
+ProgramManager::ProgramManager() {
   _programCollection = &programCollection;
 }
 
-void EventListener::set(DisplayAdapter* displayAdapter) {
+void ProgramManager::set(DisplayAdapter* displayAdapter) {
   _displayAdapter = displayAdapter;
 }
 
-void EventListener::set(RF24Controller* rf24Controller) {
+void ProgramManager::set(RF24Controller* rf24Controller) {
   _rf24Controller = rf24Controller;
 };
 
-bool EventListener::add(ProgramCapsule* programCapsule) {
+bool ProgramManager::add(ProgramCapsule* programCapsule) {
   return _programCollection->add(programCapsule);
 }
 
-int EventListener::enterDashboard_(MasterContext* context, JoystickAction* action) {
+int ProgramManager::enterDashboard_(MasterContext* context, JoystickAction* action) {
   if (_displayAdapter != NULL) {
     _displayAdapter->render(_programCollection);
   }
   return 0;
 }
 
-int EventListener::processDashboard_(MasterContext* context, JoystickAction* action) {
+int ProgramManager::processDashboard_(MasterContext* context, JoystickAction* action) {
   uint8_t toggle = action->getTogglingFlags();
   if (toggle & (1U >> 12)) { // LEFT -> BACK
     changeFlow_(DASHBOARD_FLOW_DISPATCHING);
@@ -53,24 +53,24 @@ int EventListener::processDashboard_(MasterContext* context, JoystickAction* act
   return 0;
 }
 
-int EventListener::leaveDashboard_(MasterContext* context, JoystickAction* action) {
+int ProgramManager::leaveDashboard_(MasterContext* context, JoystickAction* action) {
   _programCollection->setFocusAsCurrent();
   return 0;
 }
 
-int EventListener::enterProgram_(MasterContext* context, JoystickAction* action) {
+int ProgramManager::enterProgram_(MasterContext* context, JoystickAction* action) {
   return 0;
 }
 
-int EventListener::executeProgram_(MasterContext* context, JoystickAction* action, MovingCommand* command) {
+int ProgramManager::executeProgram_(MasterContext* context, JoystickAction* action, MovingCommand* command) {
   return _programCollection->getCurrentItem()->check(action, command);
 }
 
-int EventListener::leaveProgram_(MasterContext* context, JoystickAction* action) {
+int ProgramManager::leaveProgram_(MasterContext* context, JoystickAction* action) {
   return 0;
 }
 
-void EventListener::changeFlow_(uint8_t flow) {
+void ProgramManager::changeFlow_(uint8_t flow) {
   if (flow == _flow) return;
   _flow = flow;
   if (_displayAdapter != NULL) {
@@ -78,10 +78,10 @@ void EventListener::changeFlow_(uint8_t flow) {
   }
 }
 
-void EventListener::begin() {
+void ProgramManager::begin() {
 }
 
-int EventListener::check() {
+int ProgramManager::check() {
   MasterContext context;
   JoystickAction action;
   MovingCommand command;
@@ -95,12 +95,12 @@ int EventListener::check() {
   return wait_(move_(&context, &action, &command));
 }
 
-int EventListener::wait_(int state) {
+int ProgramManager::wait_(int state) {
   delay(10);
   return state;
 }
 
-int EventListener::move_(MasterContext* context, JoystickAction* action, MovingCommand* command) {
+int ProgramManager::move_(MasterContext* context, JoystickAction* action, MovingCommand* command) {
   uint16_t pressingFlags = action->getPressingFlags();
   uint16_t togglingFlags = action->getTogglingFlags();
   if ((togglingFlags & PROGRAM_MENU_TOGGLE_BUTTON)) {
