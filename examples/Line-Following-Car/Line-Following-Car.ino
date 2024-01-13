@@ -1,7 +1,7 @@
 #include "Pokerobo_Car.h"
 
 const uint64_t address = 0x18580901LL;
-RF24Controller rf24Controller(address);
+RF24Listener rf24Listener(address);
 HangingDetector hangingDetector;
 
 RoboCarHandler roboCarHandler;
@@ -28,11 +28,11 @@ void setup() {
     roboCarHandler.stop();
   }, 100);
 
-  rf24Controller.set(&hangingDetector);
-  rf24Controller.begin();
+  rf24Listener.set(&hangingDetector);
+  rf24Listener.begin();
 
   programManager.set(&eventTrigger);
-  programManager.set(&rf24Controller);
+  programManager.set(&rf24Listener);
   programManager.begin();
 
   #if __LOADING_LOG_ENABLED__

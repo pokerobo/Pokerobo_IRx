@@ -9,7 +9,7 @@
 #endif
 
 #if (CONTROLLER == CONTROLLER_RF24)
-#include "RF24_Controller.h"
+#include "RF24_Listener.h"
 #endif
 
 #include "Display_Adapter.h"

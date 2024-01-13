@@ -1,4 +1,4 @@
-#include "Event_Listener.h"
+#include "Program_Manager.h"
 
 #define PROGRAM_MENU_TOGGLE_BUTTON          MASK_ANALOG_BUTTON
 
@@ -12,8 +12,8 @@ void ProgramManager::set(DisplayAdapter* displayAdapter) {
   _displayAdapter = displayAdapter;
 }
 
-void ProgramManager::set(RF24Controller* rf24Controller) {
-  _rf24Controller = rf24Controller;
+void ProgramManager::set(RF24Listener* rf24Listener) {
+  _rf24Listener = rf24Listener;
 };
 
 bool ProgramManager::add(ProgramCapsule* programCapsule) {
@@ -86,7 +86,7 @@ int ProgramManager::check() {
   JoystickAction action;
   MovingCommand command;
 
-  int ok = _rf24Controller->read(&context, &action, &command);
+  int ok = _rf24Listener->read(&context, &action, &command);
 
   if (ok != 1) {
     return ok;

@@ -1,5 +1,5 @@
-#ifndef __RF24_CONTROLLER_H__
-#define __RF24_CONTROLLER_H__
+#ifndef __RF24_LISTENER_H__
+#define __RF24_LISTENER_H__
 
 #include "Commons.h"
 #include "Context_Packet.h"
@@ -44,9 +44,9 @@
 #define RF24_JOYSTICK_RANGE_X     255
 #define RF24_JOYSTICK_RANGE_Y     255
 
-class RF24Controller: InputController {
+class RF24Listener: InputController {
   public:
-    RF24Controller(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
+    RF24Listener(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
     void begin();
     int read(MasterContext* context, JoystickAction* action, MovingCommand* command);
     int loop();

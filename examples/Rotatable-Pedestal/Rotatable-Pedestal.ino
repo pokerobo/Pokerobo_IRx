@@ -35,7 +35,7 @@ PS2Controller ps2Controller;
 
 #if (CONTROLLER == CONTROLLER_RF24)
 const uint64_t address = 0x18580901LL;
-RF24Controller rf24Controller(address);
+RF24Listener rf24Listener(address);
 #endif
 
 #if (CONTROLLER_ROBOCAR)
@@ -90,9 +90,9 @@ void setup() {
   #endif
 
   #if (CONTROLLER == CONTROLLER_RF24)
-  rf24Controller.begin();
-  rf24Controller.set(&hangingDetector);
-  rf24Controller.set(&eventTrigger);
+  rf24Listener.begin();
+  rf24Listener.set(&hangingDetector);
+  rf24Listener.set(&eventTrigger);
   #endif
 
   #if (CONTROLLER_IR)
@@ -140,7 +140,7 @@ void loop() {
   #endif
 
   #if (CONTROLLER == CONTROLLER_RF24)
-  rf24Controller.loop();
+  rf24Listener.loop();
   #endif
 
   #if (CONTROLLER_IR)

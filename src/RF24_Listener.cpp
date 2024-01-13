@@ -1,4 +1,4 @@
-#include "RF24_Controller.h"
+#include "RF24_Listener.h"
 
 #include <SPI.h>
 #include <nRF24L01.h>
@@ -6,18 +6,18 @@
 
 RF24 radio(__RF24_CE_PIN__, __RF24_CSN_PIN__);  // CE, CSN
 
-RF24Controller::RF24Controller(uint64_t address, bool debugEnabled) {
+RF24Listener::RF24Listener(uint64_t address, bool debugEnabled) {
   _address = address;
   _debugEnabled = debugEnabled;
 }
 
-void RF24Controller::begin() {
+void RF24Listener::begin() {
   radio.begin();
   radio.openReadingPipe(0, _address);
   radio.startListening();
 }
 
-bool RF24Controller::available() {
+bool RF24Listener::available() {
   bool tx_ds, tx_df, rx_dr;
   radio.whatHappened(tx_ds, tx_df, rx_dr);
   bool ok = radio.available();
@@ -33,7 +33,7 @@ bool RF24Controller::available() {
   return ok;
 }
 
-int RF24Controller::read(MasterContext* context, JoystickAction* action, MovingCommand* command) {
+int RF24Listener::read(MasterContext* context, JoystickAction* action, MovingCommand* command) {
   if (!available()) {
     return 0;
   }
@@ -84,7 +84,7 @@ int RF24Controller::read(MasterContext* context, JoystickAction* action, MovingC
   return ok ? 1 : -1;
 }
 
-int RF24Controller::loop() {
+int RF24Listener::loop() {
   MasterContext context;
   JoystickAction action;
   MovingCommand command;
@@ -108,11 +108,11 @@ int RF24Controller::loop() {
   return ok;
 }
 
-bool RF24Controller::isDebugEnabled() {
+bool RF24Listener::isDebugEnabled() {
   return _debugEnabled;
 }
 
-bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
+bool RF24Listener::isJoystickChanged(int nJoyX, int nJoyY) {
   #if defined(RF24_JOYSTICK_CHECKING_CHANGE)
   return nJoyX >= RF24_JOYSTICK_DEADZONE_X || nJoyX <= -RF24_JOYSTICK_DEADZONE_X ||
       nJoyY >= RF24_JOYSTICK_DEADZONE_Y || nJoyY <= -RF24_JOYSTICK_DEADZONE_Y;
@@ -121,18 +121,18 @@ bool RF24Controller::isJoystickChanged(int nJoyX, int nJoyY) {
   #endif
 }
 
-int RF24Controller::adjustJoystickX(int nJoyX) {
+int RF24Listener::adjustJoystickX(int nJoyX) {
   return map(nJoyX, 0, 1024, -RF24_JOYSTICK_RANGE_X, RF24_JOYSTICK_RANGE_X);
 }
 
-int RF24Controller::adjustJoystickY(int nJoyY) {
+int RF24Listener::adjustJoystickY(int nJoyY) {
   return map(nJoyY, 0, 1024, -RF24_JOYSTICK_RANGE_Y, RF24_JOYSTICK_RANGE_Y);
 }
 
-void RF24Controller::set(HangingDetector* hangingDetector) {
+void RF24Listener::set(HangingDetector* hangingDetector) {
   _hangingDetector = hangingDetector;
 };
 
-void RF24Controller::set(EventProcessor* eventProcessor) {
+void RF24Listener::set(EventProcessor* eventProcessor) {
   _eventProcessor = eventProcessor;
 };
