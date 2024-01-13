@@ -1,5 +1,5 @@
-#ifndef __EVENT_LISTENER_H__
-#define __EVENT_LISTENER_H__
+#ifndef __PROGRAM_MANAGER_H__
+#define __PROGRAM_MANAGER_H__
 
 #include "Display_Adapter.h"
 #include "RF24_Controller.h"
