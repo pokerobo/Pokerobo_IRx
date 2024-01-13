@@ -30,14 +30,19 @@ void setup() {
   debugLog("main", "()", " - ", "Starting");
   #endif
 
+  displayAdapter.begin();
+
   roboCarHandler.set(&movingResolver);
   roboCarHandler.begin();
 
-  remoteControlCar.set(&pedestalGroup);
+  remoteControlCar.set(&displayAdapter);
   remoteControlCar.set(&roboCarHandler);
+  remoteControlCar.set(&pedestalGroup);
   remoteControlCar.begin();
 
   hangingDetector.begin([] (void ()) {
+    displayAdapter.clear();
+    displayAdapter.render(0, 0, "Suspending...");
     roboCarHandler.stop();
   }, 100);
 

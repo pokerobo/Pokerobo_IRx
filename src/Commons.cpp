@@ -51,7 +51,7 @@ bool HangingDetector::check(bool ok) {
     _triggered = false;
   } else {
     if (_count >= _limit) {
-      if (_trigger && !_triggered) {
+      if (_trigger != NULL && !_triggered) {
         _triggered = true;
         _trigger();
       }

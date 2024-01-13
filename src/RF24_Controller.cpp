@@ -54,6 +54,8 @@ int RF24Controller::read(MasterContext* context, JoystickAction* action, MovingC
     }
     offset += MasterContext::messageSize;
 
+    ok = true;
+
     if (action != NULL) {
       action->deserialize(msg + offset);
     }

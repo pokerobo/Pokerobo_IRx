@@ -20,14 +20,14 @@ bool EventListener::add(ProgramCapsule* programCapsule) {
   return _programCollection->add(programCapsule);
 }
 
-int EventListener::enterDashboard_(JoystickAction* action) {
+int EventListener::enterDashboard_(MasterContext* context, JoystickAction* action) {
   if (_displayAdapter != NULL) {
     _displayAdapter->render(_programCollection);
   }
   return 0;
 }
 
-int EventListener::processDashboard_(JoystickAction* action) {
+int EventListener::processDashboard_(MasterContext* context, JoystickAction* action) {
   uint8_t toggle = action->getTogglingFlags();
   if (toggle & (1U >> 12)) { // LEFT -> BACK
     changeFlow_(DASHBOARD_FLOW_DISPATCHING);
@@ -53,20 +53,20 @@ int EventListener::processDashboard_(JoystickAction* action) {
   return 0;
 }
 
-int EventListener::leaveDashboard_(JoystickAction* action) {
+int EventListener::leaveDashboard_(MasterContext* context, JoystickAction* action) {
   _programCollection->setFocusAsCurrent();
   return 0;
 }
 
-int EventListener::enterProgram_(JoystickAction* action) {
+int EventListener::enterProgram_(MasterContext* context, JoystickAction* action) {
   return 0;
 }
 
-int EventListener::executeProgram_(JoystickAction* action, MovingCommand* command) {
+int EventListener::executeProgram_(MasterContext* context, JoystickAction* action, MovingCommand* command) {
   return _programCollection->getCurrentItem()->check(action, command);
 }
 
-int EventListener::leaveProgram_(JoystickAction* action) {
+int EventListener::leaveProgram_(MasterContext* context, JoystickAction* action) {
   return 0;
 }
 
@@ -82,16 +82,17 @@ void EventListener::begin() {
 }
 
 int EventListener::check() {
+  MasterContext context;
   JoystickAction action;
   MovingCommand command;
 
-  int ok = _rf24Controller->read(NULL, &action, &command);
+  int ok = _rf24Controller->read(&context, &action, &command);
 
   if (ok != 1) {
     return ok;
   }
 
-  return wait_(move_(&action, &command));
+  return wait_(move_(&context, &action, &command));
 }
 
 int EventListener::wait_(int state) {
@@ -99,26 +100,26 @@ int EventListener::wait_(int state) {
   return state;
 }
 
-int EventListener::move_(JoystickAction* action, MovingCommand* command) {
+int EventListener::move_(MasterContext* context, JoystickAction* action, MovingCommand* command) {
   uint16_t pressingFlags = action->getPressingFlags();
   uint16_t togglingFlags = action->getTogglingFlags();
   if ((togglingFlags & PROGRAM_MENU_TOGGLE_BUTTON)) {
     switch(_flow) {
       case DASHBOARD_FLOW_DISPATCHING:
-        leaveProgram_(action);
+        leaveProgram_(context, action);
         changeFlow_(DASHBOARD_FLOW_CONFIGURING);
-        return enterDashboard_(action);
+        return enterDashboard_(context, action);
       case DASHBOARD_FLOW_CONFIGURING:
-        leaveDashboard_(action);
+        leaveDashboard_(context, action);
         changeFlow_(DASHBOARD_FLOW_DISPATCHING);
-        return enterProgram_(action);
+        return enterProgram_(context, action);
     }
   }
 
   switch(_flow) {
     case DASHBOARD_FLOW_CONFIGURING:
-      return processDashboard_(action);
+      return processDashboard_(context, action);
     case DASHBOARD_FLOW_DISPATCHING:
-      return executeProgram_(action, command);
+      return executeProgram_(context, action, command);
   }
 }

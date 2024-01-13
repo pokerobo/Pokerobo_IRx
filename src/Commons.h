@@ -61,8 +61,8 @@ class WaitingCounter {
 
 class HangingDetector {
   public:
-    HangingDetector(void (*trigger)() = NULL, uint16_t limit = 100);
-    void begin(void (*trigger)() = NULL, uint16_t limit = 100);
+    HangingDetector(void (*trigger)() = NULL, uint16_t limit = 5);
+    void begin(void (*trigger)() = NULL, uint16_t limit = 5);
     bool check(bool ok);
     void reset();
   private:
