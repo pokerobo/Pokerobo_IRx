@@ -9,7 +9,7 @@
 
 #include "Commons.h"
 #include "Input_Controller.h"
-#include "Event_Trigger.h"
+#include "Event_Dispatcher.h"
 #include <PS2X_lib.h>
 
 #ifndef __PS2INIT_LOG_ENABLED__
@@ -65,7 +65,7 @@ class PS2Kontroller: PS2Controller_, InputController {
 class PS2Controller: PS2Controller_, InputController {
   public:
     PS2Controller(): PS2Controller_() {};
-    void set(EventTrigger* eventTrigger);
+    void set(EventDispatcher* eventDispatcher);
     int check();
   protected:
     bool isDebugEnabled();
@@ -73,7 +73,7 @@ class PS2Controller: PS2Controller_, InputController {
     int adjustJoystickX(int nJoyX);
     int adjustJoystickY(int nJoyY);
   private:
-    EventTrigger* _eventTrigger = NULL;
+    EventDispatcher* _eventDispatcher = NULL;
     int processStartButtonPress();
     int processSelectButtonPress();
     int processDPadUpButtonPress();

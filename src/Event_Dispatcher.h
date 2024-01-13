@@ -1,5 +1,5 @@
-#ifndef __EVENT_TRIGGER_H__
-#define __EVENT_TRIGGER_H__
+#ifndef __EVENT_DISPATCHER_H__
+#define __EVENT_DISPATCHER_H__
 
 #include "Commons.h"
 
@@ -28,7 +28,7 @@
 
 #define CLICKING_FLAGS            0
 
-class EventTrigger: public EventProcessor {
+class EventDispatcher: public EventProcessor {
   public:
     void begin();
     int loop();

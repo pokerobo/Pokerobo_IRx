@@ -74,8 +74,8 @@ void IRListener::setCodeMapper(IRCodeMapper* irCodeMapper) {
   _irCodeMapper = irCodeMapper;
 }
 
-void IRListener::set(EventTrigger* eventTrigger) {
-  _eventTrigger = eventTrigger;
+void IRListener::set(EventDispatcher* eventDispatcher) {
+  _eventDispatcher = eventDispatcher;
 };
 
 uint32_t IRListener::processButtonPress(uint32_t pressed) {
@@ -92,7 +92,7 @@ uint32_t IRListener::processButtonPress(uint32_t pressed) {
   }
 
   if(pressed & IR_MASK_UP_BUTTON) {
-    if (_eventTrigger || _onDPadUpButtonPressed) {
+    if (_eventDispatcher || _onDPadUpButtonPressed) {
       #if __RUNNING_LOG_ENABLED__
       if (_debugEnabled) {
         debugLog("on", "DPad", "Up", "ButtonPressed", "()", " is called");
@@ -101,14 +101,14 @@ uint32_t IRListener::processButtonPress(uint32_t pressed) {
       if (_onDPadUpButtonPressed) {
         _onDPadUpButtonPressed();
       } else {
-        _eventTrigger->processDPadUpButtonPressedEvent();
+        _eventDispatcher->processDPadUpButtonPressedEvent();
       }
       checked |= IR_MASK_UP_BUTTON;
     }
   }
 
   if(pressed & IR_MASK_RIGHT_BUTTON) {
-    if (_eventTrigger || _onDPadRightButtonPressed) {
+    if (_eventDispatcher || _onDPadRightButtonPressed) {
       #if __RUNNING_LOG_ENABLED__
       if (_debugEnabled) {
         debugLog("on", "DPad", "Right", "ButtonPressed", "()", " is called");
@@ -117,14 +117,14 @@ uint32_t IRListener::processButtonPress(uint32_t pressed) {
       if (_onDPadRightButtonPressed) {
         _onDPadRightButtonPressed();
       } else {
-        _eventTrigger->processDPadRightButtonPressedEvent();
+        _eventDispatcher->processDPadRightButtonPressedEvent();
       }
       checked |= IR_MASK_RIGHT_BUTTON;
     }
   }
 
   if(pressed & IR_MASK_DOWN_BUTTON) {
-    if (_eventTrigger || _onDPadDownButtonPressed) {
+    if (_eventDispatcher || _onDPadDownButtonPressed) {
       #if __RUNNING_LOG_ENABLED__
       if (_debugEnabled) {
         debugLog("on", "DPad", "Down", "ButtonPressed", "()", " is called");
@@ -133,14 +133,14 @@ uint32_t IRListener::processButtonPress(uint32_t pressed) {
       if (_onDPadDownButtonPressed) {
         _onDPadDownButtonPressed();
       } else {
-        _eventTrigger->processDPadDownButtonPressedEvent();
+        _eventDispatcher->processDPadDownButtonPressedEvent();
       }
       checked |= IR_MASK_DOWN_BUTTON;
     }
   }
 
   if(pressed & IR_MASK_LEFT_BUTTON) {
-    if (_eventTrigger || _onDPadLeftButtonPressed) {
+    if (_eventDispatcher || _onDPadLeftButtonPressed) {
       #if __RUNNING_LOG_ENABLED__
       if (_debugEnabled) {
         debugLog("on", "DPad", "Left", "ButtonPressed", "()", " is called");
@@ -149,7 +149,7 @@ uint32_t IRListener::processButtonPress(uint32_t pressed) {
       if (_onDPadLeftButtonPressed) {
         _onDPadLeftButtonPressed();
       } else {
-        _eventTrigger->processDPadLeftButtonPressedEvent();
+        _eventDispatcher->processDPadLeftButtonPressedEvent();
       }
       checked |= IR_MASK_LEFT_BUTTON;
     }

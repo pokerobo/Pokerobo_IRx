@@ -3,14 +3,14 @@
 
 #include "Commons.h"
 #include "IR_Mapping_Code.h"
-#include "Event_Trigger.h"
+#include "Event_Dispatcher.h"
 
 class IRListener {
   public:
     IRListener(IRCodeMapper* irCodeMapper=NULL);
     void begin();
     void setCodeMapper(IRCodeMapper* irCodeMapper);
-    void set(EventTrigger* eventTrigger);
+    void set(EventDispatcher* eventDispatcher);
     void setOnOkButtonPressed(void (*function)());
     void setOnDPadUpButtonPressed(void (*function)());
     void setOnDPadRightButtonPressed(void (*function)());
@@ -26,7 +26,7 @@ class IRListener {
   private:
     bool _debugEnabled;
     IRCodeMapper* _irCodeMapper = NULL;
-    EventTrigger* _eventTrigger = NULL;
+    EventDispatcher* _eventDispatcher = NULL;
     void (*_onOkButtonPressed)();
     void (*_onDPadUpButtonPressed)();
     void (*_onDPadRightButtonPressed)();

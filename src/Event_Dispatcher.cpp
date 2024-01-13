@@ -1,4 +1,4 @@
-#include "Event_Trigger.h"
+#include "Event_Dispatcher.h"
 
 #define PEDESTAL_RANGE_X          6
 #define PEDESTAL_RANGE_Y          6
@@ -6,63 +6,63 @@
 //-------------------------------------------------------------------------------------------------
 
 #if (CONTROLLER_PEDESTAL)
-void EventTrigger::set(PedestalGroup* pedestalGroup) {
+void EventDispatcher::set(PedestalGroup* pedestalGroup) {
   _pedestalGroup = pedestalGroup;
 }
 #endif
 
 #if (CONTROLLER_ROBOCAR)
-void EventTrigger::set(RoboCarHandler* roboCarHandler) {
+void EventDispatcher::set(RoboCarHandler* roboCarHandler) {
   _roboCarHandler = roboCarHandler;
 }
 #endif
 
-void EventTrigger::setOnStartButtonPressed(void (*function)()) {
+void EventDispatcher::setOnStartButtonPressed(void (*function)()) {
   _onStartButtonPressed = function;
 };
 
-void EventTrigger::setOnSelectButtonPressed(void (*function)()) {
+void EventDispatcher::setOnSelectButtonPressed(void (*function)()) {
   _onSelectButtonPressed = function;
 };
 
-void EventTrigger::setOnAnalogButtonPressed(void (*function)()) {
+void EventDispatcher::setOnAnalogButtonPressed(void (*function)()) {
   _onAnalogButtonPressed = function;
 };
 
-void EventTrigger::setOnDPadUpButtonPressed(void (*function)()) {
+void EventDispatcher::setOnDPadUpButtonPressed(void (*function)()) {
   _onDPadUpButtonPressed = function;
 };
 
-void EventTrigger::setOnDPadRightButtonPressed(void (*function)()) {
+void EventDispatcher::setOnDPadRightButtonPressed(void (*function)()) {
   _onDPadRightButtonPressed = function;
 };
 
-void EventTrigger::setOnDPadDownButtonPressed(void (*function)()) {
+void EventDispatcher::setOnDPadDownButtonPressed(void (*function)()) {
   _onDPadDownButtonPressed = function;
 };
 
-void EventTrigger::setOnDPadLeftButtonPressed(void (*function)()) {
+void EventDispatcher::setOnDPadLeftButtonPressed(void (*function)()) {
   _onDPadLeftButtonPressed = function;
 };
 
-void EventTrigger::setOnLeftJoystickChanged(void (*function)(int, int)) {
+void EventDispatcher::setOnLeftJoystickChanged(void (*function)(int, int)) {
   _onLeftJoystickChanged = function;
 }
 
-void EventTrigger::setOnRightJoystickChanged(void (*function)(int, int)) {
+void EventDispatcher::setOnRightJoystickChanged(void (*function)(int, int)) {
   _onRightJoystickChanged = function;
 };
 
 //-------------------------------------------------------------------------------------------------
 
-void EventTrigger::begin() {
+void EventDispatcher::begin() {
 }
 
-int EventTrigger::loop() {
+int EventDispatcher::loop() {
   return autoplay();
 }
 
-int EventTrigger::autoplay() {
+int EventDispatcher::autoplay() {
   switch(_currentState) {
     case PROGRAM_CARDUINO_STATE_IDLE:
       break;
@@ -79,7 +79,7 @@ int EventTrigger::autoplay() {
   return 0;
 }
 
-int EventTrigger::next() {
+int EventDispatcher::next() {
   int result = 0;
   switch(_currentState) {
     case PROGRAM_CARDUINO_STATE_IDLE:
@@ -112,7 +112,7 @@ int EventTrigger::next() {
 
 //-------------------------------------------------------------------------------------------------
 
-void EventTrigger::processEvents(JoystickAction* action, MovingCommand* command) {
+void EventDispatcher::processEvents(JoystickAction* action, MovingCommand* command) {
   if (action == NULL) {
     return;
   }
@@ -133,7 +133,7 @@ void EventTrigger::processEvents(JoystickAction* action, MovingCommand* command)
   return processJoystickChange(action->getX(), action->getY(), 'L');
 }
 
-bool EventTrigger::checkButtonPress(uint16_t pressed, uint16_t mask) {
+bool EventDispatcher::checkButtonPress(uint16_t pressed, uint16_t mask) {
   #if CLICKING_FLAGS
   if (pressed & mask) {
     _clickingTrail |= mask;
@@ -149,7 +149,7 @@ bool EventTrigger::checkButtonPress(uint16_t pressed, uint16_t mask) {
   #endif
 }
 
-uint16_t EventTrigger::processButtonPress(uint16_t pressed) {
+uint16_t EventDispatcher::processButtonPress(uint16_t pressed) {
   uint16_t checked = 0;
 
   if(checkButtonPress(pressed, MASK_START_BUTTON)) {
@@ -253,12 +253,12 @@ uint16_t EventTrigger::processButtonPress(uint16_t pressed) {
   return checked;
 }
 
-bool EventTrigger::isJoystickChanged(int nJoyX, int nJoyY) {
+bool EventDispatcher::isJoystickChanged(int nJoyX, int nJoyY) {
   return nJoyX >= RF24_JOYSTICK_DEADZONE_X || nJoyX <= -RF24_JOYSTICK_DEADZONE_X ||
       nJoyY >= RF24_JOYSTICK_DEADZONE_Y || nJoyY <= -RF24_JOYSTICK_DEADZONE_Y;
 }
 
-int EventTrigger::processJoystickChange(int nJoyX, int nJoyY, char label) {
+int EventDispatcher::processJoystickChange(int nJoyX, int nJoyY, char label) {
 
   nJoyX = map(nJoyX, 0, 1024, -RF24_JOYSTICK_RANGE_X, RF24_JOYSTICK_RANGE_X);
   nJoyY = map(nJoyY, 0, 1024, -RF24_JOYSTICK_RANGE_Y, RF24_JOYSTICK_RANGE_Y);
@@ -311,17 +311,17 @@ int EventTrigger::processJoystickChange(int nJoyX, int nJoyY, char label) {
 
 //-------------------------------------------------------------------------------------------------
 
-void EventTrigger::processStartButtonPressedEvent() {
+void EventDispatcher::processStartButtonPressedEvent() {
   next();
 }
 
-void EventTrigger::processSelectButtonPressedEvent() {
+void EventDispatcher::processSelectButtonPressedEvent() {
 }
 
-void EventTrigger::processAnalogButtonPressedEvent() {
+void EventDispatcher::processAnalogButtonPressedEvent() {
 }
 
-void EventTrigger::processDPadUpButtonPressedEvent() {
+void EventDispatcher::processDPadUpButtonPressedEvent() {
   #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
     _pedestalGroup->verticalServoUp();
@@ -329,7 +329,7 @@ void EventTrigger::processDPadUpButtonPressedEvent() {
   #endif
 }
 
-void EventTrigger::processDPadRightButtonPressedEvent() {
+void EventDispatcher::processDPadRightButtonPressedEvent() {
   #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
     _pedestalGroup->horizontalServoRight();
@@ -337,7 +337,7 @@ void EventTrigger::processDPadRightButtonPressedEvent() {
   #endif
 }
 
-void EventTrigger::processDPadDownButtonPressedEvent() {
+void EventDispatcher::processDPadDownButtonPressedEvent() {
   #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
     _pedestalGroup->verticalServoDown();
@@ -345,7 +345,7 @@ void EventTrigger::processDPadDownButtonPressedEvent() {
   #endif
 }
 
-void EventTrigger::processDPadLeftButtonPressedEvent() {
+void EventDispatcher::processDPadLeftButtonPressedEvent() {
   #if (CONTROLLER_PEDESTAL)
   if (_pedestalGroup != NULL) {
     _pedestalGroup->horizontalServoLeft();
@@ -353,7 +353,7 @@ void EventTrigger::processDPadLeftButtonPressedEvent() {
   #endif
 }
 
-void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
+void EventDispatcher::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
   switch(_currentState) {
     case PROGRAM_CARDUINO_STATE_IDLE:
       break;
@@ -376,5 +376,5 @@ void EventTrigger::processLeftJoystickChangeEvent(int nJoyX, int nJoyY) {
   }
 }
 
-void EventTrigger::processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
+void EventDispatcher::processRightJoystickChangeEvent(int nJoyX, int nJoyY) {
 }

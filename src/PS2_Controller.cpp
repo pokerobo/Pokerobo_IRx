@@ -90,8 +90,8 @@ int PS2Controller_::loop() {
 
 //-------------------------------------------------------------------------------------------------
 
-void PS2Controller::set(EventTrigger* eventTrigger) {
-  _eventTrigger = eventTrigger;
+void PS2Controller::set(EventDispatcher* eventDispatcher) {
+  _eventDispatcher = eventDispatcher;
 };
 
 int PS2Controller::check() {
@@ -132,7 +132,7 @@ int PS2Controller::check() {
 };
 
 int PS2Controller::processStartButtonPress() {
-  if (!_onStartButtonPressed && !_eventTrigger) {
+  if (!_onStartButtonPressed && !_eventDispatcher) {
     return 0;
   }
   if(ps2x.Button(PSB_START)) {
@@ -144,7 +144,7 @@ int PS2Controller::processStartButtonPress() {
     if (_onStartButtonPressed) {
       _onStartButtonPressed();
     } else {
-      _eventTrigger->processStartButtonPressedEvent();
+      _eventDispatcher->processStartButtonPressedEvent();
     }
     return PSB_START;
   }
@@ -152,7 +152,7 @@ int PS2Controller::processStartButtonPress() {
 }
 
 int PS2Controller::processSelectButtonPress() {
-  if (!_onSelectButtonPressed && !_eventTrigger) {
+  if (!_onSelectButtonPressed && !_eventDispatcher) {
     return 0;
   }
   if(ps2x.Button(PSB_SELECT)) {
@@ -164,7 +164,7 @@ int PS2Controller::processSelectButtonPress() {
     if (_onSelectButtonPressed) {
       _onSelectButtonPressed();
     } else {
-      _eventTrigger->processSelectButtonPressedEvent();
+      _eventDispatcher->processSelectButtonPressedEvent();
     }
     return PSB_SELECT;
   }
@@ -172,7 +172,7 @@ int PS2Controller::processSelectButtonPress() {
 }
 
 int PS2Controller::processDPadUpButtonPress() {
-  if (!_onDPadUpButtonPressed && !_eventTrigger) {
+  if (!_onDPadUpButtonPressed && !_eventDispatcher) {
     return 0;
   }
   if(ps2x.Button(PSB_PAD_UP)) {
@@ -184,7 +184,7 @@ int PS2Controller::processDPadUpButtonPress() {
     if (_onDPadUpButtonPressed) {
       _onDPadUpButtonPressed();
     } else {
-      _eventTrigger->processDPadUpButtonPressedEvent();
+      _eventDispatcher->processDPadUpButtonPressedEvent();
     }
     return PSB_PAD_UP;
   }
@@ -192,7 +192,7 @@ int PS2Controller::processDPadUpButtonPress() {
 }
 
 int PS2Controller::processDPadRightButtonPress() {
-  if (!_onDPadRightButtonPressed && !_eventTrigger) {
+  if (!_onDPadRightButtonPressed && !_eventDispatcher) {
     return 0;
   }
   if(ps2x.Button(PSB_PAD_RIGHT)) {
@@ -204,7 +204,7 @@ int PS2Controller::processDPadRightButtonPress() {
     if (_onDPadRightButtonPressed) {
       _onDPadRightButtonPressed();
     } else {
-      _eventTrigger->processDPadRightButtonPressedEvent();
+      _eventDispatcher->processDPadRightButtonPressedEvent();
     }
     return PSB_PAD_RIGHT;
   }
@@ -212,7 +212,7 @@ int PS2Controller::processDPadRightButtonPress() {
 }
 
 int PS2Controller::processDPadDownButtonPress() {
-  if (!_onDPadDownButtonPressed && !_eventTrigger) {
+  if (!_onDPadDownButtonPressed && !_eventDispatcher) {
     return 0;
   }
   if(ps2x.Button(PSB_PAD_DOWN)) {
@@ -224,7 +224,7 @@ int PS2Controller::processDPadDownButtonPress() {
     if (_onDPadDownButtonPressed) {
       _onDPadDownButtonPressed();
     } else {
-      _eventTrigger->processDPadDownButtonPressedEvent();
+      _eventDispatcher->processDPadDownButtonPressedEvent();
     }
     return PSB_PAD_DOWN;
   }
@@ -244,7 +244,7 @@ int PS2Controller::processDPadLeftButtonPress() {
     if (_onDPadLeftButtonPressed) {
       _onDPadLeftButtonPressed();
     } else {
-      _eventTrigger->processDPadLeftButtonPressedEvent();
+      _eventDispatcher->processDPadLeftButtonPressedEvent();
     }
     return PSB_PAD_LEFT;
   }

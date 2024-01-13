@@ -53,7 +53,7 @@ PedestalHandler* pedestalHandlers[PEDESTALS_MAX] = {
 
 PedestalGroup pedestalGroup(pedestalHandlers);
 
-EventTrigger eventTrigger;
+EventDispatcher eventDispatcher;
 
 #if (CONTROLLER == CONTROLLER_RF24)
 HangingDetector hangingDetector;
@@ -70,15 +70,15 @@ void setup() {
   #if (CONTROLLER_ROBOCAR)
   roboCarHandler.begin();
   roboCarHandler.set(&movingResolver);
-  eventTrigger.set(&roboCarHandler);
+  eventDispatcher.set(&roboCarHandler);
   #endif
 
   pedestalGroup.begin();
-  eventTrigger.set(&pedestalGroup);
+  eventDispatcher.set(&pedestalGroup);
 
   #if (CONTROLLER == CONTROLLER_PS2)
   ps2Controller.begin();
-  ps2Controller.set(&eventTrigger);
+  ps2Controller.set(&eventDispatcher);
   #endif
 
   #if (CONTROLLER == CONTROLLER_RF24)
@@ -92,7 +92,7 @@ void setup() {
   #if (CONTROLLER == CONTROLLER_RF24)
   rf24Listener.begin();
   rf24Listener.set(&hangingDetector);
-  rf24Listener.set(&eventTrigger);
+  rf24Listener.set(&eventDispatcher);
   #endif
 
   #if (CONTROLLER_IR)
@@ -122,7 +122,7 @@ void setup() {
 
   #if (CONTROLLER_IR)
   irListener.begin();
-  irListener.set(&eventTrigger);
+  irListener.set(&eventDispatcher);
   #endif
 
   #if __LOADING_LOG_ENABLED__
@@ -133,7 +133,7 @@ void setup() {
 void loop() {
   uint32_t begin = millis();
 
-  eventTrigger.loop();
+  eventDispatcher.loop();
 
   #if (CONTROLLER == CONTROLLER_PS2)
   ps2Controller.loop();

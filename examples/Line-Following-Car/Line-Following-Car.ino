@@ -8,7 +8,7 @@ RoboCarHandler roboCarHandler;
 MovingResolver movingResolver;
 
 ProgramManager programManager;
-EventTrigger eventTrigger;
+EventDispatcher eventDispatcher;
 
 void setup() {
   while (!Serial) delay(100); // Wait for the serial connection to be establised.
@@ -21,8 +21,8 @@ void setup() {
   roboCarHandler.set(&movingResolver);
   roboCarHandler.begin();
 
-  eventTrigger.set(&roboCarHandler);
-  eventTrigger.begin();
+  eventDispatcher.set(&roboCarHandler);
+  eventDispatcher.begin();
 
   hangingDetector.begin([] (void ()) {
     roboCarHandler.stop();
@@ -31,7 +31,7 @@ void setup() {
   rf24Listener.set(&hangingDetector);
   rf24Listener.begin();
 
-  programManager.set(&eventTrigger);
+  programManager.set(&eventDispatcher);
   programManager.set(&rf24Listener);
   programManager.begin();
 
