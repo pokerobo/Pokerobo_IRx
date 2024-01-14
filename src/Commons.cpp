@@ -128,11 +128,11 @@ void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* 
 
 void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6, char* s7, char* s8, char* s9,
     char* s10, char* s11, char* s12, char* s13, char* s14, char* s15) {
-  debugLog(s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, NULL, NULL, NULL);
+  debugLog(s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, NULL, NULL, NULL, NULL);
 }
 
 void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6, char* s7, char* s8, char* s9,
-    char* s10, char* s11, char* s12, char* s13, char* s14, char* s15, char* s16, char* s17, char* s18) {
+    char* s10, char* s11, char* s12, char* s13, char* s14, char* s15, char* s16, char* s17, char* s18, char* s19) {
   Serial.print(s0);
   while(1) {
     if (s1 != NULL) Serial.print(s1); else break;
@@ -150,9 +150,10 @@ void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* 
     if (s13 != NULL) Serial.print(s13); else break;
     if (s14 != NULL) Serial.print(s14); else break;
     if (s15 != NULL) Serial.print(s15); else break;
-    if (s16 != NULL) Serial.print(s15); else break;
-    if (s17 != NULL) Serial.print(s15); else break;
-    if (s18 != NULL) Serial.print(s15); else break;
+    if (s16 != NULL) Serial.print(s16); else break;
+    if (s17 != NULL) Serial.print(s17); else break;
+    if (s18 != NULL) Serial.print(s18); else break;
+    if (s19 != NULL) Serial.print(s19); else break;
     break;
   }
   Serial.println();

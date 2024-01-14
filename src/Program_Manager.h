@@ -11,8 +11,9 @@
 class ProgramManager {
   public:
     ProgramManager();
-    void set(DisplayAdapter* displayAdapter);
     void set(InputListener* inputListener);
+    void set(DisplayAdapter* displayAdapter);
+    void set(HangingDetector* hangingDetector);
     bool add(ProgramCapsule* programCapsule);
     void begin();
     int check();
@@ -27,8 +28,9 @@ class ProgramManager {
     int move_(MasterContext* context, JoystickAction* action, MovingCommand* command);
     int wait_(int state);
   private:
-    DisplayAdapter* _displayAdapter = NULL;
     InputListener* _inputListener = NULL;
+    DisplayAdapter* _displayAdapter = NULL;
+    HangingDetector* _hangingDetector = NULL;
     ProgramCollection* _programCollection = NULL;
     uint8_t _flow = DASHBOARD_FLOW_DISPATCHING;
 };

@@ -13,14 +13,24 @@ RF24Listener::RF24Listener(uint64_t address, bool debugEnabled) {
 
 void RF24Listener::begin() {
   radio.begin();
+  // radio.setRetries(5, 15);
   radio.openReadingPipe(0, _address);
   radio.startListening();
 }
 
 bool RF24Listener::available() {
-  bool tx_ds, tx_df, rx_dr;
-  radio.whatHappened(tx_ds, tx_df, rx_dr);
+  bool tx_ok, tx_fail, rx_ready;
+  radio.whatHappened(tx_ok, tx_fail, rx_ready);
   bool ok = radio.available();
+  #if __DEBUG_LOG_RF24_LISTENER__
+  if (isDebugEnabled()) {
+    Serial.print("tx_ok"), Serial.print(':'), Serial.print(tx_ok), Serial.print(';'),
+    Serial.print("tx_fail"), Serial.print(':'), Serial.print(tx_fail), Serial.print(';'),
+    Serial.print("rx_ready"), Serial.print(':'), Serial.print(rx_ready), Serial.print(';'),
+    Serial.print("available()"), Serial.print(':'), Serial.print(ok),
+    Serial.println();
+  }
+  #endif
   if (!ok) {
     bool connected = radio.isChipConnected();
     if (!connected) {
@@ -66,15 +76,15 @@ int RF24Listener::read(MasterContext* context, JoystickAction* action, MovingCom
     }
   }
 
-  #if __RF24_RUNNING_LOG__
+  #if __DEBUG_LOG_RF24_LISTENER__
   if (isDebugEnabled()) {
     if (ok) {
       char c_[11], b_[7], t_[7], x_[7], y_[7];
       debugLog("#", ltoa(action->getExtras(), c_, 10), " - ",
-          "pressing", "Flags", ": ", itoa(action->getPressingFlags(), b_, 10),
-          "toggling", "Flags", ": ", itoa(action->getTogglingFlags(), t_, 10),
-          "; ", "X", ": ", itoa(action->getX(), x_, 10),
-          "; ", "Y", ": ", itoa(action->getY(), y_, 10));
+          "pressing", "Flags", ": ", itoa(action->getPressingFlags(), b_, 10), "; ",
+          "toggling", "Flags", ": ", itoa(action->getTogglingFlags(), t_, 10), "; ",
+          "X", ": ", itoa(action->getX(), x_, 10), "; ",
+          "Y", ": ", itoa(action->getY(), y_, 10));
     } else {
       
     }

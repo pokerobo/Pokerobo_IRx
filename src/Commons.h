@@ -13,6 +13,8 @@
 #define __ROBOCAR_RUNNING_LOG__         0
 #define __PEDESTAL_RUNNING_LOG__        0
 
+#define  __DEBUG_LOG_RF24_LISTENER__    1
+
 #define __PS2_LOGGING_ENABLED__         1
 
 #define CONTROLLER_PEDESTAL             1
@@ -61,8 +63,8 @@ class WaitingCounter {
 
 class HangingDetector {
   public:
-    HangingDetector(void (*trigger)() = NULL, uint16_t limit = 5);
-    void begin(void (*trigger)() = NULL, uint16_t limit = 5);
+    HangingDetector(void (*trigger)() = NULL, uint16_t limit = 10);
+    void begin(void (*trigger)() = NULL, uint16_t limit = 10);
     bool check(bool ok);
     void reset();
   private:
@@ -94,5 +96,7 @@ void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* 
     char* s10, char* s11, char* s12, char* s13, char* s14, char* s15);
 void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6, char* s7, char* s8, char* s9,
     char* s10, char* s11, char* s12, char* s13, char* s14, char* s15, char* s16, char* s17, char* s18);
+void debugLog(char* s0, char* s1, char* s2, char* s3, char* s4, char* s5, char* s6, char* s7, char* s8, char* s9,
+    char* s10, char* s11, char* s12, char* s13, char* s14, char* s15, char* s16, char* s17, char* s18, char* s19);
 
 #endif

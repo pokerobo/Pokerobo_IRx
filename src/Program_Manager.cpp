@@ -8,12 +8,16 @@ ProgramManager::ProgramManager() {
   _programCollection = &programCollection;
 }
 
+void ProgramManager::set(InputListener* inputListener) {
+  _inputListener = inputListener;
+};
+
 void ProgramManager::set(DisplayAdapter* displayAdapter) {
   _displayAdapter = displayAdapter;
 }
 
-void ProgramManager::set(InputListener* inputListener) {
-  _inputListener = inputListener;
+void ProgramManager::set(HangingDetector* hangingDetector) {
+  _hangingDetector = hangingDetector;
 };
 
 bool ProgramManager::add(ProgramCapsule* programCapsule) {
@@ -87,6 +91,10 @@ int ProgramManager::check() {
   MovingCommand command;
 
   int ok = _inputListener->read(&context, &action, &command);
+
+  if (_hangingDetector != NULL) {
+    _hangingDetector->check(ok == 1);
+  }
 
   if (ok != 1) {
     return ok;
