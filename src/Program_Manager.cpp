@@ -12,8 +12,8 @@ void ProgramManager::set(DisplayAdapter* displayAdapter) {
   _displayAdapter = displayAdapter;
 }
 
-void ProgramManager::set(RF24Listener* rf24Listener) {
-  _rf24Listener = rf24Listener;
+void ProgramManager::set(InputListener* inputListener) {
+  _inputListener = inputListener;
 };
 
 bool ProgramManager::add(ProgramCapsule* programCapsule) {
@@ -86,7 +86,7 @@ int ProgramManager::check() {
   JoystickAction action;
   MovingCommand command;
 
-  int ok = _rf24Listener->read(&context, &action, &command);
+  int ok = _inputListener->read(&context, &action, &command);
 
   if (ok != 1) {
     return ok;

@@ -2,7 +2,7 @@
 #define __RF24_LISTENER_H__
 
 #include "Commons.h"
-#include "Context_Packet.h"
+#include "Input_Listener.h"
 #include "Input_Controller.h"
 #include "Event_Processor.h"
 
@@ -44,7 +44,7 @@
 #define RF24_JOYSTICK_RANGE_X     255
 #define RF24_JOYSTICK_RANGE_Y     255
 
-class RF24Listener: InputController {
+class RF24Listener: public InputListener, InputController {
   public:
     RF24Listener(uint64_t address=__RF24_DEFAULT_ADDRESS__, bool debugEnabled=true);
     void begin();

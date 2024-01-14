@@ -2,7 +2,7 @@
 #define __PROGRAM_MANAGER_H__
 
 #include "Display_Adapter.h"
-#include "RF24_Listener.h"
+#include "Input_Listener.h"
 #include "Program_Collection.h"
 
 #define DASHBOARD_FLOW_CONFIGURING            1
@@ -12,7 +12,7 @@ class ProgramManager {
   public:
     ProgramManager();
     void set(DisplayAdapter* displayAdapter);
-    void set(RF24Listener* rf24Listener);
+    void set(InputListener* inputListener);
     bool add(ProgramCapsule* programCapsule);
     void begin();
     int check();
@@ -28,7 +28,7 @@ class ProgramManager {
     int wait_(int state);
   private:
     DisplayAdapter* _displayAdapter = NULL;
-    RF24Listener* _rf24Listener = NULL;
+    InputListener* _inputListener = NULL;
     ProgramCollection* _programCollection = NULL;
     uint8_t _flow = DASHBOARD_FLOW_DISPATCHING;
 };
