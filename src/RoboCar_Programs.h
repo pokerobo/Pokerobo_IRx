@@ -7,6 +7,7 @@
 #include "Joystick_Action.h"
 #include "Moving_Command.h"
 
+#include "Line_Detector.h"
 #include "Pedestal_Group.h"
 #include "RoboCar_Handler.h"
 
@@ -22,6 +23,7 @@ class RemoteControlCar: public ProgramCapsule {
     virtual int check(void* action, void* command);
     virtual int close();
   protected:
+    bool isDebugEnabled();
     virtual void showSpeedometer_(JoystickAction* action, MovingCommand* command);
     DisplayAdapter* getDisplayAdapter();
     RoboCarHandler* getRoboCarHandler();
@@ -39,7 +41,14 @@ class LineFollowingCar: public RemoteControlCar {
         RoboCarHandler* roboCarHandler=NULL): RemoteControlCar(title,
             displayAdapter,
             roboCarHandler) {};
+    void set(DisplayAdapter* displayAdapter);
+    void set(RoboCarHandler* roboCarHandler);
+    void set(LineDetector* lineDetector);
     int check(void* action, void* command);
+  protected:
+    void showSpeedometer_(JoystickAction* action, MovingCommand* command);
+  private:
+    LineDetector* _lineDetector = NULL;
 };
 
 class DancingPuppetCar: public RemoteControlCar {
