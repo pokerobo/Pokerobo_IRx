@@ -28,15 +28,13 @@ class RemoteControlCar: public ProgramCapsule {
     bool _debugEnabled = true;
 };
 
-class LineFollowingCar: ProgramCapsule {
+class LineFollowingCar: public RemoteControlCar {
   public:
-    LineFollowingCar(char* title);
-    char* getTitle();
-    int begin();
-    int check(void* action, void* command);
-    int close();
-  private:
-    char* _title;
+    LineFollowingCar(char* title,
+        DisplayAdapter* displayAdapter=NULL,
+        RoboCarHandler* roboCarHandler=NULL): RemoteControlCar(title,
+            displayAdapter,
+            roboCarHandler) {};
 };
 
 class DancingPuppetCar: public RemoteControlCar {

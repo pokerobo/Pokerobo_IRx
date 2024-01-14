@@ -8,7 +8,7 @@ HangingDetector hangingDetector;
 RoboCarHandler roboCarHandler;
 MovingResolver movingResolver;
 
-RemoteControlCar remoteControlCar(" Remote Control Car");
+LineFollowingCar lineFollowingCar(" Line Following Car");
 
 ProgramManager programManager;
 
@@ -21,9 +21,9 @@ void setup() {
   roboCarHandler.set(&movingResolver);
   roboCarHandler.begin();
 
-  remoteControlCar.set(&displayAdapter);
-  remoteControlCar.set(&roboCarHandler);
-  remoteControlCar.begin();
+  lineFollowingCar.set(&displayAdapter);
+  lineFollowingCar.set(&roboCarHandler);
+  lineFollowingCar.begin();
 
   hangingDetector.begin([] (void ()) {
     displayAdapter.clear();
@@ -36,7 +36,7 @@ void setup() {
   programManager.set(&rf24Listener);
   programManager.set(&displayAdapter);
   programManager.set(&hangingDetector);
-  programManager.add(&remoteControlCar);
+  programManager.add(&lineFollowingCar);
   programManager.begin();
 }
 
