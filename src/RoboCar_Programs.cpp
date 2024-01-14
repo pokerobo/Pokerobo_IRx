@@ -39,12 +39,7 @@ int RemoteControlCar::check(void* action_, void* command_) {
     _roboCarHandler->move(command);
   }
 
-  if (_displayAdapter != NULL) {
-    _displayAdapter->render(0, 0, _title);
-    char text[16] = {};
-    sprintf(text, fmt, command->getLeftSpeed(), command->getRightSpeed());
-    _displayAdapter->render(0, 1, text);
-  }
+  showSpeedometer_(action, command);
 
   return 0;
 }
@@ -55,6 +50,32 @@ int RemoteControlCar::close() {
   }
 
   return 0;
+}
+
+void RemoteControlCar::showSpeedometer_(JoystickAction* action, MovingCommand* command) {
+  if (_displayAdapter != NULL) {
+    _displayAdapter->render(0, 0, _title);
+    char text[16] = {};
+    sprintf(text, fmt, command->getLeftSpeed(), command->getRightSpeed());
+    _displayAdapter->render(0, 1, text);
+  }
+}
+
+DisplayAdapter* RemoteControlCar::getDisplayAdapter() {
+  return _displayAdapter;
+}
+
+RoboCarHandler* RemoteControlCar::getRoboCarHandler() {
+  return _roboCarHandler;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+int LineFollowingCar::check(void* action_, void* command_) {
+  JoystickAction* action = (JoystickAction*) action_;
+  MovingCommand* command = (MovingCommand*) command_;
+
+  return RemoteControlCar::check(action_, command_);
 }
 
 //-------------------------------------------------------------------------------------------------

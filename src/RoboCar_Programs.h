@@ -21,6 +21,10 @@ class RemoteControlCar: public ProgramCapsule {
     virtual int begin();
     virtual int check(void* action, void* command);
     virtual int close();
+  protected:
+    virtual void showSpeedometer_(JoystickAction* action, MovingCommand* command);
+    DisplayAdapter* getDisplayAdapter();
+    RoboCarHandler* getRoboCarHandler();
   private:
     char* _title;
     DisplayAdapter* _displayAdapter = NULL;
@@ -35,6 +39,7 @@ class LineFollowingCar: public RemoteControlCar {
         RoboCarHandler* roboCarHandler=NULL): RemoteControlCar(title,
             displayAdapter,
             roboCarHandler) {};
+    int check(void* action, void* command);
 };
 
 class DancingPuppetCar: public RemoteControlCar {
