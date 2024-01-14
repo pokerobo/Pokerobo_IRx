@@ -4,14 +4,10 @@
 
 RemoteControlCar::RemoteControlCar(char* title,
     DisplayAdapter* displayAdapter,
-    RoboCarHandler* roboCarHandler,
-    PedestalGroup* pedestalGroup,
-    bool autoPedestal) {
+    RoboCarHandler* roboCarHandler) {
   _title = title;
   _displayAdapter = displayAdapter;
   _roboCarHandler = roboCarHandler;
-  _pedestalGroup = pedestalGroup;
-  _autoPedestal = autoPedestal;
 }
 
 void RemoteControlCar::set(DisplayAdapter* displayAdapter) {
@@ -20,11 +16,6 @@ void RemoteControlCar::set(DisplayAdapter* displayAdapter) {
 
 void RemoteControlCar::set(RoboCarHandler* roboCarHandler) {
   _roboCarHandler = roboCarHandler;
-}
-
-void RemoteControlCar::set(PedestalGroup* pedestalGroup, bool autoPedestal) {
-  _pedestalGroup = pedestalGroup;
-  _autoPedestal = autoPedestal;
 }
 
 char* RemoteControlCar::getTitle() {
@@ -44,12 +35,6 @@ int RemoteControlCar::check(void* action_, void* command_) {
   JoystickAction* action = (JoystickAction*) action_;
   MovingCommand* command = (MovingCommand*) command_;
 
-  if (_autoPedestal) {
-    if (_pedestalGroup != NULL) {
-      _pedestalGroup->autoDance();
-    }
-  }
-
   if (_roboCarHandler) {
     _roboCarHandler->move(command);
   }
@@ -65,10 +50,6 @@ int RemoteControlCar::check(void* action_, void* command_) {
 }
 
 int RemoteControlCar::close() {
-  if (_pedestalGroup != NULL) {
-    _pedestalGroup->reset();
-  }
-
   if (_roboCarHandler != NULL) {
     _roboCarHandler->turnOff();
   }
@@ -77,3 +58,41 @@ int RemoteControlCar::close() {
 }
 
 //-------------------------------------------------------------------------------------------------
+
+void DancingPuppetCar::set(DisplayAdapter* displayAdapter) {
+  RemoteControlCar::set(displayAdapter);
+}
+
+void DancingPuppetCar::set(RoboCarHandler* roboCarHandler) {
+  RemoteControlCar::set(roboCarHandler);
+}
+
+void DancingPuppetCar::set(PedestalGroup* pedestalGroup, bool autoPedestal) {
+  _pedestalGroup = pedestalGroup;
+  _autoPedestal = autoPedestal;
+}
+
+int DancingPuppetCar::begin() {
+  return RemoteControlCar::begin();
+}
+
+int DancingPuppetCar::check(void* action_, void* command_) {
+  JoystickAction* action = (JoystickAction*) action_;
+  MovingCommand* command = (MovingCommand*) command_;
+
+  if (_autoPedestal) {
+    if (_pedestalGroup != NULL) {
+      _pedestalGroup->autoDance();
+    }
+  }
+
+  return RemoteControlCar::check(action_, command_);
+}
+
+int DancingPuppetCar::close() {\
+  if (_pedestalGroup != NULL) {
+    _pedestalGroup->reset();
+  }
+
+  return RemoteControlCar::close();
+}

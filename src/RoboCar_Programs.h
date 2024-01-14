@@ -14,22 +14,17 @@ class RemoteControlCar: public ProgramCapsule {
   public:
     RemoteControlCar(char* title,
         DisplayAdapter* displayAdapter=NULL,
-        RoboCarHandler* roboCarHandler=NULL,
-        PedestalGroup* pedestalGroup=NULL,
-        bool autoPedestal=false);
+        RoboCarHandler* roboCarHandler=NULL);
     void set(DisplayAdapter* displayAdapter);
     void set(RoboCarHandler* roboCarHandler);
-    void set(PedestalGroup* pedestalGroup, bool autoPedestal=false);
-    char* getTitle();
-    int begin();
-    int check(void* action, void* command);
-    int close();
+    virtual char* getTitle();
+    virtual int begin();
+    virtual int check(void* action, void* command);
+    virtual int close();
   private:
     char* _title;
     DisplayAdapter* _displayAdapter = NULL;
     RoboCarHandler* _roboCarHandler = NULL;
-    PedestalGroup* _pedestalGroup = NULL;
-    bool _autoPedestal = false;
     bool _debugEnabled = true;
 };
 
@@ -42,6 +37,29 @@ class LineFollowingCar: ProgramCapsule {
     int close();
   private:
     char* _title;
+};
+
+class DancingPuppetCar: public RemoteControlCar {
+  public:
+    DancingPuppetCar(char* title,
+        DisplayAdapter* displayAdapter=NULL,
+        RoboCarHandler* roboCarHandler=NULL,
+        PedestalGroup* pedestalGroup=NULL,
+        bool autoPedestal=false): RemoteControlCar(title,
+            displayAdapter,
+            roboCarHandler) {
+              _pedestalGroup = pedestalGroup;
+              _autoPedestal = autoPedestal;
+            };
+    void set(DisplayAdapter* displayAdapter);
+    void set(RoboCarHandler* roboCarHandler);
+    void set(PedestalGroup* pedestalGroup, bool autoPedestal=false);
+    int begin();
+    int check(void* action, void* command);
+    int close();
+  private:
+    PedestalGroup* _pedestalGroup = NULL;
+    bool _autoPedestal = false;
 };
 
 #endif

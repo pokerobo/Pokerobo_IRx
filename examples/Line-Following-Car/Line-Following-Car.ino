@@ -1,52 +1,47 @@
 #include "Pokerobo_Car.h"
 
-const uint64_t address = 0x18580901LL;
-RF24Listener rf24Listener(address);
+DisplayAdapter displayAdapter;
+
+RF24Listener rf24Listener(0x18580901LL);
 HangingDetector hangingDetector;
 
 RoboCarHandler roboCarHandler;
 MovingResolver movingResolver;
 
+RemoteControlCar remoteControlCar(" Remote Control Car");
+
 ProgramManager programManager;
-EventDispatcher eventDispatcher;
 
 void setup() {
   while (!Serial) delay(100); // Wait for the serial connection to be establised.
   Serial.begin(57600);
 
-  #if __LOADING_LOG_ENABLED__
-  debugLog("main", "()", " - ", "Starting");
-  #endif
+  displayAdapter.begin();
 
   roboCarHandler.set(&movingResolver);
   roboCarHandler.begin();
 
-  eventDispatcher.set(&roboCarHandler);
-  eventDispatcher.begin();
+  remoteControlCar.set(&displayAdapter);
+  remoteControlCar.set(&roboCarHandler);
+  remoteControlCar.begin();
 
   hangingDetector.begin([] (void ()) {
+    displayAdapter.clear();
+    displayAdapter.render(0, 0, "Suspending...");
     roboCarHandler.stop();
-  }, 100);
+  }, 10);
 
-  rf24Listener.set(&hangingDetector);
   rf24Listener.begin();
 
-  programManager.set(&eventDispatcher);
   programManager.set(&rf24Listener);
+  programManager.set(&displayAdapter);
+  programManager.set(&hangingDetector);
+  programManager.add(&remoteControlCar);
   programManager.begin();
-
-  #if __LOADING_LOG_ENABLED__
-  debugLog("main", "()", " - ", "Done!");
-  #endif
 }
 
 void loop() {
   uint32_t begin = millis();
-
   programManager.check();
-
-  uint32_t exectime = millis() - begin;
-  // Serial.print("EXECTIME"), Serial.print(": "), Serial.print(exectime), Serial.println();
-
-  delay(max(100 - exectime, 0));
+  delay(max(100 - (millis() - begin), 0));
 }
