@@ -98,13 +98,13 @@ int LineFollowingCar::check(void* action_, void* command_) {
       Serial.print("LineSignals: "), Serial.print(lineSignals, BIN), Serial.println();
     }
 
-    // transforms the 10001 -> "|---|", 1: white; 0: black
+    // transforms the 10001 -> "-|||-", 1: white(-); 0: black(|)
     char lineText[16] = { 0 };
     for (int i=0; i<5; i++) {
       if ((lineSignals >> i) & 0b1) {
-        lineText[i] = '|';
-      } else {
         lineText[i] = '-';
+      } else {
+        lineText[i] = '|';
       }
     }
 

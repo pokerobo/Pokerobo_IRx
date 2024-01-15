@@ -23,10 +23,10 @@ class RemoteControlCar: public ProgramCapsule {
     virtual int check(void* action, void* command);
     virtual int close();
   protected:
-    bool isDebugEnabled();
     virtual void showSpeedometer_(JoystickAction* action, MovingCommand* command);
     DisplayAdapter* getDisplayAdapter();
     RoboCarHandler* getRoboCarHandler();
+    bool isDebugEnabled();
   private:
     char* _title;
     DisplayAdapter* _displayAdapter = NULL;
