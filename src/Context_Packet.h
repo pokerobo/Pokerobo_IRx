@@ -2,8 +2,9 @@
 #define __CONTEXT_PACKET_H__
 
 #include "Commons.h"
+#include "Message_Exchange.h"
 
-class MasterContext {
+class MasterContext: public MessageInterface {
   public:
     MasterContext();
     MasterContext(uint8_t applicationId, bool programCheckBit);

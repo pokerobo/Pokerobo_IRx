@@ -1,5 +1,13 @@
 #include "Message_Exchange.h"
 
+uint8_t MessageInterface::getVariation() {
+  return _variation;
+}
+
+void MessageInterface::setVariation(uint8_t variation) {
+  _variation = variation;
+}
+
 uint8_t* encodeInteger(uint8_t* store, uint16_t value) {
   store[0] = value & 0xff;
   store[1] = (value >> 8) & 0xff;

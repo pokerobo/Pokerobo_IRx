@@ -21,7 +21,7 @@
 
 #define PROGRAM_MENU_TOGGLE_BUTTON          MASK_ANALOG_BUTTON
 
-class JoystickAction {
+class JoystickAction: public MessageInterface {
   public:
     static const uint8_t messageSize;
     JoystickAction(uint16_t buttons, uint16_t x, uint16_t y, uint32_t extras);
@@ -33,6 +33,7 @@ class JoystickAction {
     uint16_t getX();
     uint16_t getY();
     uint32_t getExtras();
+    uint8_t length();
     void* deserialize(uint8_t* buf);
   private:
     uint16_t _pressingFlags = 0;

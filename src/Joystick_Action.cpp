@@ -58,6 +58,10 @@ uint32_t JoystickAction::getExtras() {
   return _extras;
 }
 
+uint8_t JoystickAction::length() {
+  return messageSize;
+}
+
 bool decodeMessage(uint8_t* msg, char* cmd, uint16_t* buttons, uint16_t* x, uint16_t* y, uint32_t* extras);
 bool decodeMessage(uint8_t* msg, char* cmd,
     uint16_t* x, uint16_t* y,

@@ -1,5 +1,9 @@
 #include "Moving_Command.h"
 
+const uint8_t MovingCommand::messageSize = sizeof(uint8_t) +
+    sizeof(uint8_t) +
+    sizeof(uint8_t);
+
 MovingCommand::MovingCommand(int leftSpeed, byte leftDirection, int rightSpeed, byte rightDirection) {
   update(leftSpeed, leftDirection, rightSpeed, rightDirection);
 }
@@ -25,6 +29,10 @@ int MovingCommand::getRightSpeed() {
 
 byte MovingCommand::getRightDirection() {
   return _RightDirection;
+}
+
+uint8_t MovingCommand::length() {
+  return messageSize;
 }
 
 void* MovingCommand::deserialize(uint8_t* buf) {
