@@ -157,7 +157,7 @@ int DancingPuppetCar::check(void* action_, void* command_) {
   return RemoteControlCar::check(action_, command_);
 }
 
-int DancingPuppetCar::close() {\
+int DancingPuppetCar::close() {
   if (_pedestalGroup != NULL) {
     _pedestalGroup->reset();
   }
