@@ -1,11 +1,16 @@
 #include "Message_Exchange.h"
 
+#ifndef __POKEROBO_RC_CLIENT_H__
 uint8_t MessageInterface::getVariation() {
   return _variation;
 }
 
 void MessageInterface::setVariation(uint8_t variation) {
   _variation = variation;
+}
+
+uint8_t* MessageInterface::serialize(uint8_t* buf, uint8_t len) {
+  return NULL;
 }
 
 uint8_t* encodeInteger(uint8_t* store, uint16_t value) {
@@ -35,3 +40,4 @@ uint32_t decodeInteger(uint8_t* arr, int length) {
   }
   return 0;
 }
+#endif//__POKEROBO_RC_CLIENT_H__

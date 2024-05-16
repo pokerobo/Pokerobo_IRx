@@ -1,8 +1,10 @@
-#ifndef __PROGRAM_COLLECTION_H__
-#define __PROGRAM_COLLECTION_H__
+#ifndef __POKEROBO_CAR_PROGRAM_COLLECTION_H__
+#define __POKEROBO_CAR_PROGRAM_COLLECTION_H__
 
 #include "Program_Capsule.h"
+#include "Pokerobo_RCB_client.h"
 
+#ifndef __POKEROBO_RC_CLIENT_H__
 #ifndef PROGRAM_COLLECTION_LIMIT
 #define PROGRAM_COLLECTION_LIMIT              20
 #endif//PROGRAM_COLLECTION_LIMIT
@@ -29,10 +31,10 @@ class ProgramCollection {
   private:
     ProgramCapsule* _programCapsules[PROGRAM_COLLECTION_LIMIT] = {};
     uint8_t _programCapsulesTotal = 0;
-    uint8_t _programCode = 0;
     uint8_t _programIndex = PROGRAM_COLLECTION_LIMIT;
     uint8_t _focusIndex = PROGRAM_COLLECTION_LIMIT;
     uint8_t _frameBegin = 0;
 };
 
+#endif//#ifndef __POKEROBO_RC_CLIENT_H__
 #endif

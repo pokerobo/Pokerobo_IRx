@@ -2,10 +2,8 @@
 
 #define PROGRAM_MENU_TOGGLE_BUTTON          MASK_ANALOG_BUTTON
 
-ProgramCollection programCollection;
-
 ProgramManager::ProgramManager() {
-  _programCollection = &programCollection;
+  _programCollection = new ProgramCollection();
 }
 
 void ProgramManager::set(InputListener* inputListener) {

@@ -1,5 +1,6 @@
 #include "Program_Collection.h"
 
+#ifndef __POKEROBO_RC_CLIENT_H__
 bool ProgramCollection::isReady() {
   return _programCapsulesTotal > 0 && _programIndex < PROGRAM_COLLECTION_LIMIT;
 }
@@ -133,3 +134,4 @@ bool ProgramCollection::setFrameEnd(uint8_t pos) {
   }
   return true;
 }
+#endif//#ifndef __POKEROBO_RC_CLIENT_H__

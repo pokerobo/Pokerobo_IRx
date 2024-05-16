@@ -4,6 +4,7 @@
 #include "Commons.h"
 #include "Message_Exchange.h"
 
+#ifndef __POKEROBO_RC_CLIENT_H__
 class MasterContext: public MessageInterface {
   public:
     MasterContext();
@@ -24,5 +25,6 @@ class MasterContext: public MessageInterface {
     bool _contextCheckBit = 0;
     bool _programCheckBit = 0;
 };
+#endif
 
 #endif

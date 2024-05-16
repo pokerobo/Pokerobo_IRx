@@ -1,9 +1,10 @@
-#ifndef __JOYSTICK_ACTION_H__
-#define __JOYSTICK_ACTION_H__
+#ifndef __POKEROBO_CAR_JOYSTICK_ACTION_H__
+#define __POKEROBO_CAR_JOYSTICK_ACTION_H__
 
 #include "Commons.h"
 #include "Message_Exchange.h"
 
+#ifndef __POKEROBO_RC_CLIENT_H__
 #define CONTROL_PACKET_V1                 1
 #define CONTROL_PACKET_V2                 2
 
@@ -43,4 +44,5 @@ class JoystickAction: public MessageInterface {
     uint32_t _extras = 0;
 };
 
+#endif//__POKEROBO_RC_CLIENT_H__
 #endif

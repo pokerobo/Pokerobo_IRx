@@ -1,5 +1,6 @@
 #include "Context_Packet.h"
 
+#ifndef __POKEROBO_RC_CLIENT_H__
 MasterContext::MasterContext() {}
 
 MasterContext::MasterContext(uint8_t applicationId, bool programCheckBit) {
@@ -62,3 +63,4 @@ MasterContext* MasterContext::deserialize(uint8_t* buf) {
   _programCheckBit = (buf[0] >> 6) & 0b1;
   _applicationId = buf[0] & ((1U << 6) - 1);
 }
+#endif

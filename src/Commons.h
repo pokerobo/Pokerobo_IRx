@@ -1,5 +1,5 @@
-#ifndef __COMMONS_H__
-#define __COMMONS_H__
+#ifndef __POKEROBO_CAR_COMMONS_H__
+#define __POKEROBO_CAR_COMMONS_H__
 
 #include <Arduino.h>
 
@@ -47,18 +47,6 @@ class FlagChecker {
   private:
     bool enabled;
     uint32_t limit;
-};
-
-class WaitingCounter {
-  public:
-    WaitingCounter(uint16_t limit = 100); // 100ms
-    void begin(uint16_t limit);
-    void reset();
-    bool check();
-  private:
-    uint16_t _delta = 0;
-    uint16_t _limit = 0;
-    uint32_t _milestone = 0;
 };
 
 class HangingDetector {

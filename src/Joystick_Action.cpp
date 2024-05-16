@@ -1,5 +1,6 @@
 #include "Joystick_Action.h"
 
+#ifndef __POKEROBO_RC_CLIENT_H__
 #if __JOYSTICK_MESSAGE_STRUCTURE__ == CONTROL_PACKET_V1
 const uint8_t JoystickAction::messageSize = 0 // SIGNATURE
     + sizeof(uint16_t) // pressingFlags
@@ -114,3 +115,4 @@ bool decodeMessage(uint8_t* msg, char* cmd,
   *extras = decodeInteger(&msg[8], 4);
   return true;
 }
+#endif//__POKEROBO_RC_CLIENT_H__

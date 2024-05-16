@@ -10,6 +10,10 @@ RemoteControlCar::RemoteControlCar(char* title,
   _roboCarHandler = roboCarHandler;
 }
 
+uint8_t RemoteControlCar::getId() {
+  return 1;
+}
+
 void RemoteControlCar::set(DisplayAdapter* displayAdapter) {
   _displayAdapter = displayAdapter;
 }
@@ -75,6 +79,10 @@ RoboCarHandler* RemoteControlCar::getRoboCarHandler() {
 
 //-------------------------------------------------------------------------------------------------
 
+uint8_t LineFollowingCar::getId() {
+  return 2;
+}
+
 void LineFollowingCar::set(DisplayAdapter* displayAdapter) {
   RemoteControlCar::set(displayAdapter);
 }
@@ -126,6 +134,10 @@ void LineFollowingCar::showSpeedometer_(JoystickAction* action, MovingCommand* c
 }
 
 //-------------------------------------------------------------------------------------------------
+
+uint8_t DancingPuppetCar::getId() {
+  return 3;
+}
 
 void DancingPuppetCar::set(DisplayAdapter* displayAdapter) {
   RemoteControlCar::set(displayAdapter);

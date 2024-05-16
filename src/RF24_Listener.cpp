@@ -4,24 +4,25 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-RF24 radio(__RF24_CE_PIN__, __RF24_CSN_PIN__);  // CE, CSN
+RF24* _radio = NULL;
 
 RF24Listener::RF24Listener(uint64_t address, bool debugEnabled) {
+  _radio = new RF24(__RF24_CE_PIN__, __RF24_CSN_PIN__);  // CE, CSN
   _address = address;
   _debugEnabled = debugEnabled;
 }
 
 void RF24Listener::begin() {
-  radio.begin();
-  // radio.setRetries(5, 15);
-  radio.openReadingPipe(0, _address);
-  radio.startListening();
+  _radio->begin();
+  // _radio->setRetries(5, 15);
+  _radio->openReadingPipe(0, _address);
+  _radio->startListening();
 }
 
 bool RF24Listener::available() {
   bool tx_ok, tx_fail, rx_ready;
-  radio.whatHappened(tx_ok, tx_fail, rx_ready);
-  bool ok = radio.available();
+  _radio->whatHappened(tx_ok, tx_fail, rx_ready);
+  bool ok = _radio->available();
   #if __DEBUG_LOG_RF24_LISTENER__
   if (isDebugEnabled()) {
     Serial.print("tx_ok"), Serial.print(':'), Serial.print(tx_ok), Serial.print(';'),
@@ -32,7 +33,7 @@ bool RF24Listener::available() {
   }
   #endif
   if (!ok) {
-    bool connected = radio.isChipConnected();
+    bool connected = _radio->isChipConnected();
     if (!connected) {
       debugLog("RF24 is not connected");
     }
@@ -48,7 +49,7 @@ int RF24Listener::read(MasterContext* context, JoystickAction* action, MovingCom
     return 0;
   }
   uint8_t msg[__RF24_MESSAGE_LENGTH__] = {0};
-  radio.read(&msg, sizeof(msg));
+  _radio->read(&msg, sizeof(msg));
 
   bool ok = false;
 
