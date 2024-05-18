@@ -5,8 +5,8 @@
 #include "IR_Mapping_Code.h"
 #include "IR_Processor.h"
 
-#ifndef RECV_PIN
-#define RECV_PIN 2
+#ifndef POKEROBO_IRX_RECV_PIN
+#define POKEROBO_IRX_RECV_PIN                 2
 #endif
 
 class IRListener: public IRProcessor {
@@ -14,7 +14,7 @@ class IRListener: public IRProcessor {
     IRListener(IRCodeMapper* irCodeMapper=NULL, IRProcessor* irProcessor=NULL);
     void set(IRCodeMapper* irCodeMapper);
     void set(IRProcessor* irProcessor);
-    void begin(uint8_t aReceivePin=RECV_PIN);
+    void begin(uint8_t aReceivePin=POKEROBO_IRX_RECV_PIN);
     int loop();
     uint32_t processButtonPress(uint32_t buttons);
   private:

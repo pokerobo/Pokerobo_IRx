@@ -20,10 +20,10 @@ void IRListener::set(IRProcessor* irProcessor) {
 void IRListener::begin(uint8_t aReceivePin) {
   IrReceiver.begin(aReceivePin, ENABLE_LED_FEEDBACK);
   //
-  #if __LOADING_LOG_ENABLED__
+  #if POKEROBO_IRX_DEBUG_ENABLED
   if (isDebugEnabled()) {
     char buf[7];
-    _logger->debug("IR is now running on Pin", " ", itoa(RECV_PIN, buf, 10));
+    _logger->debug("IR is now running on Pin", " ", itoa(POKEROBO_IRX_RECV_PIN, buf, 10));
   }
   #endif
 }
@@ -57,14 +57,14 @@ uint32_t detectButtonPress(IRData decodedIRData, IRCodeMapper* _irCodeMapper) {
     uint8_t pos = _irCodeMapper->getPosition((uint8_t)decodedIRData.protocol, decodedIRData.command);
     if (_irCodeMapper->isValid(pos)) {
       buttons |= (1UL << pos);
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       char pos_[7];
       IRDebugLogger::debug("Position", ": ", itoa(pos, pos_, 10), " is pushed");
       Serial.print("Flags: "), Serial.println(buttons, BIN);
       #endif
       return buttons;
     } else {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       IrReceiver.printIRResultShort(&Serial);
       #endif
     }

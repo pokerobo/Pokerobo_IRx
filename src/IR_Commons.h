@@ -3,8 +3,9 @@
 
 #include <Arduino.h>
 
-#define __LOADING_LOG_ENABLED__         0
-#define __RUNNING_LOG_ENABLED__         1
+#ifndef POKEROBO_IRX_DEBUG_ENABLED
+#define POKEROBO_IRX_DEBUG_ENABLED         1
+#endif
 
 class IRDebugLogger {
   public:
