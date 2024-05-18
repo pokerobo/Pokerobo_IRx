@@ -6,9 +6,10 @@
 class IRProcessor {
   public:
     virtual uint32_t processButtonPress(uint32_t buttons);
+    void setDebugEnabled(bool enabled);
     void set(IRDebugLogger* logger);
   protected:
-    bool _debugEnabled = true;
+    bool _debugEnabled = false;
     IRDebugLogger* _logger = NULL;
     bool isDebugEnabled();
 };

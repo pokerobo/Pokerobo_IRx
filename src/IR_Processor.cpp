@@ -35,6 +35,10 @@ void IRProcessor::set(IRDebugLogger* logger) {
   _logger = logger;
 }
 
+void IRProcessor::setDebugEnabled(bool enabled) {
+  _debugEnabled = enabled;
+}
+
 bool IRProcessor::isDebugEnabled() {
   return _debugEnabled && _logger != NULL;
 }
@@ -45,7 +49,7 @@ uint32_t IREventDispatcher::processButtonPress(uint32_t pressed) {
   uint32_t checked = 0;
 
   if(pressed & IR_MASK_OK_BUTTON) {
-    #if __RUNNING_LOG_ENABLED__
+    #if POKEROBO_IRX_DEBUG_ENABLED
     if (isDebugEnabled()) {
       _logger->debug("process", "Ok", "ButtonPressedEvent", "()", " is called");
     }
@@ -55,7 +59,7 @@ uint32_t IREventDispatcher::processButtonPress(uint32_t pressed) {
   }
 
   if(pressed & IR_MASK_UP_BUTTON) {
-    #if __RUNNING_LOG_ENABLED__
+    #if POKEROBO_IRX_DEBUG_ENABLED
     if (isDebugEnabled()) {
       _logger->debug("process", "DPad", "Up", "ButtonPressedEvent", "()", " is called");
     }
@@ -65,7 +69,7 @@ uint32_t IREventDispatcher::processButtonPress(uint32_t pressed) {
   }
 
   if(pressed & IR_MASK_RIGHT_BUTTON) {
-    #if __RUNNING_LOG_ENABLED__
+    #if POKEROBO_IRX_DEBUG_ENABLED
     if (isDebugEnabled()) {
       _logger->debug("process", "DPad", "Right", "ButtonPressedEvent", "()", " is called");
     }
@@ -75,7 +79,7 @@ uint32_t IREventDispatcher::processButtonPress(uint32_t pressed) {
   }
 
   if(pressed & IR_MASK_DOWN_BUTTON) {
-    #if __RUNNING_LOG_ENABLED__
+    #if POKEROBO_IRX_DEBUG_ENABLED
     if (isDebugEnabled()) {
       _logger->debug("process", "DPad", "Down", "ButtonPressedEvent", "()", " is called");
     }
@@ -85,7 +89,7 @@ uint32_t IREventDispatcher::processButtonPress(uint32_t pressed) {
   }
 
   if(pressed & IR_MASK_LEFT_BUTTON) {
-    #if __RUNNING_LOG_ENABLED__
+    #if POKEROBO_IRX_DEBUG_ENABLED
     if (isDebugEnabled()) {
       _logger->debug("process", "DPad", "Left", "ButtonPressedEvent", "()", " is called");
     }
@@ -95,7 +99,7 @@ uint32_t IREventDispatcher::processButtonPress(uint32_t pressed) {
   }
 
   if(pressed & IR_MASK_ASTERISK_BUTTON) {
-    #if __RUNNING_LOG_ENABLED__
+    #if POKEROBO_IRX_DEBUG_ENABLED
     if (isDebugEnabled()) {
       _logger->debug("process", "Asterisk", "ButtonPressedEvent", "()", " is called");
     }
@@ -105,7 +109,7 @@ uint32_t IREventDispatcher::processButtonPress(uint32_t pressed) {
   }
 
   if(pressed & IR_MASK_SHARP_BUTTON) {
-    #if __RUNNING_LOG_ENABLED__
+    #if POKEROBO_IRX_DEBUG_ENABLED
     if (isDebugEnabled()) {
       _logger->debug("process", "Sharp", "ButtonPressedEvent", "()", " is called");
     }
@@ -116,7 +120,7 @@ uint32_t IREventDispatcher::processButtonPress(uint32_t pressed) {
 
   uint32_t digitButtons = pressed & uint32_t(IR_MASK_DIGITS_BUTTON);
   if(digitButtons) {
-    #if __RUNNING_LOG_ENABLED__
+    #if POKEROBO_IRX_DEBUG_ENABLED
     if (isDebugEnabled()) {
       _logger->debug("process", "Digit", "ButtonPressedEvent", "()", " is called");
     }
@@ -127,7 +131,7 @@ uint32_t IREventDispatcher::processButtonPress(uint32_t pressed) {
 
   uint32_t otherButtons = pressed >> 17;
   if(otherButtons) {
-    #if __RUNNING_LOG_ENABLED__
+    #if POKEROBO_IRX_DEBUG_ENABLED
     if (isDebugEnabled()) {
       _logger->debug("process", "OtherButtons", "PressedEvent", "()", " is called");
     }
@@ -154,7 +158,7 @@ uint32_t IREventTrigger::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_OK_BUTTON) {
     if (_eventDispatcher || _onOkButtonPressed) {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       if (isDebugEnabled()) {
         _logger->debug("on", "Ok", "ButtonPressed", "()", " is called");
       }
@@ -170,7 +174,7 @@ uint32_t IREventTrigger::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_UP_BUTTON) {
     if (_eventDispatcher || _onDPadUpButtonPressed) {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       if (isDebugEnabled()) {
         _logger->debug("on", "DPad", "Up", "ButtonPressed", "()", " is called");
       }
@@ -186,7 +190,7 @@ uint32_t IREventTrigger::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_RIGHT_BUTTON) {
     if (_eventDispatcher || _onDPadRightButtonPressed) {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       if (isDebugEnabled()) {
         _logger->debug("on", "DPad", "Right", "ButtonPressed", "()", " is called");
       }
@@ -202,7 +206,7 @@ uint32_t IREventTrigger::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_DOWN_BUTTON) {
     if (_eventDispatcher || _onDPadDownButtonPressed) {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       if (isDebugEnabled()) {
         _logger->debug("on", "DPad", "Down", "ButtonPressed", "()", " is called");
       }
@@ -218,7 +222,7 @@ uint32_t IREventTrigger::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_LEFT_BUTTON) {
     if (_eventDispatcher || _onDPadLeftButtonPressed) {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       if (isDebugEnabled()) {
         _logger->debug("on", "DPad", "Left", "ButtonPressed", "()", " is called");
       }
@@ -234,7 +238,7 @@ uint32_t IREventTrigger::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_ASTERISK_BUTTON) {
     if (_eventDispatcher || _onAsteriskButtonPressed) {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       if (isDebugEnabled()) {
         _logger->debug("on", "Asterisk", "ButtonPressed", "()", " is called");
       }
@@ -250,7 +254,7 @@ uint32_t IREventTrigger::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_SHARP_BUTTON) {
     if (_eventDispatcher || _onSharpButtonPressed) {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       if (isDebugEnabled()) {
         _logger->debug("on", "Sharp", "ButtonPressed", "()", " is called");
       }
@@ -266,7 +270,7 @@ uint32_t IREventTrigger::processButtonPress(uint32_t pressed) {
 
   if(pressed & IR_MASK_DIGITS_BUTTON) {
     if (_eventDispatcher || _onDigitButtonsPressed) {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       if (isDebugEnabled()) {
         _logger->debug("on", "Digit", "ButtonPressed", "()", " is called");
       }
@@ -283,7 +287,7 @@ uint32_t IREventTrigger::processButtonPress(uint32_t pressed) {
   uint32_t otherButtons = pressed >> 17;
   if(otherButtons) {
     if (_eventDispatcher || _onOtherButtonsPressed) {
-      #if __RUNNING_LOG_ENABLED__
+      #if POKEROBO_IRX_DEBUG_ENABLED
       if (isDebugEnabled()) {
         _logger->debug("on", "Other", "ButtonPressed", "()", " is called");
       }

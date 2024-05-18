@@ -3,6 +3,10 @@
 
 #include <Arduino.h>
 
+#ifndef POKEROBO_IRX_TRACE_ENABLED
+#define POKEROBO_IRX_TRACE_ENABLED         0
+#endif
+
 #ifndef POKEROBO_IRX_DEBUG_ENABLED
 #define POKEROBO_IRX_DEBUG_ENABLED         1
 #endif

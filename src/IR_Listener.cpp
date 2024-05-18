@@ -57,14 +57,14 @@ uint32_t detectButtonPress(IRData decodedIRData, IRCodeMapper* _irCodeMapper) {
     uint8_t pos = _irCodeMapper->getPosition((uint8_t)decodedIRData.protocol, decodedIRData.command);
     if (_irCodeMapper->isValid(pos)) {
       buttons |= (1UL << pos);
-      #if POKEROBO_IRX_DEBUG_ENABLED
+      #if POKEROBO_IRX_TRACE_ENABLED
       char pos_[7];
       IRDebugLogger::debug("Position", ": ", itoa(pos, pos_, 10), " is pushed");
       Serial.print("Flags: "), Serial.println(buttons, BIN);
       #endif
       return buttons;
     } else {
-      #if POKEROBO_IRX_DEBUG_ENABLED
+      #if POKEROBO_IRX_TRACE_ENABLED
       IrReceiver.printIRResultShort(&Serial);
       #endif
     }
