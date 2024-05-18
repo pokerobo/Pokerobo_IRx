@@ -1,5 +1,5 @@
-#ifndef __INPUT_CONTROLLER_H__
-#define __INPUT_CONTROLLER_H__
+#ifndef __POKEROBO_CAR_INPUT_CONTROLLER_H__
+#define __POKEROBO_CAR_INPUT_CONTROLLER_H__
 
 #include "Commons.h"
 

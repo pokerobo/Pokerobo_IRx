@@ -1,5 +1,5 @@
-#ifndef __LINE_DETECTOR_H__
-#define __LINE_DETECTOR_H__
+#ifndef __POKEROBO_CAR_LINE_DETECTOR_H__
+#define __POKEROBO_CAR_LINE_DETECTOR_H__
 
 #include "Commons.h"
 

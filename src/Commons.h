@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#define __POKEROBO_RCB_CLIENT_ENABLED__ 1
+
 #define __HCPCA9685_ENABLED__           1
 
 #define __LOADING_LOG_ENABLED__         1

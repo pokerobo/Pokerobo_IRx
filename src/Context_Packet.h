@@ -1,5 +1,5 @@
-#ifndef __CONTEXT_PACKET_H__
-#define __CONTEXT_PACKET_H__
+#ifndef __POKEROBO_CAR_CONTEXT_PACKET_H__
+#define __POKEROBO_CAR_CONTEXT_PACKET_H__
 
 #include "Commons.h"
 #include "Message_Exchange.h"

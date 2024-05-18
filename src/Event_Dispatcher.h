@@ -1,5 +1,5 @@
-#ifndef __EVENT_DISPATCHER_H__
-#define __EVENT_DISPATCHER_H__
+#ifndef __POKEROBO_CAR_EVENT_DISPATCHER_H__
+#define __POKEROBO_CAR_EVENT_DISPATCHER_H__
 
 #include "Commons.h"
 

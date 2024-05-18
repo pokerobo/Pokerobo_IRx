@@ -1,5 +1,5 @@
-#ifndef __PROGRAM_MANAGER_H__
-#define __PROGRAM_MANAGER_H__
+#ifndef __POKEROBO_CAR_PROGRAM_MANAGER_H__
+#define __POKEROBO_CAR_PROGRAM_MANAGER_H__
 
 #include "Display_Adapter.h"
 #include "Input_Listener.h"

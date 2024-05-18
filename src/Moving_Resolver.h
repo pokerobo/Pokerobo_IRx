@@ -1,5 +1,5 @@
-#ifndef __MOVING_RESOLVER_H__
-#define __MOVING_RESOLVER_H__
+#ifndef __POKEROBO_CAR_MOVING_RESOLVER_H__
+#define __POKEROBO_CAR_MOVING_RESOLVER_H__
 
 #include "Commons.h"
 #include "Moving_Command.h"

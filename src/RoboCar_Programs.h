@@ -1,5 +1,5 @@
-#ifndef __ROBOCAR_PROGRAMS_H__
-#define __ROBOCAR_PROGRAMS_H__
+#ifndef __POKEROBO_CAR_ROBOCAR_PROGRAMS_H__
+#define __POKEROBO_CAR_ROBOCAR_PROGRAMS_H__
 
 #include "Commons.h"
 #include "Display_Adapter.h"

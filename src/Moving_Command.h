@@ -1,5 +1,5 @@
-#ifndef __MOVING_COMMAND_H__
-#define __MOVING_COMMAND_H__
+#ifndef __POKEROBO_CAR_MOVING_COMMAND_H__
+#define __POKEROBO_CAR_MOVING_COMMAND_H__
 
 #include "Commons.h"
 #include "Message_Exchange.h"

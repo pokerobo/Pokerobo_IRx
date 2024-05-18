@@ -1,5 +1,5 @@
-#ifndef __DISPLAY_ADAPTER_H__
-#define __DISPLAY_ADAPTER_H__
+#ifndef __POKEROBO_CAR_DISPLAY_ADAPTER_H__
+#define __POKEROBO_CAR_DISPLAY_ADAPTER_H__
 
 #include "Program_Collection.h"
 
