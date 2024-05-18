@@ -1,5 +1,5 @@
-#ifndef __IR_CODE_MAPPING_H__
-#define __IR_CODE_MAPPING_H__
+#ifndef __POKEROBO_IRX_IR_CODE_MAPPING_H__
+#define __POKEROBO_IRX_IR_CODE_MAPPING_H__
 
 #include <Arduino.h>
 

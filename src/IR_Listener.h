@@ -1,41 +1,25 @@
-#ifndef __IR_LISTENER_H__
-#define __IR_LISTENER_H__
+#ifndef __POKEROBO_IRX_IR_LISTENER_H__
+#define __POKEROBO_IRX_IR_LISTENER_H__
 
-#include "Commons.h"
+#include "IR_Commons.h"
 #include "IR_Mapping_Code.h"
-#include "Event_Dispatcher.h"
+#include "IR_Processor.h"
 
-class IRListener {
+#ifndef RECV_PIN
+#define RECV_PIN 2
+#endif
+
+class IRListener: public IRProcessor {
   public:
-    IRListener(IRCodeMapper* irCodeMapper=NULL);
-    void begin();
-    void setCodeMapper(IRCodeMapper* irCodeMapper);
-    void set(EventDispatcher* eventDispatcher);
-    void setOnOkButtonPressed(void (*function)());
-    void setOnDPadUpButtonPressed(void (*function)());
-    void setOnDPadRightButtonPressed(void (*function)());
-    void setOnDPadDownButtonPressed(void (*function)());
-    void setOnDPadLeftButtonPressed(void (*function)());
-    void setOnAsteriskButtonPressed(void (*function)());
-    void setOnSharpButtonPressed(void (*function)());
-    void setOnDigitButtonPressed(void (*function)(uint32_t));
-    void setOnAnyButtonPressed(void (*function)(uint32_t));
+    IRListener(IRCodeMapper* irCodeMapper=NULL, IRProcessor* irProcessor=NULL);
+    void set(IRCodeMapper* irCodeMapper);
+    void set(IRProcessor* irProcessor);
+    void begin(uint8_t aReceivePin=RECV_PIN);
     int loop();
-  protected:
     uint32_t processButtonPress(uint32_t buttons);
   private:
-    bool _debugEnabled;
     IRCodeMapper* _irCodeMapper = NULL;
-    EventDispatcher* _eventDispatcher = NULL;
-    void (*_onOkButtonPressed)();
-    void (*_onDPadUpButtonPressed)();
-    void (*_onDPadRightButtonPressed)();
-    void (*_onDPadDownButtonPressed)();
-    void (*_onDPadLeftButtonPressed)();
-    void (*_onAsteriskButtonPressed)();
-    void (*_onSharpButtonPressed)();
-    void (*_onDigitButtonPressed)(uint32_t buttons);
-    void (*_onAnyButtonPressed)(uint32_t buttons);
+    IRProcessor* _irProcessor = NULL;
 };
 
 #endif
